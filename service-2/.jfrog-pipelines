@@ -1,0 +1,32 @@
+resources:
+  - name: newRepo_2
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+  - name: propertyBag_2
+    type: PropertyBag
+    configuration:
+      foo: bar
+      foo1: bar1
+      foo2: bar2
+
+pipelines:
+  - name: demo_manual_2
+    steps:
+      - name: manual_trigger_2
+        type: Bash
+        configuration:
+          inputResources:
+            - name: newRepo_2
+          outputResources:
+            - name: propertyBag_2
+          integrations:
+            - name: deepikaGithub
+        execution:
+          onExecute:
+            - write_output propertyBag "foo=$run_number"
+
+
