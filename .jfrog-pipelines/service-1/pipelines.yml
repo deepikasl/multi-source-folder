@@ -28,4 +28,3 @@ pipelines:
         execution:
           onExecute:
             - write_output propertyBag "foo=$run_number"
-
