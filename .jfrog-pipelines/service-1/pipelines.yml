@@ -12,7 +12,6 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
-
 pipelines:
   - name: demo_manual_1
     steps:
