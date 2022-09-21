@@ -1,9 +1,12 @@
+template: true   # required for local templates   
+valuesFilePath: ./values.yml # required for local templates. DO NOT SPECIFY for system level templates
+
 resources:
   - name: myRepo
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
+      gitProvider: {{ .Values.GitHub.gitProvider }}
       branches:
         include: master
 
