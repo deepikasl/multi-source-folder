@@ -1,0 +1,7 @@
+ GitRepo:
+  name: myRepo
+  gitProvider: deepikaGithub
+  path: deepikasl/jfrog-pipelines
+  branches:
+    include: master
+   
