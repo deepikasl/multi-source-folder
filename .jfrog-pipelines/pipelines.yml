@@ -6,7 +6,7 @@ resources:
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
-      gitProvider: {{ .Values.GitHub.gitProvider }}
+      gitProvider: {{ .Values.GitRepo.gitProvider }}
       branches:
         include: master
 
