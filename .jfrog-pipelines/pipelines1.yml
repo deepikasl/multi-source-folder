@@ -1,0 +1,24 @@
+resources:
+  - name: myRepo_1
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+
+pipelines:
+  - name: demo_manual_1
+    configuration:
+      integrations:
+        - name: deepikaGithub
+    steps:
+      - name: manual_trigger_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myRepo_1
+        execution:
+          onExecute:
+            - *print-5-numbers
+ 
