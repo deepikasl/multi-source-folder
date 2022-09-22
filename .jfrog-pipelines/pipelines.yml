@@ -1,2 +1,26 @@
 template: jfrog/DockerBuildAndPush/1.0.0   # required for local templates   
 valuesFilePath: ./values.yml # required for local templates. DO NOT SPECIFY for system level templates
+
+resources:
+  - name: myRepo_3
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+
+pipelines:
+  - name: demo_manual_3
+    configuration:
+      integrations:
+        - name: deepikaGithub
+    steps:
+      - name: manual_trigger_3
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myRepo_3
+        execution:
+          onExecute:
+            - echo "hi"
