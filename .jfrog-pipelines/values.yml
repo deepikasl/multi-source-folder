@@ -4,7 +4,7 @@ kubernetesIntegration: k8s
 GitRepo:
   name: fooGitRepo
   gitProvider: deepikaGithub
-  path: jfrog/jfrog-pipelines-simple-example
+  path: deepikasl/jfrog_pipelines
   branches:
     exclude: master
     include: {{gitBranch}}
