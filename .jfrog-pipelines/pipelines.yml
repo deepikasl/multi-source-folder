@@ -5,12 +5,27 @@ print-5-numbers: &print-5-numbers
   - echo 4
   - echo 5
   
+resources:
+  - name: myRepo
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+
 pipelines:
- name: foo
- steps:
-   - name: foo
-     type: Bash
-     execution:
-       onExecute:
-         - *print-5-numbers
+  - name: demo_manual
+    configuration:
+      integrations:
+        - name: deepikaGithub
+    steps:
+      - name: manual_trigger
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myRepo
+        execution:
+          onExecute:
+            - *print-5-numbers
  
