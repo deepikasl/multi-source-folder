@@ -1,7 +1,32 @@
- GitRepo:
-  name: myRepo
+Pipeline:
+  name: foo
+
+GitRepo:
+  name: fooGitRepo
   gitProvider: deepikaGithub
-  path: deepikasl/jfrog-pipelines
+  path: deepikasl/jfrog_pipelines
   branches:
-    include: master
-   
+    exclude: 'master'
+    include: {{gitBranch}}
+
+artifactoryIntegration: art
+
+Image:
+  name: fooImage
+  sourceRepository: foo
+  autoPull: false
+
+DockerBuild:
+  name: foobuild
+  dockerImageName: foo
+  dockerFileName: foo
+  dockerFileLocation: '.'
+  dockerImageTag: ${run_number}
+
+DockerPush:
+  name: foopush
+  targetRepository: foo
+
+BuildInfo:
+  autoPublishBuildInfo: true
+  name: fooBuildInfo
