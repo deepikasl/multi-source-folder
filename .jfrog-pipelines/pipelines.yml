@@ -1,2 +1,2 @@
-template: jfrog/HelmPublishAndDeploy/1.0.0   # required for local templates   
-valuesFilePath: ./values.yml # required for local templates. DO NOT SPECIFY for system level templates
+template: jfrog/HelmPublishAndDeploy/1.0.0
+valuesFilePath: ./values.yml
