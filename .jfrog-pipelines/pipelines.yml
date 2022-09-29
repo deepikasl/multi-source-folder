@@ -33,6 +33,11 @@ pipelines:
           integrations:
             - name: deepikaGithub
         execution:
+          onStart:
+            - |
+              if [ "{{gitBranch}}" = "main" ]; then
+                echo "Branch is 'main'"
+              fi
           onExecute:
             - write_output propertyBag "foo=$run_number"
             
