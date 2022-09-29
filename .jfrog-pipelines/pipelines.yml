@@ -1,5 +1,5 @@
-template: true   # required for local templates   
-valuesFilePath: ./values.yml # required for local templates. DO NOT SPECIFY for system level templates
+template: true     
+valuesFilePath: ./values.yml
 
 resources:
   - name: myRepo
