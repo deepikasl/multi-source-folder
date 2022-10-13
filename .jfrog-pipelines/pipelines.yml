@@ -1,4 +1,5 @@
-template: jfrog/DockerBuildAndPush/1.0.0    
+include:
+  template: jfrog/DockerBuildAndPush/1.0.0    
 valuesFilePath: ./values.yml
 
 resources:
