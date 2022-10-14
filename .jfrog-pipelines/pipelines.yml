@@ -6,6 +6,14 @@ resources:
       gitProvider: deepikaGithub
       branches:
         include: master
+  
+  - name: tempRepo
+    type: GITRepo
+    configuration:
+      path: deepikasl/old-templates
+      gitProvider: deepikaGithub
+      branches:
+        include: master
 
   - name: myTemplate
     type: FileSpec
@@ -23,7 +31,14 @@ pipelines:
         configuration:
           inputResources:
             - name: myTemplate
+            - name: tempRepo
         execution:
           onExecute:
-            - echo "you are here"
+            - pushd $res_templateGit_resourcePath
+            - pushd templates/jfrog_name_space/myPipelineTemplate
+            - touch values.yml
+            - cp -vr $res_myTemplate_resourcePath/pipelines-template ./pipelines-template
+            - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
+            - cat output.yml
+            - popd
             
