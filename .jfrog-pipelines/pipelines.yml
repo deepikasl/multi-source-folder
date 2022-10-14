@@ -54,6 +54,6 @@ pipelines:
             - name: validate_template
         execution:
           onExecute:
-            - pushd $res_tempRepo_resourcePath/templates
+            - pushd $res_tempRepo_resourcePath
             - jfrog rt upload templates pipeline-artifacts/
             - popd
