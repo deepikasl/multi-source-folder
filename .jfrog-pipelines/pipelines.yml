@@ -38,6 +38,7 @@ pipelines:
             - pushd templates/jfrog_name_space/myPipelineTemplate
             - touch values.yml
             - cp -vr $res_myTemplate_resourcePath/pipelines-template ./pipelines-template
+            - chmod +x ./pipelines-template
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
             - cat output.yml
             - popd
