@@ -58,7 +58,7 @@ pipelines:
             - name: validate_template
         execution:
           onExecute:
-            - printenv
+#             - printenv
             - pushd $res_tempRepo_resourcePath
             - ls
             - jfrog rt upload $templateTarget/templateDefinition.yml pipeline-artifacts/$templateTarget/templateDefinition.yml --recursive=true
