@@ -25,6 +25,10 @@ resources:
       
 pipelines:
   - name: Demo_template
+    configuration:
+      environmentVariables:
+        readOnly:
+          templateTarget: "templates/jfrog_name_space/myPipelineTemplate"
     steps:
       - name: validate_template
         type: Bash
@@ -35,7 +39,7 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_tempRepo_resourcePath
-            - pushd templates/jfrog_name_space/myPipelineTemplate
+            - pushd $templateTarget
             - touch values.yml
             - cp -vr $res_myTemplate_resourcePath/pipelines-template ./pipelines-template
             - chmod +x ./pipelines-template
@@ -57,7 +61,8 @@ pipelines:
             - printenv
             - pushd $res_tempRepo_resourcePath
             - ls
-            - jfrog rt upload "templates/(*)/(*)/templateDefinition.yml" pipeline-artifacts/templates/{1}/{2}/templateDefinition.yml --recursive=true
-            - jfrog rt upload "templates/(*)/(*)/values.yml.example" pipeline-artifacts/templates/{1}/{2}/values.yml.example --recursive=true
-            - jfrog rt upload "templates/(*)/(*)/readme.md" pipeline-artifacts/templates/{1}/{2}/readme.md --recursive=true
+            - jfrog rt upload $templateTarget/templateDefinition.yml pipeline-artifacts/$templateTarget/templateDefinition.yml --recursive=true
+#             - jfrog rt upload "templates/(*)/(*)/templateDefinition.yml" pipeline-artifacts/templates/{1}/{2}/templateDefinition.yml --recursive=true
+#             - jfrog rt upload "templates/(*)/(*)/values.yml.example" pipeline-artifacts/templates/{1}/{2}/values.yml.example --recursive=true
+#             - jfrog rt upload "templates/(*)/(*)/readme.md" pipeline-artifacts/templates/{1}/{2}/readme.md --recursive=true
             - popd
