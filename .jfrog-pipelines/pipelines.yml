@@ -14,6 +14,8 @@ resources:
       gitProvider: deepikaGithub
       branches:
         include: master
+      files:
+        include: \btemplates\/jfrog_name_space\/myPipelineTemplate\/.+\b
 
   - name: myTemplate
     type: FileSpec
@@ -54,7 +56,9 @@ pipelines:
             - name: validate_template
         execution:
           onExecute:
+            - printenv
             - pushd $res_tempRepo_resourcePath
+            - ls
             - jfrog rt upload "templates/(*)/(*)/templateDefinition.yml" pipeline-artifacts/templates/{1}/{2}/templateDefinition.yml --recursive=true
             - jfrog rt upload "templates/(*)/(*)/values.yml.example" pipeline-artifacts/templates/{1}/{2}/values.yml.example --recursive=true
             - jfrog rt upload "templates/(*)/(*)/readme.md" pipeline-artifacts/templates/{1}/{2}/readme.md --recursive=true
