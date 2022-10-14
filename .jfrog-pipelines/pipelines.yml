@@ -55,6 +55,6 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_tempRepo_resourcePath
-            - jfrog rt upload "templates/(*)templateDefinition.yml" pipeline-artifacts/templates/{1}templateDefinition.yml --recursive=false
+            - jfrog rt upload "templates/(*)/(*)/templateDefinition.yml" pipeline-artifacts/templates/{1}/{2}/templateDefinition.yml --recursive=true
            # - jfrog rt upload templates/jfrog_name_space/myPipelineTemplate/templateDefinition.yml pipeline-artifacts/jfrog_name_space/myPipelineTemplate/templateDefinition.yml
             - popd
