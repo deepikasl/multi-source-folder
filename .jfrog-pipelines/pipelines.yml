@@ -22,7 +22,7 @@ resources:
       pattern: "deepika-artifacts/pipelines-template"
       recursive: false
       flat: true
-
+      
 pipelines:
   - name: Demo_template
     steps:
@@ -43,3 +43,15 @@ pipelines:
             - cat output.yml
             - popd
             
+      - name: upload_template
+        type: Bash
+        configuration:
+          inputResources:
+            - name: tempRepo
+          inputSteps:
+            - name: validate_template
+        execution:
+          onExecute:
+            - pushd $res_tempRepo_resourcePath/templates
+            - jfrog rt upload templates pipeline-artifacts/
+            - popd
