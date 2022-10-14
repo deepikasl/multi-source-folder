@@ -55,5 +55,6 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_tempRepo_resourcePath
-            - jfrog rt upload templates pipeline-artifacts/
+            - jfrog rt upload templates pipeline-artifacts/ --flat=false
+            - jfrog rt upload templates/jfrog_name_space/myPipelineTemplate/templateDefinition.yml pipeline-artifacts/jfrog_name_space/myPipelineTemplate/templateDefinition.yml
             - popd
