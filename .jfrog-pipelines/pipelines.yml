@@ -46,6 +46,8 @@ pipelines:
       - name: upload_template
         type: Bash
         configuration:
+          integrations:
+            - name: art
           inputResources:
             - name: tempRepo
           inputSteps:
