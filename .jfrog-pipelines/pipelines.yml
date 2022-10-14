@@ -58,11 +58,13 @@ pipelines:
             - name: validate_template
         execution:
           onExecute:
-#             - printenv
             - pushd $res_tempRepo_resourcePath
             - ls
             - jfrog rt upload $templateTarget/templateDefinition.yml pipeline-artifacts/$templateTarget/templateDefinition.yml --recursive=true
-            - jfrog rt upload $templateTarget/values.yml.example pipeline-artifacts/$templateTarget/values.yml.example --recursive=true
+            - |
+              if test -f "$templateTarget/values.yml.example"; then
+                jfrog rt upload $templateTarget/values.yml.example pipeline-artifacts/$templateTarget/values.yml.example --recursive=true
+              fi
             - |
               if test -f "$templateTarget/readme.md"; then
                 jfrog rt upload $templateTarget/readme.md pipeline-artifacts/$templateTarget/readme.md --recursive=true
