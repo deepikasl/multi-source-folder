@@ -30,7 +30,7 @@ pipelines:
         readOnly:
           templateTarget: "templates/jfrog_name_space/myPipelineTemplate"
     steps:
-      - name: validate_template
+      - name: validate_and_upload_template
         type: Bash
         configuration:
           inputResources:
