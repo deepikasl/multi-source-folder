@@ -11,7 +11,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: art
-      pattern: "pipelines_1663779252/pipelines-template"
+      pattern: "pipelines-artifacts/pipelines-template"
       recursive: false
       flat: true
 
