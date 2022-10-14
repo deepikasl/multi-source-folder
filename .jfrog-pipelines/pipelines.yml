@@ -14,8 +14,6 @@ resources:
       gitProvider: deepikaGithub
       branches:
         include: master
-      files:
-        include: \btemplates\/jfrog_name_space\/myPipelineTemplate\/.+\b
 
   - name: myTemplate
     type: FileSpec
