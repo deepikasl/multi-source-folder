@@ -34,7 +34,7 @@ pipelines:
             - name: tempRepo
         execution:
           onExecute:
-            - pushd $res_templateGit_resourcePath
+            - pushd $res_tempRepo_resourcePath
             - pushd templates/jfrog_name_space/myPipelineTemplate
             - touch values.yml
             - cp -vr $res_myTemplate_resourcePath/pipelines-template ./pipelines-template
