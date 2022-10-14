@@ -11,7 +11,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: art
-      pattern: "pipelines-artifacts/pipelines-template"
+      pattern: "deepika-artifacts/pipelines-template"
       recursive: false
       flat: true
 
