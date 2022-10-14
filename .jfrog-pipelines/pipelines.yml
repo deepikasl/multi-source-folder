@@ -62,6 +62,8 @@ pipelines:
             - pushd $res_tempRepo_resourcePath
             - ls
             - jfrog rt upload $templateTarget/templateDefinition.yml pipeline-artifacts/$templateTarget/templateDefinition.yml --recursive=true
+            - jfrog rt upload $templateTarget/values.yml.example pipeline-artifacts/$templateTarget/values.yml.example --recursive=true
+            - jfrog rt upload $templateTarget/readme.md pipeline-artifacts/$templateTarget/readme.md --recursive=true
 #             - jfrog rt upload "templates/(*)/(*)/templateDefinition.yml" pipeline-artifacts/templates/{1}/{2}/templateDefinition.yml --recursive=true
 #             - jfrog rt upload "templates/(*)/(*)/values.yml.example" pipeline-artifacts/templates/{1}/{2}/values.yml.example --recursive=true
 #             - jfrog rt upload "templates/(*)/(*)/readme.md" pipeline-artifacts/templates/{1}/{2}/readme.md --recursive=true
