@@ -29,6 +29,7 @@ pipelines:
       environmentVariables:
         readOnly:
           templateTarget: "templates/jfrog_name_space/myPipelineTemplate"
+          version: 0.0.1
     steps:
       - name: validate_and_upload_template
         type: Bash
