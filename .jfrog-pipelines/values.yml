@@ -1,6 +1,6 @@
 template_repository:
   name: my_temp_repo
-  path: deepikasl/old_templates
+  path: deepikasl/old-templates
   branch: master
   
 git_integration_name: deepikaGithub
