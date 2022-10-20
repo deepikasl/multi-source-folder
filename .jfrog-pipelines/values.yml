@@ -1,32 +1,12 @@
-Pipeline:
-  name: foo
+template_repository:
+  name: my_temp_repo
+  path: deepikasl/old_templates
+  branch: master
+  
+git_integration_name: deepikaGithub
 
-GitRepo:
-  name: fooGitRepo
-  gitProvider: deepikaGithub
-  path: deepikasl/jfrog_pipelines
-  branches:
-    exclude: 'master'
-    include: {{gitBranch}}
-
-artifactoryIntegration: art
-
-Image:
-  name: fooImage
-  sourceRepository: foo
-  autoPull: false
-
-DockerBuild:
-  name: foobuild
-  dockerImageName: foo
-  dockerFileName: foo
-  dockerFileLocation: '.'
-  dockerImageTag: ${run_number}
-
-DockerPush:
-  name: foopush
-  targetRepository: foo
-
-BuildInfo:
-  autoPublishBuildInfo: true
-  name: fooBuildInfo
+release_template:
+  pipelineName: Release_Template
+  stepName: validate_and_release_template
+  path: templates/jfrog_name_space/myPipelineTemplate
+  version: 0.0.1
