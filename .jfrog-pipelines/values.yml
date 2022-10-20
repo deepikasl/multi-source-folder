@@ -1,3 +1,7 @@
+sample_step_1:
+  name: sample_step_1
+  type: Bash
+
 artifactoryIntegration: art
 kubernetesIntegration: k8s
 
