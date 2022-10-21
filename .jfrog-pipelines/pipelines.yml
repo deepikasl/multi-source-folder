@@ -1,7 +1,7 @@
 valuesFilePath: ./values.yml
 
 resources:
-  - name: myRepo
+  - name: myRepo_template
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
@@ -9,7 +9,7 @@ resources:
       branches:
         include: master
 
-  - name: propertyBag
+  - name: propertyBag_template
     type: PropertyBag
     configuration:
       foo: bar
@@ -17,18 +17,18 @@ resources:
       foo2: bar2
 
 pipelines:
-  - name: demo_manual
+  - name: demo_manual_template
     configuration:
       integrations:
         - name: deepikaGithub
     steps:
-      - name: manual_trigger
+      - name: manual_trigger_template
         type: Bash
         configuration:
           inputResources:
-            - name: myRepo
+            - name: myRepo_template
           outputResources:
-            - name: propertyBag
+            - name: propertyBag_template
           integrations:
             - name: deepikaGithub
         execution:
