@@ -1,3 +1,50 @@
-include:
-  template: jfrog_name_space/ReleaseTemplate/1.0.0    
-valuesFilePath: ./values.yml
+resources:  
+  - name: {{ .Values.template_repository.name }}
+    type: GITRepo
+    configuration:
+      path: {{ .Values.template_repository.path }}
+      gitProvider: {{ .Values.git_integration_name }}
+      branches:
+        include: {{ .Values.template_repository.branch }}
+
+  - name: goTemplateBinary
+    type: FileSpec
+    configuration:
+      sourceArtifactory: art
+      pattern: "deepika-artifacts/pipelines-template"
+      recursive: false
+      flat: true
+      
+pipelines:
+  - name: {{ .Values.release_template.pipelineName }}
+    configuration:
+      environmentVariables:
+        readOnly:
+          templateTarget: {{ .Values.release_template.path }}
+          version: {{ .Values.release_template.version }}
+    steps:
+      - name: {{ .Values.release_template.stepName }}
+        type: Bash
+        configuration:
+          inputResources:
+            - name: goTemplateBinary
+            - name: {{ .Values.template_repository.name }}
+              trigger: false
+        execution:
+          onExecute:
+            - pushd $res_my_temp_repo_resourcePath
+            - pushd $templateTarget
+            - touch values.yml
+            - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
+            - chmod +x ./pipelines-template
+            - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
+            - jfrog rt upload ./templateDefinition.yml jfrogpipelines/$templateTarget/$version/templateDefinition.yml --recursive=true
+            - |
+              if test -f "./values.yml.example"; then
+                jfrog rt upload ./values.yml.example jfrogpipelines/$templateTarget/$version/values.yml.example --recursive=true
+              fi
+            - |
+              if test -f "./readme.md"; then
+                jfrog rt upload ./readme.md jfrogpipelines/$templateTarget/$version/readme.md --recursive=true
+              fi
+            - popd
