@@ -25,11 +25,12 @@ pipelines:
           onExecute:
               - providerUrl=$int_{{.Values.git_integration_name}}_url
               - repositoryUrl=$providerUrl/repos/$repoPath
-#               - normalizeRepoResult=$(curl --location --request GET 'https://api.github.com/repos/deepikasl/monoRepository' \
-# --header 'Accept: application/vnd.GithubProvider.v3' \
-# --header 'Authorization: token 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' \
-# --header 'Content-Type: application/json' \
-# --data-raw '')
+              - |
+                normalizeRepoResult=$(curl --location --request GET 'https://api.github.com/repos/deepikasl/monoRepository' \
+--header 'Accept: application/vnd.GithubProvider.v3' \
+--header 'Authorization: token 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' \
+--header 'Content-Type: application/json' \
+--data-raw '')
               - mkdir -p cloneRepo
               - pushd cloneRepo
               - git clone $normalizeRepoResult.clone_url
