@@ -37,6 +37,18 @@ pipelines:
               - pushd cloneRepo
               - git clone $normalizeRepoResult
               - pushd $repoName
-              - ls
+              - touch values.yml
+              - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
+              - chmod +x ./pipelines-template
+              - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
+              - jfrog rt upload ./templateDefinition.yml jfrogpipelines/$templateTarget/$version/templateDefinition.yml --recursive=true
+              - |
+                if test -f "./values.yml.example"; then
+                  jfrog rt upload ./values.yml.example jfrogpipelines/$templateTarget/$version/values.yml.example --recursive=true
+                fi
+              - |
+                if test -f "./readme.md"; then
+                  jfrog rt upload ./readme.md jfrogpipelines/$templateTarget/$version/readme.md --recursive=true
+                fi
               - popd
               
