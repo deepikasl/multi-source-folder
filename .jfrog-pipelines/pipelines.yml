@@ -38,11 +38,7 @@ pipelines:
           onExecute:
               - providerUrl=$int_{{.Values.git_integration_name}}_url
               - repositoryUrl=$providerUrl/repos/$repoPath
-              - normalizeRepoResult=$(curl --location --request GET $repositoryUrl \
-                --header 'Accept: application/vnd.GithubProvider.v3' \
-                --header 'Authorization: token $int_{{.Values.git_integration_name}}_token' \
-                --header 'Content-Type: application/json' \
-                --data-raw '')
+              - normalizeRepoResult=$(curl --location --request GET $repositoryUrl --header 'Accept: application/vnd.GithubProvider.v3' --header 'Authorization: token $int_{{.Values.git_integration_name}}_token' --header 'Content-Type: application/json' --data-raw '')
               - mkdir -p cloneRepo
               - pushd cloneRepo
               - git clone $normalizeRepoResult.clone_url
