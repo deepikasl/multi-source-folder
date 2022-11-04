@@ -30,10 +30,10 @@ pipelines:
                   --header 'Accept: application/vnd.GithubProvider.v3' \
                   --header 'Authorization: token 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' \
                   --header 'Content-Type: application/json' \
-                  --data-raw '')
+                  --data-raw ''| jq --raw-output '.clone_url')
               - mkdir -p cloneRepo
               - pushd cloneRepo
-              - git clone $normalizeRepoResult.clone_url
+              - git clone $normalizeRepoResult
               - pushd $repoName
               - ls
               - popd
