@@ -1,12 +1,4 @@
 resources:  
-  - name: {{ .Values.template_repository.name }}
-    type: GITRepo
-    configuration:
-      path: {{ .Values.template_repository.path }}
-      gitProvider: {{ .Values.git_integration_name }}
-      branches:
-        include: {{ .Values.template_repository.branch }}
-
   - name: goTemplateBinary
     type: FileSpec
     configuration:
@@ -22,14 +14,12 @@ pipelines:
         readOnly:
           templateTarget: {{ .Values.release_template.path }}
           version: {{ .Values.release_template.version }}
-          repoPath: ''
-          repoName: ''
+#           repoPath: ''
+#           repoName: ''
     steps:
       - name: {{ .Values.release_template.stepName }}
         type: Bash
         configuration:
-          inputResources:
-            - name: goTemplateBinary
           integrations:
             - name: {{ .Values.git_integration_name }}
         execution:
