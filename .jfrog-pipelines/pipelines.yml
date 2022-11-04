@@ -1,4 +1,4 @@
-template: true
+valuesFilePath: ./values.yml
 resources:  
   - name: goTemplateBinary
     type: FileSpec
