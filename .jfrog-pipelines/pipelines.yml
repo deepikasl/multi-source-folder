@@ -30,8 +30,6 @@ pipelines:
         configuration:
           inputResources:
             - name: goTemplateBinary
-            - name: {{ .Values.template_repository.name }}
-              trigger: false
           integrations:
             - name: {{ .Values.git_integration_name }}
         execution:
