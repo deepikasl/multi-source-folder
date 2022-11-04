@@ -38,9 +38,4 @@ pipelines:
           onExecute:
               - providerUrl=$int_{{.Values.git_integration_name}}_url
               - repositoryUrl=$providerUrl/repos/$repoPath
-              - mkdir -p cloneRepo
-              - pushd cloneRepo
-              - git clone $normalizeRepoResult.clone_url
-              - pushd $repoName
-              - ls
-              - popd
+              
