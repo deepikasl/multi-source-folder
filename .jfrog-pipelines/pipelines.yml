@@ -4,6 +4,7 @@ resources:
     configuration:
       path: deepikasl/jfrog_pipelines
       gitProvider: deepikaGithub
+      storeHistory: false
       branches:
         include: master
 
