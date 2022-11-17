@@ -11,6 +11,7 @@ resources:
   - name: propertyBag
     type: PropertyBag
     configuration:
+      storeHistory: true
       foo: bar
       foo1: bar1
       foo2: bar2
