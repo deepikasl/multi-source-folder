@@ -4,7 +4,7 @@ resources:
     configuration:
       path: deepikasl/jfrog_pipelines
       gitProvider: deepikaGithub
-      storeHistory: false
+      storeHistory: true
       branches:
         include: master
 
@@ -17,9 +17,6 @@ resources:
 
 pipelines:
   - name: demo_manual
-    configuration:
-      integrations:
-        - name: deepikaGithub
     steps:
       - name: manual_trigger
         type: Bash
@@ -33,4 +30,12 @@ pipelines:
         execution:
           onExecute:
             - write_output propertyBag "foo=$run_number"
+      - name: second_step
+        type: Bash
+        configuration:
+          inputResources:
+            - name: propertyBag
+        execution:
+          onExecute:
+            - echo "executing"
             
