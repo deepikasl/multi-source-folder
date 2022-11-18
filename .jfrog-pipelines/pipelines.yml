@@ -19,6 +19,9 @@ resources:
 pipelines:
   - name: demo_manual_template
     configuration:
+      environmentVariables:
+        readOnly:
+          GIT_INT: {{ .Values.GitRepo.gitProvider }}
       integrations:
         - name: deepikaGithub
     steps:
