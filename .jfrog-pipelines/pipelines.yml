@@ -1,86 +1,77 @@
-resources:
-  - name: myRepo
+resources:  
+  - name: templateRepository
     type: GITRepo
     configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
+      path: {{ .Values.templateRepository.path }}
+      gitProvider: {{ .Values.templateRepository.gitProvider }}
       branches:
-        include: master
-  
-  - name: tempRepo
-    type: GITRepo
-    configuration:
-      path: deepikasl/old-templates
-      gitProvider: deepikaGithub
-      branches:
-        include: master
+        include: {{ .Values.templateRepository.branch }}
 
-  - name: myTemplate
+  - name: goTemplateBinary
     type: FileSpec
     configuration:
-      sourceArtifactory: art
-      pattern: "deepika-artifacts/pipelines-template"
+      sourceArtifactory: {{ defaultArtifactory }}
+      pattern: "jfrogpipelines/tools/pipelines-template"
       recursive: false
       flat: true
-      
+
 pipelines:
-  - name: Demo_template
+  - name: {{ .Values.publishTemplate.pipelineName }}
     configuration:
       environmentVariables:
         readOnly:
-          templateTarget: "templates/jfrog_name_space/myPipelineTemplate"
-          version: 0.0.1
+          templateFolder:
+            default: {{ .Values.templateRepository.templateFolder }}
+            description: Please mention the exact template folder location, where your templateDefinition.yml file is present in the repository
+          templateNameSpace:
+            default: {{ .Values.publishTemplate.namespace }}
+            description: Please mention the namespace where you want your template to be uploaded to artifactory's {{ rootBucket }}
+          templateName:
+            default: {{ .Values.publishTemplate.name }}
+            description: Please mention the name of your template
+          version: 
+            default: {{ .Values.publishTemplate.version }}
+            description: Please enter semantic version
     steps:
-      - name: validate_and_upload_template
+      - name: validate_and_publish_template
         type: Bash
         configuration:
           inputResources:
-            - name: myTemplate
-            - name: tempRepo
+            - name: goTemplateBinary
+            - name: templateRepository
+              trigger: false
         execution:
           onExecute:
-            - pushd $res_tempRepo_resourcePath
-            - pushd $templateTarget
+            - versionRegex='^([0-9]+\.){0,2}(\*|[0-9]+)$'
+            - |
+              if [[ $version =~ $versionRegex ]]; then
+                echo "$version is valid"
+              else
+                echo "Please enter a valid semantic version"
+                exit 1
+              fi
+            - |
+              if [[ $templateNameSpace == 'jfrog' ]]; then
+                echo "namespace cannot be jfrog, please choose a different namespace"
+                exit 1
+              fi
+            - pushd $res_templateRepository_resourcePath
+            - pushd $templateFolder
+            - |
+              if [ ! test -f "./templateDefinition.yml" ]; then
+                echo "please provide valid template folder where your templateDefinition.yml is present in the repository"
+              fi
             - touch values.yml
-            - cp -vr $res_myTemplate_resourcePath/pipelines-template ./pipelines-template
+            - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
             - chmod +x ./pipelines-template
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
-            - cat output.yml
-            - jfrog rt upload ./templateDefinition.yml pipeline-artifacts/$templateTarget/templateDefinition.yml --recursive=true
+            - jfrog rt upload ./templateDefinition.yml jfrogpipelines/$templateTarget/$version/templateDefinition.yml --recursive=true
             - |
               if test -f "./values.yml.example"; then
-                jfrog rt upload ./values.yml.example pipeline-artifacts/$templateTarget/values.yml.example --recursive=true
+                jfrog rt upload ./values.yml.example jfrogpipelines/$templateTarget/$version/values.yml.example --recursive=true
               fi
             - |
               if test -f "./readme.md"; then
-                jfrog rt upload ./readme.md pipeline-artifacts/$templateTarget/readme.md --recursive=true
+                jfrog rt upload ./readme.md jfrogpipelines/$templateTarget/$version/readme.md --recursive=true
               fi
             - popd
-            
-#       - name: upload_template
-#         type: Bash
-#         configuration:
-#           integrations:
-#             - name: art
-#           inputResources:
-#             - name: tempRepo
-#           inputSteps:
-#             - name: validate_template
-#         execution:
-#           onExecute:
-#             - pushd $res_tempRepo_resourcePath
-#             - ls
-#             - jfrog rt upload $templateTarget/templateDefinition.yml pipeline-artifacts/$templateTarget/templateDefinition.yml --recursive=true
-#             - |
-#               if test -f "$templateTarget/values.yml.example"; then
-#                 jfrog rt upload $templateTarget/values.yml.example pipeline-artifacts/$templateTarget/values.yml.example --recursive=true
-#               fi
-#             - |
-#               if test -f "$templateTarget/readme.md"; then
-#                 jfrog rt upload $templateTarget/readme.md pipeline-artifacts/$templateTarget/readme.md --recursive=true
-#               fi
-# #             - jfrog rt upload $templateTarget/readme.md pipeline-artifacts/$templateTarget/readme.md --recursive=true
-# #             - jfrog rt upload "templates/(*)/(*)/templateDefinition.yml" pipeline-artifacts/templates/{1}/{2}/templateDefinition.yml --recursive=true
-# #             - jfrog rt upload "templates/(*)/(*)/values.yml.example" pipeline-artifacts/templates/{1}/{2}/values.yml.example --recursive=true
-# #             - jfrog rt upload "templates/(*)/(*)/readme.md" pipeline-artifacts/templates/{1}/{2}/readme.md --recursive=true
-#             - popd
