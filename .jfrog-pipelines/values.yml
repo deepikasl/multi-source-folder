@@ -4,7 +4,7 @@ templateRepository:
   # repository path where your templates are present
   path: deepikasl/old-templates
   # branch name where your templates are present in the repository
-  branch: main
+#   branch: main
   # template folder location, where your templateDefinition.yml file is present
   templateFolder: templates/jfrog_name_space/myPipelineTemplate
  
