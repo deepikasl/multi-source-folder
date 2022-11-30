@@ -5,9 +5,13 @@ resources:
     configuration:
       path: {{ .Values.templateRepository.path }}
       gitProvider: {{ .Values.templateRepository.gitProvider }}
-      branches:
-        include: {{ .Values.templateRepository.branch }}
-        exclude: {{ default "foo"  .Values.templateRepository.branch1 }}
+      {{ if .Values.templateRepository.branch }} 
+branches:
+        include: {{ .Values.templateRepository.branch}}
+{{ end }} 
+#       branches:
+#         include: {{ .Values.templateRepository.branch }}
+#         exclude: {{ default "foo"  .Values.templateRepository.branch1 }}
 
   - name: goTemplateBinary
     type: FileSpec
