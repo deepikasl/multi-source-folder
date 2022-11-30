@@ -17,3 +17,5 @@ publishTemplate:
   version: 0.0.1
   # name of the pipeline
   pipelineName: Publish_Template
+
+defaultArtifactroy: {{ defaultArtifactroy }}
