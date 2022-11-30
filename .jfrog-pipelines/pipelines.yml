@@ -68,13 +68,13 @@ pipelines:
             - ls -ll
             - uname -m 
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
-            - jfrog rt upload ./templateDefinition.yml jfrogpipelines/$templateNameSpace/$templateName/$version/templateDefinition.yml --recursive=true
+            - jfrog rt upload ./templateDefinition.yml jfrogpipelines/templates/$templateNameSpace/$templateName/$version/templateDefinition.yml --recursive=true
             - |
               if test -f "./values.yml.example"; then
-                jfrog rt upload ./values.yml.example jfrogpipelines/$templateNameSpace/$templateName/$version/values.yml.example --recursive=true
+                jfrog rt upload ./values.yml.example jfrogpipelines/templates/$templateNameSpace/$templateName/$version/values.yml.example --recursive=true
               fi
             - |
               if test -f "./readme.md"; then
-                jfrog rt upload ./readme.md jfrogpipelines/$templateNameSpace/$templateName/$version/readme.md --recursive=true
+                jfrog rt upload ./readme.md jfrogpipelines/templates/$templateNameSpace/$templateName/$version/readme.md --recursive=true
               fi
             - popd
