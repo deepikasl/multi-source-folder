@@ -10,7 +10,7 @@ resources:
   - name: goTemplateBinary
     type: FileSpec
     configuration:
-      sourceArtifactory: {{ defaultArtifactory }}
+      sourceArtifactory: int_default_artifactory
       pattern: "jfrogpipelines/tools/pipelines-template"
       recursive: false
       flat: true
