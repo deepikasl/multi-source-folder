@@ -66,6 +66,7 @@ pipelines:
             - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
             - chmod +x ./pipelines-template
             - ls -ll
+            - uname -m 
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
             - jfrog rt upload ./templateDefinition.yml jfrogpipelines/$templateNameSpace/$templateName/$version/templateDefinition.yml --recursive=true
             - |
