@@ -6,7 +6,7 @@ resources:
       path: {{ .Values.templateRepository.path }}
       gitProvider: {{ .Values.templateRepository.gitProvider }}
       branches:
-        include: {{ .Values.templateRepository.branch }} | "main"
+        include: {{ .Values.templateRepository.branch }}
         exclude: {{ .Values.templateRepository.branch1 }} | "dev"
 
   - name: goTemplateBinary
