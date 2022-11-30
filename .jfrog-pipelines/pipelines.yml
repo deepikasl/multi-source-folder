@@ -6,9 +6,9 @@ resources:
       path: {{ .Values.templateRepository.path }}
       gitProvider: {{ .Values.templateRepository.gitProvider }}
       {{ if .Values.templateRepository.branch }} 
-branches:
+      branches:
         include: {{ .Values.templateRepository.branch}}
-{{ end }} 
+      {{ end }} 
 #       branches:
 #         include: {{ .Values.templateRepository.branch }}
 #         exclude: {{ default "foo"  .Values.templateRepository.branch1 }}
