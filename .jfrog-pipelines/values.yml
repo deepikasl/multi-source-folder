@@ -12,7 +12,7 @@ publishTemplate:
   # Template namespace
   namespace: deepikaTemplate
   # Template name
-  template_name: myPipelineTemplate
+  name: myPipelineTemplate
   # Template version
   version: 0.0.1
   # name of the pipeline
