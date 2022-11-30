@@ -1,32 +1,19 @@
-Pipeline:
-  name: foo
-
-GitRepo:
-  name: fooGitRepo
+templateRepository:
+  # scm integration name
   gitProvider: deepikaGithub
-  path: deepikasl/jfrog_pipelines
-  branches:
-    exclude: 'master'
-    include: {{gitBranch}}
-
-artifactoryIntegration: art
-
-Image:
-  name: fooImage
-  sourceRepository: foo
-  autoPull: false
-
-DockerBuild:
-  name: foobuild
-  dockerImageName: foo
-  dockerFileName: foo
-  dockerFileLocation: '.'
-  dockerImageTag: ${run_number}
-
-DockerPush:
-  name: foopush
-  targetRepository: foo
-
-BuildInfo:
-  autoPublishBuildInfo: true
-  name: fooBuildInfo
+  # repository path where your templates are present
+  path: deepikasl/old-templates
+  # branch name where your templates are present in the repository
+  branch: main
+  # template folder location, where your templateDefinition.yml file is present
+  templateFolder: templates/jfrog_name_space/myPipelineTemplate
+ 
+publishTemplate:
+  # Template namespace
+  namespace: deepikaTemplate
+  # Template name
+  template_name: myPipelineTemplate
+  # Template version
+  version: 0.0.1
+  # name of the pipeline
+  pipelineName: Publish_Template
