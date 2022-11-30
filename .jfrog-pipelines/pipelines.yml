@@ -67,6 +67,7 @@ pipelines:
             - touch values.yml
             - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
             - chmod +x ./pipelines-template
+            - sed -i '' -e 's/\({{ defaultArtifactory }}\)/{{ .defaultArtifactory }}/g ; s/\({{ rootBucket }}\)/{{ .rootBucket }}/g ; s/\({{ sourceRepository }}\)/{{ .sourceRepository }}/g ; s/\({{ gitBranch }}\)/{{ .gitBranch }}/g' templateDefinition.yml
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
             - jfrog rt upload ./templateDefinition.yml jfrogpipelines/templates/$templateNameSpace/$templateName/$version/templateDefinition.yml --recursive=true
             - |
