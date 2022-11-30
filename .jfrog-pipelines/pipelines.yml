@@ -8,15 +8,12 @@ resources:
       {{ if .Values.templateRepository.branch1 }} 
       branches:
         include: {{ .Values.templateRepository.branch}}
-      {{ end }} 
-#       branches:
-#         include: {{ .Values.templateRepository.branch }}
-#         exclude: {{ default "foo"  .Values.templateRepository.branch1 }}
+      {{ end }}
 
   - name: goTemplateBinary
     type: FileSpec
     configuration:
-      sourceArtifactory: {{ .Values.defaultArtifactory }}
+      sourceArtifactory: int_default_artifactory
       pattern: "jfrogpipelines/tools/pipelines-template"
       recursive: false
       flat: true
