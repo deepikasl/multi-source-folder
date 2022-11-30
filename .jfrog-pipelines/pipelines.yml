@@ -6,7 +6,8 @@ resources:
       path: {{ .Values.templateRepository.path }}
       gitProvider: {{ .Values.templateRepository.gitProvider }}
       branches:
-        include: {{ .Values.templateRepository.branch }}
+        include: {{ .Values.templateRepository.branch || 'master' }}
+        exclude: {{ .Values.templateRepository.branch || 'dev' }}
 
   - name: goTemplateBinary
     type: FileSpec
@@ -17,7 +18,7 @@ resources:
       flat: true
 
 pipelines:
-  - name: {{ .Values.publishTemplate.pipelineName }}
+  - name: {{ .Values.publishTemplate.pipelineName || 'template' }}
     configuration:
       environmentVariables:
         readOnly:
