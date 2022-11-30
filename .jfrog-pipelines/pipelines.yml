@@ -1,3 +1,4 @@
+template: true
 resources:  
   - name: templateRepository
     type: GITRepo
