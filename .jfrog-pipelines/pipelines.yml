@@ -5,7 +5,7 @@ resources:
     configuration:
       path: {{ .Values.templateRepository.path }}
       gitProvider: {{ .Values.templateRepository.gitProvider }}
-      {{ if .Values.templateRepository.branch }} 
+      {{ if .Values.templateRepository.branch1 }} 
       branches:
         include: {{ .Values.templateRepository.branch}}
       {{ end }} 
