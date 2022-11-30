@@ -25,7 +25,7 @@ pipelines:
             description: Please mention the exact template folder location, where your templateDefinition.yml file is present in the repository
           templateNameSpace:
             default: {{ .Values.publishTemplate.namespace }}
-            description: Please mention the namespace where you want your template to be uploaded to artifactory's {{ rootBucket }}
+            description: Please mention the namespace where you want your template to be uploaded to artifactory's jfrogpipelines
           templateName:
             default: {{ .Values.publishTemplate.name }}
             description: Please mention the name of your template
