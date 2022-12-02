@@ -1,3 +1,5 @@
+include:
+  template: jfrog/invalidTemplateDocker/1.0.0
 valuesFilePath: ./values.yml
 resources:  
   - name: templateRepository
