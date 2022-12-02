@@ -18,4 +18,4 @@ publishTemplate:
   # name of the pipeline
   pipelineName: Publish_Template
 
-defaultArtifactory: "{{ defaultArtifactory }}"
+defaultArtifactory: "{{ gitBranch }}"
