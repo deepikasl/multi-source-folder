@@ -1,12 +1,19 @@
-template_repository:
-  name: my_temp_repo
+templateRepository:
+  # scm integration name
+  gitProvider: deepikaGithub
+  # repository path where your templates are present
   path: deepikasl/old-templates
+  # branch name where your templates are present in the repository
   branch: main
-  
-git_integration_name: deepikaGithub
-
-release_template:
-  pipelineName: Release_Template
-  stepName: validate_and_release_template
-  path: templates/jfrog_name_space/myPipelineTemplate
+  # template folder location, where your templateDefinition.yml file is present
+  templateFolder: templates/jfrog_name_space/myPipelineTemplate
+ 
+publishTemplate:
+  # Template namespace
+  namespace: deepikaTemplate
+  # Template name
+  name: myPipelineTemplate
+  # Template version
   version: 0.0.1
+  # name of the pipeline
+  pipelineName: Publish_Template
