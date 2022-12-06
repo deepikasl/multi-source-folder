@@ -13,8 +13,8 @@ resources:
   - name: goTemplateBinary
     type: FileSpec
     configuration:
-      sourceArtifactory: {{ .jfrog-pipelines.defaultArtifactory }}
-      pattern: "{{ .jfrog-pipelines.rootBucket }}/tools/pipelines-template"
+      sourceArtifactory: int_default_artifactory
+      pattern: "jfrogpipelines/tools/pipelines-template"
       recursive: false
       flat: true
 
@@ -28,7 +28,7 @@ pipelines:
             description: Please mention the exact template folder location, where your templateDefinition.yml file is present in the repository
           templateNamespace:
             default: {{ .Values.publishTemplate.namespace }}
-            description: Please mention the namespace where you want your template to be uploaded to artifactory's {{ .jfrog-pipelines.rootBucket }}
+            description: Please mention the namespace where you want your template to be uploaded to artifactory's jfrogpipelines
           templateName:
             default: {{ .Values.publishTemplate.name }}
             description: Please mention the name of your template
@@ -68,17 +68,17 @@ pipelines:
             - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
             - chmod +x ./pipelines-template
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml --ignore-special-variables gitBranch
-            - jfrog rt upload ./templateDefinition.yml {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/templateDefinition.yml --recursive=true
+            - jfrog rt upload ./templateDefinition.yml jfrogpipelines/templates/$templateNamespace/$templateName/$version/templateDefinition.yml --recursive=true
             - |
               if test -f "./values.yml.example"; then
-                jfrog rt upload ./values.yml.example {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/values.yml.example --recursive=true
+                jfrog rt upload ./values.yml.example jfrogpipelines/templates/$templateNamespace/$templateName/$version/values.yml.example --recursive=true
               fi
             - |
               if test -f "./readme.md"; then
-                jfrog rt upload ./readme.md {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/readme.md --recursive=true
+                jfrog rt upload ./readme.md jfrogpipelines/templates/$templateNamespace/$templateName/$version/readme.md --recursive=true
               fi
             - |
               if test -f "./README.md"; then
-                jfrog rt upload ./README.md {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/README.md --recursive=true
+                jfrog rt upload ./README.md jfrogpipelines/templates/$templateNamespace/$templateName/$version/README.md --recursive=true
               fi
             - popd
