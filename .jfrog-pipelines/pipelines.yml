@@ -43,6 +43,8 @@ pipelines:
           deployerReleaseRepo: libs-release-local
           mvnCommand: clean install -ntp
           sourceLocation: backend
+          inputResources:
+            - name: myRepo
           inputSteps:
             - name: second_step
           integrations:
