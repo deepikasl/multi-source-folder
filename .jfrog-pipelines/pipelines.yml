@@ -13,10 +13,18 @@ resources:
   - name: goTemplateBinary
     type: FileSpec
     configuration:
-      sourceArtifactory: deepikaArt
-      pattern: "jfrogpipelines/tools/pipelines-template"
+      sourceArtifactory: {{ .Values.publishTemplate.artifactoryIntegration }}
+      pattern: "{{ .jfrog-pipelines.rootBucket }}/tools/pipelines-template"
       recursive: false
       flat: true
+
+  - name: templateUploadStatus
+    type: PropertyBag
+    configuration:
+      status: "not-built"
+      templateNameSpace: {{ .Values.publishTemplate.namespace }}
+      templateName: {{ .Values.publishTemplate.name }}
+      templateVersion: {{ .Values.publishTemplate.version }}
 
 pipelines:
   - name: {{ default "PublishTemplate"  .Values.publishTemplate.pipelineName }}
@@ -28,7 +36,7 @@ pipelines:
             description: Please mention the exact template folder location, where your templateDefinition.yml file is present in the repository
           templateNamespace:
             default: {{ .Values.publishTemplate.namespace }}
-            description: Please mention the namespace where you want your template to be uploaded to artifactory's jfrogpipelines
+            description: Please mention the namespace where you want your template to be uploaded to artifactory's {{ .jfrog-pipelines.rootBucket }}
           templateName:
             default: {{ .Values.publishTemplate.name }}
             description: Please mention the name of your template
@@ -43,6 +51,8 @@ pipelines:
             - name: goTemplateBinary
             - name: templateRepository
               trigger: false
+          outputResources:
+            - name: templateUploadStatus
         execution:
           onExecute:
             - versionRegex='^([0-9]+\.){0,2}(\*|[0-9]+)$'
@@ -68,17 +78,25 @@ pipelines:
             - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
             - chmod +x ./pipelines-template
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml --ignore-special-variables gitBranch
-            - jfrog rt upload ./templateDefinition.yml jfrogpipelines/templates/$templateNamespace/$templateName/$version/templateDefinition.yml --recursive=true
+            - jfrog rt upload ./templateDefinition.yml {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/templateDefinition.yml --recursive=true
             - |
               if test -f "./values.yml.example"; then
-                jfrog rt upload ./values.yml.example jfrogpipelines/templates/$templateNamespace/$templateName/$version/values.yml.example --recursive=true
+                jfrog rt upload ./values.yml.example {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/values.yml.example --recursive=true
               fi
             - |
               if test -f "./readme.md"; then
-                jfrog rt upload ./readme.md jfrogpipelines/templates/$templateNamespace/$templateName/$version/readme.md --recursive=true
+                jfrog rt upload ./readme.md {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/readme.md --recursive=true
               fi
             - |
               if test -f "./README.md"; then
-                jfrog rt upload ./README.md jfrogpipelines/templates/$templateNamespace/$templateName/$version/README.md --recursive=true
+                jfrog rt upload ./README.md {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/README.md --recursive=true
               fi
             - popd
+          onComplete:
+            - write_output templateUploadStatus "templateNamespace=${templateNamespace}"
+            - write_output templateUploadStatus "templateName=${templateName}"
+            - write_output templateUploadStatus "templateVersion=${version}"
+          onSuccess:
+            - write_output templateUploadStatus "status=success"
+          onFailure:
+            - write_output templateUploadStatus "status=failure"
