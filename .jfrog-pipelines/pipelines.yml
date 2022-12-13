@@ -1,6 +1,6 @@
 valuesFilePath: ./values.yml
 resources:  
-  - name: templateRepository
+  - name: templateRepository_1
     type: GitRepo
     configuration:
       path: {{ .Values.templateRepository.path }}
@@ -10,7 +10,7 @@ resources:
         include: {{ .Values.templateRepository.branch}}
       {{ end }}
 
-  - name: goTemplateBinary
+  - name: goTemplateBinary_1
     type: FileSpec
     configuration:
       sourceArtifactory: {{ .Values.publishTemplate.artifactoryIntegration }}
@@ -48,8 +48,8 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: goTemplateBinary
-            - name: templateRepository
+            - name: goTemplateBinary_1
+            - name: templateRepository_1
               trigger: false
           outputResources:
             - name: templateUploadStatus
@@ -68,14 +68,14 @@ pipelines:
                 echo "namespace cannot be jfrog, please choose a different namespace"
                 exit 1
               fi
-            - pushd $res_templateRepository_resourcePath
+            - pushd $res_templateRepository_1_resourcePath
             - pushd $templateFolder
             - |
               if [ ! test -f "./templateDefinition.yml" ]; then
                 echo "please provide valid template folder where your templateDefinition.yml is present in the repository"
               fi
             - touch values.yml
-            - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
+            - cp -vr $res_goTemplateBinary_1_resourcePath/pipelines-template ./pipelines-template
             - chmod +x ./pipelines-template
             - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml --ignore-special-variables gitBranch
             - jfrog rt upload ./templateDefinition.yml {{ .jfrog-pipelines.rootBucket }}/templates/$templateNamespace/$templateName/$version/templateDefinition.yml --recursive=true
