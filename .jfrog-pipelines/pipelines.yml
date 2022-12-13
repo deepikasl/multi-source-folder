@@ -4,7 +4,7 @@ resources:
     configuration:
       registry: deepikaArt
       sourceRepository: deepika-virtual
-      imageName: selenium/standalone-chrome
+      imageName: docker.io/selenium/standalone-chrome
       imageTag: '86.0'
       autoPull: true
 pipelines:
