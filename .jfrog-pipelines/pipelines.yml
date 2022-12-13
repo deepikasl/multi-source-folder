@@ -28,7 +28,7 @@ pipelines:
       - name: manual_trigger
         type: Bash
         configuration:
-          condition: 'myCurrentBranch == "conditional"'
+          condition: '{{gitBranch}} == "conditional"'
           inputResources:
             - name: myRepo
           outputResources:
