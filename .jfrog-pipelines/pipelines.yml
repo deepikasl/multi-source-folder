@@ -20,9 +20,15 @@ pipelines:
       integrations:
         - name: deepikaGithub
     steps:
+      - name: test_step
+        type: Bash          
+        execution:
+          onExecute:
+            - add_run_variables 'myCurrentBranch={{gitBranch}}'
       - name: manual_trigger
         type: Bash
         configuration:
+          condition: 'myCurrentBranch == conditional'
           inputResources:
             - name: myRepo
           outputResources:
