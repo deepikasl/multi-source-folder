@@ -1,4 +1,4 @@
-templates: true
+template: true
 valuesFilePath: ./values.yml
 
 resources:
