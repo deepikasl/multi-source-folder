@@ -3,7 +3,7 @@ resources:
     type: Image
     configuration:
       registry: deepikaArt
-      sourceRepository: deepika-virtual
+      sourceRepository: deepika-docker-2
       imageName: docker.io/selenium/standalone-chrome
       imageTag: '86.0'
       autoPull: true
