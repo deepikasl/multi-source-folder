@@ -20,23 +20,25 @@ pipelines:
       integrations:
         - name: deepikaGithub
     steps:
-      - name: test_step
+      - name: first_step
         type: Bash          
         execution:
           onExecute:
-            - add_run_variables 'myCurrentBranch={{gitBranch}}'
-      - name: manual_trigger
-        type: Bash
+            - echo "first_step"
+      - name: second_step
+        type: Bash   
         configuration:
-          condition: '{{gitBranch}} == conditional'
-          inputResources:
-            - name: myRepo
-          outputResources:
-            - name: propertyBag
-          integrations:
-            - name: deepikaGithub
           inputSteps:
-            - name: test_step
+            - name: first_step
+        execution:
+          onExecute:
+            - echo "first_step"
+      - name: third_step
+        type: MvnBuild
+        configuration:
+          condition: '{{gitBranch}} == master'
+          inputSteps:
+            - name: second_step
         execution:
           onExecute:
             - write_output propertyBag "foo=$run_number"
