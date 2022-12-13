@@ -46,7 +46,7 @@ pipelines:
           inputSteps:
             - name: second_step
           integrations:
-            - name: art
+            - name: deepikaArt
           runtime:
             type: image
             image:
