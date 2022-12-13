@@ -35,6 +35,8 @@ pipelines:
             - name: propertyBag
           integrations:
             - name: deepikaGithub
+          inputSteps:
+            - name: test_step
         execution:
           onExecute:
             - write_output propertyBag "foo=$run_number"
