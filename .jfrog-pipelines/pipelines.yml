@@ -17,5 +17,5 @@ pipelines:
             - name: my_resource
         execution:
           onExecute:
-            - echo "executing"
+            - echo "executingg"
             
