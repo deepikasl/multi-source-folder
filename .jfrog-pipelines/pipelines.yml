@@ -2,7 +2,7 @@ resources:
   - name: r_9623_propertyBag_store
     type: PropertyBag
     configuration:
-      storeVersionHistory: true
+      storeVersionHistory: false
       myEnv: 2
 
   - name: r_9623_propertyBag_no_store
