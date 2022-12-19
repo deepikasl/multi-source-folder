@@ -1,41 +1,26 @@
 resources:
-  - name: myRepo
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-
-  - name: propertyBag
+  - name: r_9623_propertyBag_store
     type: PropertyBag
     configuration:
-      storeHistory: true
-      foo: bar
-      foo1: bar1
-      foo2: bar2
+      storeVersionHistory: true
+      myEnv: 1
+
+  - name: r_9623_propertyBag_no_store
+    type: PropertyBag
+    configuration:
+      storeVersionHistory: false
+      myEnv: 1
 
 pipelines:
-  - name: demo_manual
+  - name: pipeline_9623
     steps:
-      - name: manual_trigger
+      - name: step_9623_1
         type: Bash
         configuration:
-          inputResources:
-            - name: myRepo
           outputResources:
-            - name: propertyBag
-          integrations:
-            - name: deepikaGithub
+            - name: r_9623_propertyBag_store
+            - name: r_9623_propertyBag_no_store
         execution:
           onExecute:
-            - write_output propertyBag "foo=$run_number"
-      - name: second_step
-        type: Bash
-        configuration:
-          inputResources:
-            - name: propertyBag
-        execution:
-          onExecute:
-            - echo "executing"
-            
+            - write_output r_9623_propertyBag_store "myEnv=$run_number"
+            - write_output r_9623_propertyBag_no_store "myEnv=$run_number"
