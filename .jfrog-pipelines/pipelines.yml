@@ -1,35 +1,58 @@
 resources:
-  - name: myRepo
-    type: GITRepo
+  - name: myFileSpecRes
+    type: FileSpec
     configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
+      sourceArtifactory: myArtifactory
+      pattern: "folder1/folder2/example-*.tar.gz"
+      recursive: false
+      flat: true
+      
+  - name: myRepo
+    type: GitRepo
+    configuration:
+      path: deepikasl/vt1
+      gitProvider: myGithub
       branches:
-        include: master
-
-  - name: propertyBag
+        include: ^{{gitBranch}}$
+        
+  - name: environmentVariableBag
     type: PropertyBag
     configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
+      tarVersion: ""
+      serverName: ""
 
 pipelines:
-  - name: demo_manual
-    configuration:
-      integrations:
-        - name: deepikaGithub
+  - name: producing_pipeline
     steps:
-      - name: manual_trigger
+      - name: first_step
         type: Bash
         configuration:
           inputResources:
             - name: myRepo
           outputResources:
-            - name: propertyBag
-          integrations:
-            - name: deepikaGithub
+            - name: myFileSpecRes
+            - name: environmentVariableBag
         execution:
           onExecute:
-            - write_output propertyBag "foo=$run_number"
+            - pushd $res_templateGit_resourcePath
+            - echo "some logic to produce tarball"
+            - TAR_FILENAME="example-{{gitBranch}}.tar.gz"
+            - ./tar/build.sh $TAR_FILENAME
+            - jfrog rt upload bin/$TAR_FILENAME folder1/folder2/$TAR_FILENAME #uploading to artifactory
+            - write_output environmentSetupBag "tarVersion=${run_number}" # this will update the propertyBag resource
+            - write_output environmentSetupBag "serverName=someName"
+
+  - name: consuming_pipeline
+    steps:
+      - name: second_step
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myFileSpecRes
+            - name: environmentVariableBag
+        execution:
+          onExecute:
+            - mkdir -p bin
+            - cp -vr $res_myFileSpecRes_resourcePath/folder1/folder2/example-{{gitBranch}}.tar.gz ./bin/example.tar.gz
+            - echo "some logic to deploy"
             
