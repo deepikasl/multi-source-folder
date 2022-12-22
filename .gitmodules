@@ -1,0 +1,3 @@
+[submodule "myFirstSubModule"]
+	path = myFirstSubModule
+	url = ./myFirstSubModule/
