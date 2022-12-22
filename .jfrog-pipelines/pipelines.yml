@@ -48,5 +48,8 @@ pipelines:
             - name: manual_trigger
         execution:
           onExecute:
-            - write_output propertyBag "foo=$run_number"
+            - pushd $res_submodule_resourcePath
+            - ls
+            - pushd myFirstSubModule
+            - ls
             
