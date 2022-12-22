@@ -13,6 +13,14 @@ resources:
       gitProvider: deepikaGithub
       branches:
         include: submodule
+  - name: submodule_https
+    type: GITRepo
+    configuration:
+      path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
+      cloneProtocol: https
+      branches:
+        include: submodule
 
   - name: propertyBag
     type: PropertyBag
@@ -44,6 +52,19 @@ pipelines:
         configuration:
           inputResources:
             - name: submodule
+          inputSteps:
+            - name: manual_trigger
+        execution:
+          onExecute:
+            - pushd $res_submodule_resourcePath
+            - ls
+            - pushd myFirstSubModule
+            - ls
+      - name: submodule_test_https
+        type: Bash
+        configuration:
+          inputResources:
+            - name: submodule_https
           inputSteps:
             - name: manual_trigger
         execution:
