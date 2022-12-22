@@ -69,7 +69,7 @@ pipelines:
             - name: manual_trigger
         execution:
           onExecute:
-            - pushd $res_submodule_resourcePath
+            - pushd $res_submodule_https_resourcePath
             - ls
             - pushd myFirstSubModule
             - ls
