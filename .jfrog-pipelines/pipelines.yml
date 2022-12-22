@@ -1,36 +1,16 @@
 resources:
-  - name: myRepo
-    type: GITRepo
+  - name: myArtifact
+    type: Artifact
     configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-  - name: submodule
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: submodule
-  - name: submodule_https
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      cloneProtocol: https
-      branches:
-        include: submodule
-
-  - name: propertyBag
-    type: PropertyBag
-    configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
+      sourceArtifactory: art
+      repositories:
+        include: jfrog*
+      buildOn:
+        deployed: true
+        cached: true
 
 pipelines:
-  - name: demo_manual_main
+  - name: my_pipe
     configuration:
       integrations:
         - name: deepikaGithub
@@ -39,38 +19,8 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: myRepo
-          outputResources:
-            - name: propertyBag
-          integrations:
-            - name: deepikaGithub
+            - name: myArtifact
         execution:
           onExecute:
-            - write_output propertyBag "foo=$run_number"
-      - name: submodule_test
-        type: Bash
-        configuration:
-          inputResources:
-            - name: submodule
-          inputSteps:
-            - name: manual_trigger
-        execution:
-          onExecute:
-            - pushd $res_submodule_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-      - name: submodule_test_https
-        type: Bash
-        configuration:
-          inputResources:
-            - name: submodule_https
-          inputSteps:
-            - name: manual_trigger
-        execution:
-          onExecute:
-            - pushd $res_submodule_https_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
+            - echo "u r here"
             
