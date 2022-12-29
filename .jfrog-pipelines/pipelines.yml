@@ -45,6 +45,7 @@ pipelines:
           inputResources:
             - name: myRepo
             - name: dvuCronTrigger
+              branch: master
           outputResources:
             - name: propertyBag
           integrations:
