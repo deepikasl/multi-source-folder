@@ -4,10 +4,11 @@ resources:
     configuration:
       sourceArtifactory: art
       repositories:
-        include: jfrog*
+        include: **
       buildOn:
         deployed: true
         cached: true
+        deleted: true
 
 pipelines:
   - name: my_pipe
