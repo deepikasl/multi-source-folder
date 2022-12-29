@@ -4,7 +4,7 @@ resources:
     configuration:
       sourceArtifactory: art
       repositories:
-        include: **
+        include: jfrog*
       buildOn:
         deployed: true
         cached: true
