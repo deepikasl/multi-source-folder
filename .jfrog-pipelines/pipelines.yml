@@ -1,27 +1,74 @@
 resources:
-  - name: myArtifact
+  - name: artifact_2
     type: Artifact
     configuration:
-      sourceArtifactory: art
+      jfrogPlatformProvider: deepikaArt
       repositories:
-        include: jfrog*
+        - jfrogpipelines
+        - example-repo-local
+      artifactPath:
+        include:
+          - tools/*
+        exclude:
+          - tools/exclude/*
       buildOn:
         deployed: true
         cached: true
         deleted: true
+  - name: artifact_1
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: deepikaArt
+      repositories:
+        - jfrogpipelines
+        - example-repo-local
+      artifactPath:
+        include:
+          - default/*
+          - tools/*
+      buildOn:
+        deployed: true
+  - name: artifact_3
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: deepikaArt
+      repositories:
+        - jfrogpipelines
+      artifactPath:
+        include:
+          - tools/*
+      buildOn:
+        deployed: true
 
 pipelines:
-  - name: my_pipe
-    configuration:
-      integrations:
-        - name: deepikaGithub
+  - name: my_pipe_1
     steps:
-      - name: manual_trigger
+      - name: step_1
         type: Bash
         configuration:
           inputResources:
-            - name: myArtifact
+            - name: artifact_1
         execution:
           onExecute:
-            - echo "u r here"
+            - echo "executing step_1"
+  - name: my_pipe_2
+    steps:
+      - name: step_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: artifact_2
+        execution:
+          onExecute:
+            - echo "executing step_1"
+  - name: my_pipe_3
+    steps:
+      - name: step_1
+        type: Bash
+        configuration:
+          inputResources:
+            - name: artifact_3
+        execution:
+          onExecute:
+            - echo "executing step_1"
             
