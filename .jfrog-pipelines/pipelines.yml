@@ -2,7 +2,7 @@ resources:
   - name: myFileSpec
     type: FileSpec
     configuration:
-      sourceArtifactory: readArt
+      sourceArtifactory: deepikaReadArt
       pattern: "jfrogpipelines/pipelines-template"
       recursive: false
       flat: true
