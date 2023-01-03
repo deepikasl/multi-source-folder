@@ -28,10 +28,6 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
-  - name: dvuCronTrigger
-    type: CronTrigger
-    configuration:
-      interval: '0 2 * * *'
 
 pipelines:
   - name: demo_manual_main
@@ -44,8 +40,6 @@ pipelines:
         configuration:
           inputResources:
             - name: myRepo
-            - name: dvuCronTrigger
-              branch: master
           outputResources:
             - name: propertyBag
           integrations:
