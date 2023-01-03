@@ -1,54 +1,22 @@
-valuesFilePath: ./values.yml
 resources:  
-  - name: goTemplateBinary
+  - name: myFileSpec
     type: FileSpec
     configuration:
-      sourceArtifactory: art
-      pattern: "deepika-artifacts/pipelines-template"
+      sourceArtifactory: readArt
+      pattern: "jfrogpipelines/pipelines-template"
       recursive: false
       flat: true
 
 pipelines:
-  - name: {{ .Values.release_template.pipelineName }}
+  - name: deepika_filespec_test
     configuration:
-      environmentVariables:
-        readOnly:
-          templateTarget: {{ .Values.release_template.path }}
-          version: {{ .Values.release_template.version }}
-          repoPath: ''
-          repoName: ''
     steps:
-      - name: {{ .Values.release_template.stepName }}
+      - name: filespec_test
         type: Bash
         configuration:
-          integrations:
-            - name: {{ .Values.git_integration_name }}
+          inputResources:
+            - name: myFileSpec
         execution:
           onExecute:
-              - providerUrl=$int_{{.Values.git_integration_name}}_url
-              - repositoryUrl=$providerUrl/repos/$repoPath
-              - |
-                normalizeRepoResult=$(curl --location --request GET 'https://api.github.com/repos/deepikasl/monoRepository' \
-                  --header 'Accept: application/vnd.GithubProvider.v3' \
-                  --header 'Authorization: token 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' \
-                  --header 'Content-Type: application/json' \
-                  --data-raw ''| jq --raw-output '.clone_url')
-              - mkdir -p cloneRepo
-              - pushd cloneRepo
-              - git clone $normalizeRepoResult
-              - pushd $repoName
-              - touch values.yml
-              - cp -vr $res_goTemplateBinary_resourcePath/pipelines-template ./pipelines-template
-              - chmod +x ./pipelines-template
-              - ./pipelines-template apply --values-file ./values.yml --template-file ./templateDefinition.yml --output-file output.yml
-              - jfrog rt upload ./templateDefinition.yml jfrogpipelines/$templateTarget/$version/templateDefinition.yml --recursive=true
-              - |
-                if test -f "./values.yml.example"; then
-                  jfrog rt upload ./values.yml.example jfrogpipelines/$templateTarget/$version/values.yml.example --recursive=true
-                fi
-              - |
-                if test -f "./readme.md"; then
-                  jfrog rt upload ./readme.md jfrogpipelines/$templateTarget/$version/readme.md --recursive=true
-                fi
-              - popd
+              - echo "hi"
               
