@@ -9,7 +9,6 @@ resources:
 
 pipelines:
   - name: deepika_filespec_test
-    configuration:
     steps:
       - name: filespec_test
         type: Bash
