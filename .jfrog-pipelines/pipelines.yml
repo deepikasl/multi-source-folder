@@ -3,7 +3,7 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: deepikaReadArt
-      pattern: "jfrogpipelines/pipelines-template"
+      pattern: "jfrogpipelines/templates/jfrog_name_space/ReleaseTemplate/1.0.0/templateDefinition.yml"
       recursive: false
       flat: true
 
