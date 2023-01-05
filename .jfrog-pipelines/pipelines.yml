@@ -30,7 +30,7 @@ pipelines:
           inputResources:
             - name: S_DockerPush_5933_003_GitRepo
           integrations:
-            - name: s_artifactory
+            - name: art
       - name: S_DockerPush_5933_003_2
         type: DockerPush
         configuration:
@@ -40,4 +40,4 @@ pipelines:
           inputSteps:
             - name: S_DockerPush_5933_003_1
           integrations:
-            - name: s_artifactory
+            - name: art
