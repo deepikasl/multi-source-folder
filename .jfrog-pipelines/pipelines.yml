@@ -1,58 +1,43 @@
+template: true
+valuesFilePath: ../values.yml
+
 resources:
-  - name: myFileSpecRes
-    type: FileSpec
-    configuration:
-      sourceArtifactory: myArtifactory
-      pattern: "folder1/folder2/example-*.tar.gz"
-      recursive: false
-      flat: true
-      
-  - name: myRepo
+  - name: S_DockerPush_5933_003_GitRepo
     type: GitRepo
     configuration:
-      path: deepikasl/vt1
-      gitProvider: myGithub
+      gitProvider: deepikaGithub
+      path: deepikasl/Org_test_Automation_bash
       branches:
-        include: ^{{gitBranch}}$
-        
-  - name: environmentVariableBag
-    type: PropertyBag
+        include: {{gitBranch}}
+
+  - name: S_DockerPush_5933_003_BuildInfo
+    type: BuildInfo
     configuration:
-      tarVersion: ""
-      serverName: ""
+      sourceArtifactory: art
 
 pipelines:
-  - name: producing_pipeline
+  - name: pipeline_S_DockerPush_5933_003
+    configuration:
+      outputResources:
+        - name: S_DockerPush_5933_003_BuildInfo
     steps:
-      - name: first_step
-        type: Bash
+      - name: S_DockerPush_5933_003_1
+        type: DockerBuild
         configuration:
+          affinityGroup: S_DockerPush_5933_003
+          dockerImageName: ${artifactory_registry_url}/test-automation-docker-local/s_dockerpush_5933
+          dockerImageTag: ${run_id}
           inputResources:
-            - name: myRepo
-          outputResources:
-            - name: myFileSpecRes
-            - name: environmentVariableBag
-        execution:
-          onExecute:
-            - pushd $res_templateGit_resourcePath
-            - echo "some logic to produce tarball"
-            - TAR_FILENAME="example-{{gitBranch}}.tar.gz"
-            - ./tar/build.sh $TAR_FILENAME
-            - jfrog rt upload bin/$TAR_FILENAME folder1/folder2/$TAR_FILENAME #uploading to artifactory
-            - write_output environmentSetupBag "tarVersion=${run_number}" # this will update the propertyBag resource
-            - write_output environmentSetupBag "serverName=someName"
-
-  - name: consuming_pipeline
-    steps:
-      - name: second_step
-        type: Bash
+            - name: S_DockerPush_5933_003_GitRepo
+          integrations:
+            - name: s_artifactory
+      - name: S_DockerPush_5933_003_2
+        type: DockerPush
         configuration:
-          inputResources:
-            - name: myFileSpecRes
-            - name: environmentVariableBag
-        execution:
-          onExecute:
-            - mkdir -p bin
-            - cp -vr $res_myFileSpecRes_resourcePath/folder1/folder2/example-{{gitBranch}}.tar.gz ./bin/example.tar.gz
-            - echo "some logic to deploy"
-            
+          affinityGroup: S_DockerPush_5933_003
+          targetRepository: test-automation-docker-local
+          autoPublishBuildInfo: true
+          inputSteps:
+            - name: S_DockerPush_5933_003_1
+          integrations:
+            - name: s_artifactory
