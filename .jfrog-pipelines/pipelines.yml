@@ -1,43 +1,17 @@
-# template: true
-# valuesFilePath: ./values.yml
-
 resources:
-  - name: S_DockerPush_5933_003_GitRepo
-    type: GitRepo
-    configuration:
-      gitProvider: deepikaGithub
-      path: deepikasl/Org_test_Automation_bash
-      branches:
-        include: {{gitBranch}}
-
-  - name: S_DockerPush_5933_003_BuildInfo
+  - name: S_XrayScan_0001_BuildInfo
     type: BuildInfo
     configuration:
       sourceArtifactory: art
+      buildName: 'name'
+      buildNumber: '1'
 
 pipelines:
-  - name: pipeline_S_DockerPush_5933_003
-    configuration:
-      outputResources:
-        - name: S_DockerPush_5933_003_BuildInfo
+  - name: pipeline_S_XrayScan_0001
     steps:
-      - name: S_DockerPush_5933_003_1
-        type: DockerBuild
+      - name: S_XrayScan_0001
+        type: XrayScan
         configuration:
-          affinityGroup: S_DockerPush_5933_003
-          dockerImageName: ${artifactory_registry_url}/test-automation-docker-local/s_dockerpush_5933
-          dockerImageTag: ${run_id}
           inputResources:
-            - name: S_DockerPush_5933_003_GitRepo
-          integrations:
-            - name: s_artifactory
-      - name: S_DockerPush_5933_003_2
-        type: DockerPush
-        configuration:
-          affinityGroup: S_DockerPush_5933_003
-          targetRepository: test-automation-docker-local
-          autoPublishBuildInfo: true
-          inputSteps:
-            - name: S_DockerPush_5933_003_1
-          integrations:
-            - name: s_artifactory
+            - name: S_XrayScan_0001_BuildInfo
+              newVersionOnly: true
