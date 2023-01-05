@@ -1,5 +1,5 @@
-template: true
-valuesFilePath: ./values.yml
+# template: true
+# valuesFilePath: ./values.yml
 
 resources:
   - name: S_DockerPush_5933_003_GitRepo
