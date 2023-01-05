@@ -1,76 +1,35 @@
 resources:
-  - name: artifact_2
-    type: Artifact
+  - name: S_SYC_HBGCleanUp_5933_001_resource
+    type: HelmChart
     configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - jfrogpipelines
-        - example-repo-local
-      artifactPath:
-        include:
-          - tools/*
-        exclude:
-          - tools/exclude/*
-      buildOn:
-        deployed: true
-        cached: true
-        deleted: true
-  - name: artifact_1
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - jfrogpipelines
-        - example-repo-local
-      artifactPath:
-        include:
-          - default/*
-          - tools/*
-      buildOn:
-        deployed: true
-  - name: artifact_3
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - jfrogpipelines
-      artifactPath:
-        include:
-          - tools/*
-      buildOn:
-        deployed: true
+      sourceArtifactory: art
+      repository: helm
+      chart: app
+      version: 0.0.1
 
 pipelines:
-  - name: my_pipe_1
+  - name: S_SYC_HBGCleanUp_5933_001
     configuration:
-      jfrogCliVersion: 2
+      integrations:
+        - name: kube
     steps:
-      - name: step_1
-        type: Bash
+      - name: S_SYC_HBGCleanUp_5933_001_1
+        type: HelmBlueGreenDeploy
         configuration:
+          namespace: namespace
+          blueReleaseName: blue
+          greenReleaseName: green
+          roleServices:
+            - blueReferenceName: blueService
+              greenReferenceName: greenService
+              idleName: idleService
+              liveName: liveName
           inputResources:
-            - name: artifact_1
-        execution:
-          onExecute:
-            - echo "executing step_1"
-  - name: my_pipe_2
-    steps:
-      - name: step_1
-        type: Bash
+            - name: S_SYC_HBGCleanUp_5933_001_resource
+
+      - name: S_SYC_HBGCleanUp_5933_001_2
+        type: HelmBlueGreenCleanup
         configuration:
-          inputResources:
-            - name: artifact_2
-        execution:
-          onExecute:
-            - echo "executing step_1"
-  - name: my_pipe_3
-    steps:
-      - name: step_1
-        type: Bash
-        configuration:
-          inputResources:
-            - name: artifact_3
-        execution:
-          onExecute:
-            - echo "executing step_1"
-            
+          deployStep: S_SYC_HBGCleanUp_5933_001_1
+          inputSteps:
+            - name: S_SYC_HBGCleanUp_5933_001_1
