@@ -92,8 +92,6 @@ pipelines:
         configuration:
           inputResources:
             - name: newRepo
-          inputSteps:
-            - name: manual_trigger
         execution:
           onExecute:
             - pushd $res_newRepo_resourcePath
