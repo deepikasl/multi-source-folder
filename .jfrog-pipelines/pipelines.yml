@@ -33,7 +33,7 @@ resources:
       branches:
         include: submodule
 
-  - name: propertyBag
+  - name: propertyBag_1
     type: PropertyBag
     configuration:
       foo: bar
@@ -52,7 +52,7 @@ pipelines:
           inputResources:
             - name: myRepo_1
           outputResources:
-            - name: propertyBag
+            - name: propertyBag_1
           integrations:
             - name: deepikaGithub
         execution:
