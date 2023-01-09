@@ -6,6 +6,17 @@ resources:
       gitProvider: deepikaGithub
       branches:
         include: master
+      files:
+        include: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
+  - name: newRepo
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+      files:
+        exclude: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
   - name: submodule
     type: GITRepo
     configuration:
@@ -51,6 +62,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
+            - name: newRepo
             - name: submodule
           inputSteps:
             - name: manual_trigger
