@@ -1,5 +1,5 @@
 resources:
-  - name: myRepo
+  - name: myRepo_1
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
@@ -8,7 +8,7 @@ resources:
         include: master
       files:
         include: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: newRepo
+  - name: newRepo_1
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
@@ -50,7 +50,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: myRepo
+            - name: myRepo_1
           outputResources:
             - name: propertyBag
           integrations:
@@ -62,7 +62,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: newRepo
+            - name: newRepo_1
             - name: submodule
           inputSteps:
             - name: manual_trigger
@@ -91,7 +91,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: newRepo
+            - name: newRepo_1
         execution:
           onExecute:
             - pushd $res_newRepo_resourcePath
