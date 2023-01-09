@@ -85,4 +85,19 @@ pipelines:
             - ls
             - pushd myFirstSubModule
             - ls
+  - name: second_pipeline
+    steps:
+      - name: submodule_test
+        type: Bash
+        configuration:
+          inputResources:
+            - name: newRepo
+          inputSteps:
+            - name: manual_trigger
+        execution:
+          onExecute:
+            - pushd $res_newRepo_resourcePath
+            - ls
+            - pushd myFirstSubModule
+            - ls
             
