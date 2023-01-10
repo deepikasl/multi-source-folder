@@ -1,18 +1,28 @@
 resources:
-  - name: testInfo
-    type: BuildInfo
+  - name: S_SYC_HBGDeploy_5978_0006_resource
+    type: ReleaseBundle
     configuration:
-      sourceArtifactory: art
-      buildName: 'name'
-      buildNumber: '1'
+      sourceDistribution: dist
+      name: name
+      version: '1'
 
 pipelines:
-  - name: pipeline
-    configuration:
-      nodePool: k8s
+  - name: S_SYC_HBGDeploy_5978_0006
     steps:
-      - name: mystep
-        type: Bash
-        execution:
-          onExecute:
-            - echo "executing..."
+      - name: S_SYC_HBGDeploy_5978_0006_1
+        type: HelmBlueGreenDeploy
+        configuration:
+          chartPath: ./
+          namespace: namespace
+          blueReleaseName: blue
+          greenReleaseName: green
+          roleServices:
+            - blueReferenceName: blueService
+              greenReferenceName: greenService
+              idleName: idleService
+              liveName: liveName
+          integrations:
+            - name: art
+            - name: kube
+          inputResources:
+            - name: S_SYC_HBGDeploy_5978_0006_resource
