@@ -5,7 +5,7 @@ resources:
       path: asafgabai/build-info-go
       branches:
         include: dev
-      gitProvider: git_asafgabai
+      gitProvider: deepikaGithub
 
 pipelines:
   - name: release_build_info_go
@@ -28,7 +28,7 @@ pipelines:
             - name: buildinfoGoGit
               trigger: false
           integrations:
-            - name: git_asafgabai
+            - name: deepikaGithub
             - name: ecosys_asafg
         execution:
           onExecute:
