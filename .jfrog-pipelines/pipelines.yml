@@ -1,5 +1,5 @@
 resources:
-  - name: S_XrayScan_0001_BuildInfo
+  - name: testInfo
     type: BuildInfo
     configuration:
       sourceArtifactory: art
@@ -7,11 +7,15 @@ resources:
       buildNumber: '1'
 
 pipelines:
-  - name: pipeline_S_XrayScan_0001
+  - name: pipeline
+    configuration:
+      nodePool: k8s
     steps:
-      - name: S_XrayScan_0001
-        type: XrayScan
+      - name: mystep
+        type: Bash
         configuration:
           inputResources:
-            - name: S_XrayScan_0001_BuildInfo
-              newVersionOnly: true
+            - name: testInfo
+        execution:
+          onExecute:
+            - echo "executing..."
