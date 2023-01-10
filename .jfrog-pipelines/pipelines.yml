@@ -1,28 +1,87 @@
 resources:
-  - name: S_SYC_HBGDeploy_5978_0006_resource
-    type: ReleaseBundle
+  - name: buildinfoGoGit
+    type: GitRepo
     configuration:
-      sourceDistribution: dist
-      name: name
-      version: '1'
+      path: asafgabai/build-info-go
+      branches:
+        include: dev
+      gitProvider: git_asafgabai
 
 pipelines:
-  - name: S_SYC_HBGDeploy_5978_0006
+  - name: release_build_info_go
+    configuration:
+      runtime:
+        type: image
+        image:
+          custom:
+            name: releases-docker.jfrog.io/jfrog-ecosystem-integration-env
+            tag: latest
+      environmentVariables:
+        readOnly:
+          NEXT_VERSION: 0.0.0
+
     steps:
-      - name: S_SYC_HBGDeploy_5978_0006_1
-        type: HelmBlueGreenDeploy
+      - name: Release
+        type: Bash
         configuration:
-          chartPath: ./
-          namespace: namespace
-          blueReleaseName: blue
-          greenReleaseName: green
-          roleServices:
-            - blueReferenceName: blueService
-              greenReferenceName: greenService
-              idleName: idleService
-              liveName: liveName
-          integrations:
-            - name: art
-            - name: kube
           inputResources:
-            - name: S_SYC_HBGDeploy_5978_0006_resource
+            - name: buildinfoGoGit
+              trigger: false
+          integrations:
+            - name: git_asafgabai
+            - name: ecosys_asafg
+        execution:
+          onExecute:
+            - cd $res_buildinfoGoGit_resourcePath
+
+            # Set env
+            - export CI=true
+            - export JFROG_CLI_BUILD_NAME=ecosystem-build-info-go-release
+            - export JFROG_CLI_BUILD_NUMBER=$run_number
+            - export JFROG_CLI_BUILD_PROJECT=ecosys
+
+            # Make sure version provided
+            - echo "Checking variables"
+            - test -n "$NEXT_VERSION" -a "$NEXT_VERSION" != "0.0.0"
+
+            # Configure Git and merge from the dev
+            - git checkout main
+            - git remote set-url origin https://$int_git_asafgabai_token@github.com/asafgabai/build-info-go.git
+            - git merge origin/dev
+
+            # Download JFrog CLI
+            - curl -fL https://install-cli.jfrog.io | sh
+            - jf c rm --quiet
+            - jf c add internal --url=$int_ecosys_asafg_url --user=$int_ecosys_asafg_user --password=$int_ecosys_asafg_apikey
+            - jf goc --repo-resolve go-remote
+
+            # Audit
+            - jf audit
+
+            # Build and upload
+            - >
+              env -i PATH=$PATH HOME=$HOME 
+              JFROG_CLI_BUILD_NAME=$JFROG_CLI_BUILD_NAME 
+              JFROG_CLI_BUILD_NUMBER=$JFROG_CLI_BUILD_NUMBER 
+              JFROG_CLI_BUILD_PROJECT=$JFROG_CLI_BUILD_PROJECT 
+              release/build.sh "$NEXT_VERSION"
+            - jf rt bag && jf rt bce
+
+            # Commit and publish build-info
+            - jf rt bp $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER --dry-run > build-info.json
+            - jf rt bp $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER
+
+            # Create a Git tag to the current commit
+            - git tag v${NEXT_VERSION}
+
+            # Distribute release bundle
+            #            - jf ds rbc "build-info-go" $NEXT_VERSION --spec="release/specs/bi-rbc-spec.json" --spec-vars="VERSION=$NEXT_VERSION" --sign
+            #            - jf ds rbd "build-info-go" $NEXT_VERSION --site="releases.jfrog.io" --sync
+
+            # Push to main
+            - git clean -fd
+            - git push
+            - git push --tags
+
+          onComplete:
+            - jf c rm --quiet
