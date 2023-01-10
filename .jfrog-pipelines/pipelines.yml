@@ -13,9 +13,6 @@ pipelines:
     steps:
       - name: mystep
         type: Bash
-        configuration:
-          inputResources:
-            - name: testInfo
         execution:
           onExecute:
             - echo "executing..."
