@@ -2,7 +2,7 @@ resources:
   - name: buildinfoGoGit
     type: GitRepo
     configuration:
-      path: asafgabai/build-info-go
+      path: deepikasl/multi-source-folder
       branches:
         include: dev
       gitProvider: deepikaGithub
