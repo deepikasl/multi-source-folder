@@ -10,6 +10,8 @@ resources:
           - tools/*
         exclude:
           - tools/exclude/*
+      buildOn:
+        deployed: true
   - name: artifact_2
     type: Artifact
     configuration:
