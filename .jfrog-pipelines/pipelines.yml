@@ -1,4 +1,15 @@
 resources:
+  - name: artifact_test
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: deepikaArt
+      repositories:
+        - jfrogpipelines
+      artifactPath:
+        include:
+          - tools/*
+        exclude:
+          - tools/exclude/*
   - name: artifact_2
     type: Artifact
     configuration:
