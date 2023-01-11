@@ -12,6 +12,8 @@ resources:
           - tools/exclude/*
       buildOn:
         deployed: true
+      branches:
+        exclude: master
   - name: artifact_2
     type: Artifact
     configuration:
