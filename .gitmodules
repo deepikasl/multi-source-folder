@@ -1,0 +1,3 @@
+[submodule "vt1_submodule"]
+	path = vt1_submodule
+	url = git@github.com:deepikasl/vt1.git
