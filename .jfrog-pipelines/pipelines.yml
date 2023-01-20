@@ -8,7 +8,7 @@ resources:
    type: GitRepo
    configuration:
      gitProvider: deepikaGithub
-     path: neha-mishraa/pipelines
+     path: deepikasl/multi-source-folder
      files: 
        include: ^README.md$
      branches:
