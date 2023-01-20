@@ -4,7 +4,7 @@ resources:
    configuration:
      key1: value1
      key2: value2
- - name: resource_pipelines
+ - name: resource_pipelines_1
    type: GitRepo
    configuration:
      gitProvider: deepikaGithub
@@ -38,12 +38,12 @@ pipelines:
              default: 1
              description: "Default number of nodes for node pool tests"
          inputResources: 
-           - name: resource_pipelines
+           - name: resource_pipelines_1
          integrations:
            - name: deepikaGithub
         execution:
           onExecute:
-            - pushd $res_resource_pipelines_resourcePath
+            - pushd $res_resource_pipelines_1_resourcePath
             - ls
 
   - name: testing2
