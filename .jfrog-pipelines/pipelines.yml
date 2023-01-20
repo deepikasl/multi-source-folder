@@ -15,7 +15,7 @@ resources:
        include: ^{{gitBranch}}$
 
 pipelines:
-  - name: testing1
+  - name: testing11
     steps:
       - name: myStep1
         type: Bash
@@ -46,7 +46,7 @@ pipelines:
             - pushd $res_resource_pipelines_1_resourcePath
             - ls
 
-  - name: testing2
+  - name: testing22
     steps:
       - name: myStep2
         type: Bash
@@ -57,7 +57,7 @@ pipelines:
         execution:
           onExecute:
             - echo "hi"
-  - name: testing3
+  - name: testing33
     steps:
       - name: myStep3
         type: Bash
@@ -67,7 +67,7 @@ pipelines:
           onExecute:
             - echo "hi"
          
-  - name: testing4
+  - name: testing44
     steps:
       - name: myStep4
         type: PowerShell
@@ -101,7 +101,7 @@ pipelines:
 
 
 # pipelines:
-  - name: node_test_
+  - name: node_test_1
     steps:
       - name: nodeTestStep
         type: Bash
