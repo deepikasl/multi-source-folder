@@ -1,101 +1,45 @@
 resources:
-  - name: myRepo_1
-    type: GITRepo
+  - name: signed_git
+    type: GitRepo
     configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
+      scmProvider: deepikaGithub
+      path: deepikasl/jfrog-pipelines
       branches:
-        include: master
-      files:
-        include: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: newRepo_1
-    type: GITRepo
+        include: ^master$
+  - name: signed_buildinfo
+    type: BuildInfo
     configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-      files:
-        exclude: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: submodule
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: submodule
-  - name: submodule_https
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      cloneProtocol: https
-      branches:
-        include: submodule
-
-  - name: propertyBag_1
-    type: PropertyBag
-    configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
-
+      sourceArtifactory: deepikaArt
+ 
 pipelines:
-  - name: demo_manual_main
-    configuration:
-      integrations:
-        - name: deepikaGithub
+  - name: test_signed_start
     steps:
-      - name: manual_trigger
+      - name: create_info
         type: Bash
         configuration:
           inputResources:
-            - name: myRepo_1
-          outputResources:
-            - name: propertyBag_1
+            - name: signed_git
           integrations:
-            - name: deepikaGithub
+            - name: deepikaArt
+          outputResources:
+            - name: signed_buildinfo
         execution:
           onExecute:
-            - write_output propertyBag "foo=$run_number"
-      - name: submodule_test
-        type: Bash
-        configuration:
-          inputResources:
-            - name: newRepo_1
-            - name: submodule
-          inputSteps:
-            - name: manual_trigger
-        execution:
-          onExecute:
-            - pushd $res_submodule_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-      - name: submodule_test_https
-        type: Bash
-        configuration:
-          inputResources:
-            - name: submodule_https
-          inputSteps:
-            - name: manual_trigger
-        execution:
-          onExecute:
-            - pushd $res_submodule_https_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-  - name: second_pipeline
+            - cd $res_signed_git_resourcePath
+            - jfrog rt upload README.md
+            - jfrog rt build-collect-environment
+            - jfrog rt build-publish --detailed-summary $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER > summaryOutput.json
+            - save_artifact_info buildInfo summaryOutput.json --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
+ 
+  - name: test_signed_stop
     steps:
-      - name: submodule_test
+      - name: validate_info
         type: Bash
         configuration:
           inputResources:
-            - name: newRepo_1
+            - name: signed_buildinfo
         execution:
           onExecute:
-            - pushd $res_newRepo_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-            
+            - response=$(validate_artifact buildInfo --build-name ${res_signed_buildinfo_buildName} --build-number ${res_signed_buildinfo_buildNumber})
+            - validateResult=$(echo "$response" | jq '.result')
+            - if [ "$validateResult" != "true" ]; then echo "failed validation" && exit 1; fi
