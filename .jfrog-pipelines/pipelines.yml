@@ -2,7 +2,7 @@ resources:
   - name: signed_git
     type: GitRepo
     configuration:
-      scmProvider: deepikaGithub
+      gitProvider: deepikaGithub
       path: deepikasl/jfrog-pipelines
       branches:
         include: ^master$
