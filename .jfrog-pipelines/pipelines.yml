@@ -17,6 +17,9 @@ pipelines:
       - name: create_info
         type: Bash
         configuration:
+          environmentVariables:
+            JFROG_CLI_BUILD_NAME: "deepika-test-sign"
+            JFROG_CLI_BUILD_NUMBER: "${run_id}"
           inputResources:
             - name: signed_git
           integrations:
@@ -27,7 +30,6 @@ pipelines:
           onExecute:
             - cd $res_signed_git_resourcePath
             - jfrog rt upload ./README.md {{ .jfrog-pipelines.rootBucket }}/deepikaSignedPipelines/README.md --recursive=true
-            - jfrog rt build-collect-environment
             - jfrog rt build-publish --detailed-summary $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER > summaryOutput.json
             - save_artifact_info buildInfo summaryOutput.json --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
  
