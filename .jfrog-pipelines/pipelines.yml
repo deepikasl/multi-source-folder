@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: deepikaGithub
-      path: deepikasl/jfrog-pipelines
+      path: deepikasl/jfrog_pipelines
       branches:
         include: ^master$
   - name: signed_buildinfo
