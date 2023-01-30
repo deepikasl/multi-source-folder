@@ -1,10 +1,8 @@
 resources:
-  {{ if or ( eq "{{gitBranch}}" "main" ) }}
   - name: dvu_cron_trigger
     type: CronTrigger
     configuration:
       interval: '0 2 * * *' # Every day at 2 AM
-  {{ end }}
   - name: myRepo_1
     type: GITRepo
     configuration:
@@ -47,7 +45,6 @@ resources:
       foo2: bar2
 
 pipelines:
-  {{ if or ( eq "{{gitBranch}}" "main" ) }}
   - name: demo_manual_main
     configuration:
       integrations:
@@ -100,7 +97,6 @@ pipelines:
             - ls
             - pushd myFirstSubModule
             - ls
-  {{ end }}
   - name: second_pipeline
     steps:
       - name: submodule_test
