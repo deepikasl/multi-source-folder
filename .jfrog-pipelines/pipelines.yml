@@ -1,115 +1,28 @@
 resources:
-  - name: dvu_cron_trigger
-    type: CronTrigger
-    configuration:
-      interval: '0 2 * * *' # Every day at 2 AM
-  - name: myRepo_1
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-      files:
-        include: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: newRepo_1
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-      files:
-        exclude: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: submodule
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: submodule
-  - name: submodule_https
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      cloneProtocol: https
-      branches:
-        include: submodule
-
-  - name: propertyBag_1
+  - name: MB_G_006_resource
     type: PropertyBag
     configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
+      creatingBranch: {{gitBranch}}
 
 pipelines:
-  - name: demo_manual_main
-    configuration:
-      integrations:
-        - name: deepikaGithub
+  - name: pipeline_MB_G_006
     steps:
-      - name: dependency_version_check
+      - name: MB_G_006_step1
         type: Bash
         configuration:
           inputResources:
-            - name: dvu_cron_trigger
-              branch: main
+            - name: MB_G_006_resource
         execution:
           onExecute:
-            - echo "hi"
-      - name: manual_trigger
+            - if [ "$res_MB_G_006_resource_creatingBranch" != "{{gitBranch}}" ]; then return 1; fi
+      - name: MB_G_006_step2
         type: Bash
         configuration:
-          inputResources:
-            - name: myRepo_1
-          outputResources:
-            - name: propertyBag_1
-          integrations:
-            - name: deepikaGithub
-        execution:
-          onExecute:
-            - write_output propertyBag "foo=$run_number"
-      - name: submodule_test
-        type: Bash
-        configuration:
-          inputResources:
-            - name: newRepo_1
-            - name: submodule
           inputSteps:
-            - name: dependency_version_check
-            - name: manual_trigger
-        execution:
-          onExecute:
-            - pushd $res_submodule_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-      - name: submodule_test_https
-        type: Bash
-        configuration:
+            - name: MB_G_006_step1
           inputResources:
-            - name: submodule_https
-          inputSteps:
-            - name: manual_trigger
+            - name: MB_G_006_resource
+              branch: master
         execution:
           onExecute:
-            - pushd $res_submodule_https_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-  - name: second_pipeline
-    steps:
-      - name: submodule_test
-        type: Bash
-        configuration:
-          inputResources:
-            - name: newRepo_1
-        execution:
-          onExecute:
-            - pushd $res_newRepo_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-            
+            - if [ "$res_MB_G_006_resource_creatingBranch" != "master" ]; then return 1; fi
