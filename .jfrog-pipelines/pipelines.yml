@@ -22,7 +22,7 @@ pipelines:
             - name: MB_G_006_step1
           inputResources:
             - name: MB_G_006_resource
-              branch: master
+              branch: mb_g_006
         execution:
           onExecute:
             - if [ "$res_MB_G_006_resource_creatingBranch" != "master" ]; then return 1; fi
