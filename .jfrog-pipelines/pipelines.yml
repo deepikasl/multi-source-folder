@@ -55,7 +55,7 @@ pipelines:
         configuration:
           inputResources:
             - name: dvu_cron_trigger
-              branch: master
+              branch: main
         execution:
           onExecute:
             - echo "hi"
