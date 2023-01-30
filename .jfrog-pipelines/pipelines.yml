@@ -47,12 +47,12 @@ resources:
       foo2: bar2
 
 pipelines:
+  {{ if or ( eq "{{gitBranch}}" "main" ) }}
   - name: demo_manual_main
     configuration:
       integrations:
         - name: deepikaGithub
     steps:
-      {{ if or ( eq "{{gitBranch}}" "main" ) }}
       - name: dependency_version_check
         type: Bash
         configuration:
@@ -61,7 +61,6 @@ pipelines:
         execution:
           onExecute:
             - echo "hi"
-      {{ end }}
       - name: manual_trigger
         type: Bash
         configuration:
@@ -101,6 +100,7 @@ pipelines:
             - ls
             - pushd myFirstSubModule
             - ls
+  {{ end }}
   - name: second_pipeline
     steps:
       - name: submodule_test
