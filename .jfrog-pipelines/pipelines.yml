@@ -1,5 +1,5 @@
 resources:
-  - name: signed_git
+  - name: signed_git_1
     type: GitRepo
     configuration:
       gitProvider: deepikaGithub
@@ -22,7 +22,7 @@ pipelines:
             JFROG_CLI_BUILD_NAME: "deepika-test-sign"
             JFROG_CLI_BUILD_NUMBER: "${run_id}"
           inputResources:
-            - name: signed_git
+            - name: signed_git_1
           integrations:
             - name: deepikaArt
           outputResources:
