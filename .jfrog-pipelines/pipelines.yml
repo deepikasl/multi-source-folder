@@ -5,7 +5,8 @@ resources:
       gitProvider: deepikaGithub
       path: deepikasl/jfrog_pipelines
       branches:
-        include: ^master$
+        include: .*
+        exclude: master
   - name: signed_buildinfo
     type: BuildInfo
     configuration:
