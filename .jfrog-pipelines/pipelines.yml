@@ -1,51 +1,121 @@
 resources:
-  - name: signed_git_1
-    type: GitRepo
+  - name: dvu_cron_trigger
+    type: CronTrigger
     configuration:
-      gitProvider: deepikaGithub
+      interval: '0 2 * * *' # Every day at 2 AM
+  - name: myRepo_1
+    type: GITRepo
+    configuration:
       path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
       branches:
-        include: .*
-        exclude: master
-  - name: signed_buildinfo
-    type: BuildInfo
+        include: master
+      files:
+        include: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
+  - name: newRepo_1
+    type: GITRepo
     configuration:
-      sourceArtifactory: deepikaArt
- 
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+      files:
+        exclude: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
+  - name: submodule
+    type: GITRepo
+    configuration:
+      path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
+      branches:
+        include: submodule
+  - name: submodule_https
+    type: GITRepo
+    configuration:
+      path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
+      cloneProtocol: https
+      branches:
+        include: submodule
+
+  - name: propertyBag_1
+    type: PropertyBag
+    configuration:
+      foo: bar
+      foo1: bar1
+      foo2: bar2
+
 pipelines:
-  - name: test_signed_start
+  - name: demo_manual_main
+    configuration:
+      integrations:
+        - name: deepikaGithub
     steps:
-      - name: create_info
+      - name: dependency_version_check
         type: Bash
         configuration:
-          environmentVariables:
-            JFROG_CLI_BUILD_NAME: "deepika-test-sign"
-            JFROG_CLI_BUILD_NUMBER: "${run_id}"
           inputResources:
-            - name: signed_git_1
-          integrations:
-            - name: deepikaArt
+            - name: dvu_cron_trigger
+              branch: main
+        execution:
+          onExecute:
+            - echo "hi"
+      - name: manual_trigger
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myRepo_1
           outputResources:
-            - name: signed_buildinfo
+            - name: propertyBag_1
+          integrations:
+            - name: deepikaGithub
         execution:
           onExecute:
-            - cd $res_signed_git_resourcePath
-            - jfrog rt upload ./README.md {{ .jfrog-pipelines.rootBucket }}/deepikaSignedPipelines/README.md --recursive=true
-            - jfrog rt build-publish --detailed-summary $JFROG_CLI_BUILD_NAME $JFROG_CLI_BUILD_NUMBER > summaryOutput.json
-#             - save_artifact_info file ./README.md
-#             - save_artifact_info 'buildInfo' './summaryOutput.json' --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER
-#             - save_artifact_info buildInfo summaryOutput.json --build-name=$JFROG_CLI_BUILD_NAME --build-number=$JFROG_CLI_BUILD_NUMBER
- 
-  - name: test_signed_stop
-    steps:
-      - name: validate_info
+            - write_output propertyBag "foo=$run_number"
+      - name: submodule_test
         type: Bash
         configuration:
           inputResources:
-            - name: signed_buildinfo
+            - name: newRepo_1
+            - name: submodule
+            - name: propertyBag_1
+              newVersionOnly: true
+          inputSteps:
+            - name: dependency_version_check
+            - name: manual_trigger
         execution:
           onExecute:
-            - validate_artifact 'buildInfo' --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER
-#             - response=$(validate_artifact buildInfo --build-name $JFROG_CLI_BUILD_NAME --build-number $JFROG_CLI_BUILD_NUMBER)
-#             - validateResult=$(echo "$response" | jq '.result')
-#             - if [ "$validateResult" != "true" ]; then echo "failed validation" && exit 1; fi
+            - pushd $res_submodule_resourcePath
+            - ls
+            - pushd myFirstSubModule
+            - ls
+      - name: submodule_test_https
+        type: Bash
+        configuration:
+          inputResources:
+            - name: submodule_https
+            - name: propertyBag_1
+              newVersionOnly: true
+          inputSteps:
+            - name: submodule_test
+        execution:
+          onExecute:
+            - pushd $res_submodule_https_resourcePath
+            - ls
+            - pushd myFirstSubModule
+            - ls
+      - name: submodule_test
+        type: Bash
+        configuration:
+          inputResources:
+            - name: newRepo_1
+            - name: propertyBag_1
+              newVersionOnly: true
+          inputSteps:
+            - name: submodule_test_https
+        execution:
+          onExecute:
+            - pushd $res_newRepo_resourcePath
+            - ls
+            - pushd myFirstSubModule
+            - ls
+            
