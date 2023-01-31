@@ -43,6 +43,7 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
+      storeVersionHistory: false
 
 pipelines:
   - name: demo_manual_main
