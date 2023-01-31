@@ -103,7 +103,7 @@ pipelines:
             - ls
             - pushd myFirstSubModule
             - ls
-      - name: submodule_test
+      - name: submodule_test_2
         type: Bash
         configuration:
           inputResources:
