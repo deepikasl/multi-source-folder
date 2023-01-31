@@ -86,8 +86,6 @@ pipelines:
           onExecute:
             - pushd $res_submodule_resourcePath
             - ls
-            - pushd myFirstSubModule
-            - ls
       - name: submodule_test_https
         type: Bash
         configuration:
@@ -101,8 +99,6 @@ pipelines:
           onExecute:
             - pushd $res_submodule_https_resourcePath
             - ls
-            - pushd myFirstSubModule
-            - ls
       - name: submodule_test_2
         type: Bash
         configuration:
@@ -115,7 +111,5 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_newRepo_resourcePath
-            - ls
-            - pushd myFirstSubModule
             - ls
             
