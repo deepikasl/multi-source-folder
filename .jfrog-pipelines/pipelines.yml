@@ -110,6 +110,7 @@ pipelines:
       - name: dependency_version_check
         type: Bash
         configuration:
+          nodePool: default-dynamic-nodepool
           affinityGroup: release_group
           inputResources:
             - name: dvu_cron_trigger
@@ -119,6 +120,7 @@ pipelines:
       - name: manual_trigger
         type: Bash
         configuration:
+          nodePool: default-dynamic-nodepool
           affinityGroup: release_group
           inputResources:
             - name: myRepo_1
@@ -134,6 +136,7 @@ pipelines:
       - name: submodule_test
         type: Bash
         configuration:
+          nodePool: default-dynamic-nodepool
           affinityGroup: release_group
           inputResources:
             - name: newRepo_1
