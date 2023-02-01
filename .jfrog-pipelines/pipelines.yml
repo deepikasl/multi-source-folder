@@ -148,7 +148,7 @@ pipelines:
             - name: propertyBag_1
               newVersionOnly: true
           inputSteps:
-            - name: submodule_test_https
+            - name: triggerPipeline
         execution:
           onExecute:
             - pushd $res_newRepo_1_resourcePath
