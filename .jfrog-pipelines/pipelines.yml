@@ -133,7 +133,7 @@ pipelines:
           integrations:
             - name: jfrog_platform_embedded_pipelines
         execution:
-          onExecute:
+          onStart:
             - pushd $res_newRepo_1_resourcePath
             - ls
       - name: submodule_test_2
