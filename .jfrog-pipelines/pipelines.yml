@@ -131,7 +131,7 @@ pipelines:
           stepName: deepika_bash_1
           branchName: releasePipeline
           integrations:
-            - name: jfrog_platform_embedded_pipelines
+            - name: deepikaPlatform
         execution:
           onStart:
             - pushd $res_newRepo_1_resourcePath
