@@ -19,7 +19,6 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
-      storeVersionHistory: false
 
 pipelines:
   - name: jfdev_ci_commons_release
