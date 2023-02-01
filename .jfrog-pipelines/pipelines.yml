@@ -43,7 +43,6 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
-      storeVersionHistory: false
   
   - name: some_property
     type: PropertyBag
@@ -51,7 +50,6 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
-      storeVersionHistory: false
 
 pipelines:
   - name: another_trigger
