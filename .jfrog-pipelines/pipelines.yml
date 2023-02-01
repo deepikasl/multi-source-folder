@@ -55,6 +55,9 @@ pipelines:
             - echo "hi"
       - name: deepika_bash_2
         type: Bash
+        configuration:
+          inputSteps:
+            - name: deepika_bash_1
         execution:
           onExecute:
             - echo "here"
