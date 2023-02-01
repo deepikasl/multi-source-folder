@@ -126,6 +126,7 @@ pipelines:
         execution:
           onStart:
             - echo "here"
+            - write_output propertyBag_1 "foo=$run_number"
       - name: wait_for_branch_sync
         type: Bash
         configuration:
