@@ -54,6 +54,21 @@ resources:
       storeVersionHistory: false
 
 pipelines:
+  - name: another_trigger
+    steps:
+      - name: deepika_bash_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "hi"
+      - name: deepika_bash_2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: deepika_bash_1
+        execution:
+          onExecute:
+            - echo "hi"
   - name: embedded_pipeline_deepika
     steps:
       - name: deepika_bash_1
@@ -168,18 +183,25 @@ pipelines:
           onStart:
             - pushd $res_newRepo_1_resourcePath
             - ls
-      - name: submodule_test_2
-        type: Bash
+      - name: submodule_test_2_trigger
+        type: TriggerPipeline
         configuration:
+          nodePool: u18dynamic
           affinityGroup: release_group
+          priority: 1
           inputResources:
             - name: newRepo_1
             - name: propertyBag_1
               newVersionOnly: true
           inputSteps:
             - name: triggerPipeline
+          pipelineName: another_trigger
+          stepName: deepika_bash_1
+          branchName: releasePipeline
+          integrations:
+            - name: deepikaPlatform
         execution:
-          onExecute:
+          onStart:
             - pushd $res_newRepo_1_resourcePath
             - ls
             
