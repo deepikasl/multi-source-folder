@@ -118,7 +118,7 @@ pipelines:
       - name: triggerPipeline
         type: Bash
         configuration:
-          nodepool: u18dynamic
+          nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
