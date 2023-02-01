@@ -85,6 +85,8 @@ pipelines:
             - name: propertyBag_1
           integrations:
             - name: deepikaGithub
+          inputSteps:
+            - name: dependency_version_check
         execution:
           onExecute:
             - write_output propertyBag_1 "foo=$run_number"
@@ -98,26 +100,25 @@ pipelines:
             - name: propertyBag_1
               newVersionOnly: true
           inputSteps:
-            - name: dependency_version_check
             - name: manual_trigger
         execution:
           onExecute:
             - pushd $res_submodule_resourcePath
             - ls
-      - name: submodule_test_https
-        type: Bash
-        configuration:
-          affinityGroup: release_group
-          inputResources:
-            - name: submodule_https
-            - name: propertyBag_1
-              newVersionOnly: true
-          inputSteps:
-            - name: submodule_test
-        execution:
-          onExecute:
-            - pushd $res_submodule_https_resourcePath
-            - ls
+#       - name: submodule_test_https
+#         type: Bash
+#         configuration:
+#           affinityGroup: release_group
+#           inputResources:
+#             - name: submodule_https
+#             - name: propertyBag_1
+#               newVersionOnly: true
+#           inputSteps:
+#             - name: submodule_test
+#         execution:
+#           onExecute:
+#             - pushd $res_submodule_https_resourcePath
+#             - ls
       - name: triggerPipeline
         type: TriggerPipeline
         configuration:
@@ -129,7 +130,7 @@ pipelines:
             - name: propertyBag_1
               newVersionOnly: true
           inputSteps:
-            - name: submodule_test_https
+            - name: submodule_test
           pipelineName: embedded_pipeline_deepika
           stepName: deepika_bash_1
           branchName: releasePipeline
