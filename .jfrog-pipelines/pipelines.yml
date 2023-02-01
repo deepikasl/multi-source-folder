@@ -157,6 +157,7 @@ pipelines:
         execution:
           onStart:
             - echo "here"
+            - write_output propertyBag_1 "foo=$run_number"
       - name: post_release_actions
         type: Bash
         configuration:
