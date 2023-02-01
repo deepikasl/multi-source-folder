@@ -44,6 +44,14 @@ resources:
       foo1: bar1
       foo2: bar2
       storeVersionHistory: false
+  
+  - name: some_property
+    type: PropertyBag
+    configuration:
+      foo: bar
+      foo1: bar1
+      foo2: bar2
+      storeVersionHistory: false
 
 pipelines:
   - name: embedded_pipeline_deepika
@@ -58,6 +66,26 @@ pipelines:
         configuration:
           inputSteps:
             - name: deepika_bash_1
+          outputResources:
+            - name: some_property
+        execution:
+          onExecute:
+            - write_output some_property "foo=$run_number"
+      - name: deepika_bash_3
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: deepika_bash_2
+          outputResources:
+            - name: some_property
+        execution:
+          onExecute:
+            - write_output some_property "foo1=$run_number"
+      - name: deepika_bash_4
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: deepika_bash_3
         execution:
           onExecute:
             - echo "here"
