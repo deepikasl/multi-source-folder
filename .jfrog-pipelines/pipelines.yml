@@ -2,7 +2,7 @@ resources:
   - name: dvu_cron_trigger
     type: CronTrigger
     configuration:
-      interval: '*/2 * * * *' # Every day at 2 AM
+      interval: '* 2 * * *' # Every day at 2 AM
   - name: myRepo_1
     type: GITRepo
     configuration:
