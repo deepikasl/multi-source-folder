@@ -165,7 +165,7 @@ pipelines:
       - name: triggerPipeline
         type: TriggerPipeline
         configuration:
-          nodePool: u18dynamic
+          nodePool: default-dynamic-nodepool
           affinityGroup: release_group
           priority: 1
           inputResources:
@@ -186,7 +186,7 @@ pipelines:
       - name: submodule_test_2_trigger
         type: TriggerPipeline
         configuration:
-          nodePool: u18dynamic
+          nodePool: default-dynamic-nodepool
           affinityGroup: release_group
           priority: 1
           inputResources:
