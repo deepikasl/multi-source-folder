@@ -116,7 +116,7 @@ pipelines:
             - pushd $res_submodule_https_resourcePath
             - ls
       - name: triggerPipeline
-        type: Bash
+        type: TriggerPipeline
         configuration:
           nodePool: u18dynamic
           affinityGroup: release_group
