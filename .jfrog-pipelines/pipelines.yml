@@ -46,6 +46,18 @@ resources:
       storeVersionHistory: false
 
 pipelines:
+  - name: embedded_pipeline_deepika
+    steps:
+      - name: deepika_bash_1
+        type: Bash
+        execution:
+          onExecute:
+            - echo "hi"
+      - name: deepika_bash_2
+        type: Bash
+        execution:
+          onExecute:
+            - echo "here"
   - name: demo_manual_main
     configuration:
       integrations:
@@ -54,6 +66,7 @@ pipelines:
       - name: dependency_version_check
         type: Bash
         configuration:
+          affinityGroup: release_group
           inputResources:
             - name: dvu_cron_trigger
         execution:
@@ -62,6 +75,7 @@ pipelines:
       - name: manual_trigger
         type: Bash
         configuration:
+          affinityGroup: release_group
           inputResources:
             - name: myRepo_1
           outputResources:
@@ -74,6 +88,7 @@ pipelines:
       - name: submodule_test
         type: Bash
         configuration:
+          affinityGroup: release_group
           inputResources:
             - name: newRepo_1
             - name: submodule
@@ -89,6 +104,7 @@ pipelines:
       - name: submodule_test_https
         type: Bash
         configuration:
+          affinityGroup: release_group
           inputResources:
             - name: submodule_https
             - name: propertyBag_1
@@ -99,9 +115,31 @@ pipelines:
           onExecute:
             - pushd $res_submodule_https_resourcePath
             - ls
+      - name: triggerPipeline
+        type: Bash
+        configuration:
+          nodepool: u18dynamic
+          affinityGroup: release_group
+          priority: 1
+          inputResources:
+            - name: newRepo_1
+            - name: propertyBag_1
+              newVersionOnly: true
+          inputSteps:
+            - name: submodule_test_https
+          pipelineName: embedded_pipeline_deepika
+          stepName: deepika_bash_1
+          branchName: releasePipeline
+          integrations:
+            - name: jfrog_platform_embedded_pipelines
+        execution:
+          onExecute:
+            - pushd $res_newRepo_1_resourcePath
+            - ls
       - name: submodule_test_2
         type: Bash
         configuration:
+          affinityGroup: release_group
           inputResources:
             - name: newRepo_1
             - name: propertyBag_1
