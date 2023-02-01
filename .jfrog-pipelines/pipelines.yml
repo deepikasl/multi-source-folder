@@ -1,3 +1,4 @@
+
 resources:
   - name: dvu_cron_trigger
     type: CronTrigger
@@ -12,40 +13,7 @@ resources:
         include: master
       files:
         include: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: newRepo_1
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-      files:
-        exclude: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: submodule
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: submodule
-  - name: submodule_https
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      cloneProtocol: https
-      branches:
-        include: submodule
-
   - name: propertyBag_1
-    type: PropertyBag
-    configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
-      storeVersionHistory: false
-  
-  - name: some_property
     type: PropertyBag
     configuration:
       foo: bar
@@ -54,154 +22,153 @@ resources:
       storeVersionHistory: false
 
 pipelines:
-  - name: another_trigger
-    steps:
-      - name: deepika_bash_1
-        type: Bash
-        execution:
-          onExecute:
-            - echo "hi"
-      - name: deepika_bash_2
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: deepika_bash_1
-        execution:
-          onExecute:
-            - echo "hi"
-  - name: embedded_pipeline_deepika
-    steps:
-      - name: deepika_bash_1
-        type: Bash
-        execution:
-          onExecute:
-            - echo "hi"
-      - name: deepika_bash_2
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: deepika_bash_1
-          outputResources:
-            - name: some_property
-        execution:
-          onExecute:
-            - write_output some_property "foo=$run_number"
-      - name: deepika_bash_3
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: deepika_bash_2
-          outputResources:
-            - name: some_property
-        execution:
-          onExecute:
-            - write_output some_property "foo1=$run_number"
-      - name: deepika_bash_4
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: deepika_bash_3
-        execution:
-          onExecute:
-            - echo "here"
-  - name: demo_manual_main
+  - name: jfdev_ci_commons_release
     configuration:
-      integrations:
-        - name: deepikaGithub
+      environmentVariables:
+        readOnly:
+          SLACK_RELEASE_INTEGRATION_CHANNEL:
+            default: jfdev-ci-common-release-pipeline
+          CI:
+            default: 'true'
+            description: >-
+              [DO_NOT_CHANGE] disables interactive prompts and progress bar for the
+              JFrog CLI
+          SKIP_STEP_STATUS_UPDATE:
+            default: 'true'
+            description: '[DO_NOT_CHANGE] Skips step status update to bitbucket'
+            values:
+              - 'true'
+              - 'false'
+          SERVICES_TO_RELEASE:
+            default: jfdev_ci_commons
+            values:
+              - jfdev_ci_commons
+          PIPELINE_GIT_PUSH_SSH_INTEGRATION:
+            default: deepikaArt
+            values:
+              - deepikaArt
+          SERVICE_GIT_REPO_PATH:
+            default: auto/jfdev-ci-commons
+            values:
+              - auto/jfdev-ci-commons
+          GIT_LFS_SKIP_SMUDGE:
+            default: 'true'
+            description: Git LFS skip the smudge process
+          SERVICE_DISPLAY_NAME:
+            default: JFDev CI Commons
+            values:
+              - JFDev CI Commons
+          SERVICE_BUILD_PIPELINE:
+            default: jfdev_ci_commons_build
+            values:
+              - jfdev_ci_commons_build
+          SERVICE_POST_RELEASE_PIPELINE:
+            default: jfdev_ci_commons_post_release
+            values:
+              - jfdev_ci_commons_post_release
+          RELEASE_MINOR:
+            default: 'false'
+            description: Compute the next version as a minor
+            values:
+              - 'true'
+              - 'false'
+          SERVICE_BUILD_PIPELINE_FIRST_STEP:
+            description: Defining the first step of the Build Pipeline
+            default: trigger_all
+            values:
+              - trigger_all
+              - trigger_post_release
+          MILESTONE_TAG:
+            default: ''
+            values:
+              - ''
+              - 'false'
+            description: >-
+              [MANDATORY]: Flag to determine the type of the release, options
+              are:<br> release a milestone) Value should be an empty string<br>
+              release an official version from a milestone) Value should be set to
+              the milestone tag (e.g artifactory/7.24.0-m013) you aim to release
+              from (will shorten the release cycle)<br> release an official version
+              without a milestone) Value should be set to false
+            allowCustom: true
     steps:
-      - name: dependency_version_check
+      - name: create_release_branch
         type: Bash
         configuration:
+          nodePool: u18dynamic
           affinityGroup: release_group
-          inputResources:
-            - name: dvu_cron_trigger
-        execution:
-          onExecute:
-            - echo "hi"
-      - name: manual_trigger
-        type: Bash
-        configuration:
-          affinityGroup: release_group
+          priority: 1
           inputResources:
             - name: myRepo_1
-          outputResources:
-            - name: propertyBag_1
+              trigger: false
+            - name: dvu_cron_trigger
+              trigger: true
           integrations:
-            - name: deepikaGithub
-          inputSteps:
-            - name: dependency_version_check
+            - name: deepikaArt
         execution:
-          onExecute:
-            - write_output propertyBag_1 "foo=$run_number"
-      - name: submodule_test
+          onStart:
+            - echo "here"
+      - name: select_and_modify_release_versions
         type: Bash
         configuration:
+          nodePool: u18dynamic
           affinityGroup: release_group
+          priority: 1
           inputResources:
-            - name: newRepo_1
-            - name: submodule
-            - name: propertyBag_1
-              newVersionOnly: true
+            - name: myRepo_1
+              trigger: false
           inputSteps:
-            - name: manual_trigger
+            - name: create_release_branch
+          integrations:
+            - name: deepikaArt
+          outputResources:
+            - name: propertyBag_1
         execution:
-          onExecute:
-            - pushd $res_submodule_resourcePath
-            - ls
-#       - name: submodule_test_https
-#         type: Bash
-#         configuration:
-#           affinityGroup: release_group
-#           inputResources:
-#             - name: submodule_https
-#             - name: propertyBag_1
-#               newVersionOnly: true
-#           inputSteps:
-#             - name: submodule_test
-#         execution:
-#           onExecute:
-#             - pushd $res_submodule_https_resourcePath
-#             - ls
-      - name: triggerPipeline
-        type: TriggerPipeline
+          onStart:
+            - echo "here"
+      - name: wait_for_branch_sync
+        type: Bash
         configuration:
           nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
-            - name: newRepo_1
+            - name: myRepo_1
+              trigger: false
             - name: propertyBag_1
               newVersionOnly: true
-          inputSteps:
-            - name: submodule_test
-          pipelineName: embedded_pipeline_deepika
-          stepName: deepika_bash_1
-          branchName: releasePipeline
-          integrations:
-            - name: deepikaPlatform
         execution:
           onStart:
-            - pushd $res_newRepo_1_resourcePath
-            - ls
-      - name: submodule_test_2_trigger
-        type: TriggerPipeline
+            - echo "here"
+      - name: build_release_artifacts
+        type: Bash
         configuration:
           nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
-            - name: newRepo_1
+            - name: myRepo_1
+              trigger: false
             - name: propertyBag_1
               newVersionOnly: true
           inputSteps:
-            - name: triggerPipeline
-          pipelineName: another_trigger
-          stepName: deepika_bash_1
-          branchName: releasePipeline
-          integrations:
-            - name: deepikaPlatform
+            - name: wait_for_branch_sync
         execution:
           onStart:
-            - pushd $res_newRepo_1_resourcePath
-            - ls
-            
+            - echo "here"
+      - name: post_release_actions
+        type: Bash
+        configuration:
+          nodePool: u18dynamic
+          affinityGroup: release_group
+          priority: 1
+          inputResources:
+            - name: myRepo_1
+              trigger: false
+            - name: propertyBag_1
+              newVersionOnly: true
+          inputSteps:
+            - name: build_release_artifacts
+        execution:
+          onStart:
+            - echo "here"
