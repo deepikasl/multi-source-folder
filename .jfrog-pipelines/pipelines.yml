@@ -70,8 +70,8 @@ pipelines:
         configuration:
           inputResources:
             - name: myRepo_1
-              trigger: true
-#               <<: *git_resource_trigger_condition
+#               trigger: true
+              <<: *git_resource_trigger_condition
           outputResources:
             - name: propertyBag_1
           integrations:
