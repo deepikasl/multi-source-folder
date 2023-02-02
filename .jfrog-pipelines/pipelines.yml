@@ -156,6 +156,7 @@ pipelines:
         execution:
           onStart:
             - echo "here"
+            - sleep 5m
       - name: post_release_actions
         type: Bash
         configuration:
