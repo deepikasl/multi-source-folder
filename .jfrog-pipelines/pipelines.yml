@@ -1,3 +1,9 @@
+git_resource_trigger_condition: &git_resource_trigger_condition
+  {{ if or ( hasPrefix "release" "{{gitBranch}}" ) ( hasPrefix "milestone" "{{gitBranch}}" ) }}
+  trigger: false
+  {{ else }}
+  trigger: true
+  {{ end }}
 resources:
   - name: dvu_cron_trigger
     type: CronTrigger
@@ -64,6 +70,7 @@ pipelines:
         configuration:
           inputResources:
             - name: myRepo_1
+              <<: *git_resource_trigger_condition
           outputResources:
             - name: propertyBag_1
           integrations:
