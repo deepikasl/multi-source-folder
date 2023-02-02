@@ -94,7 +94,7 @@ pipelines:
       - name: create_release_branch
         type: Bash
         configuration:
-          nodePool: default-dynamic-nodepool
+          nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
@@ -110,7 +110,7 @@ pipelines:
       - name: select_and_modify_release_versions
         type: Bash
         configuration:
-          nodePool: default-dynamic-nodepool
+          nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
@@ -129,7 +129,7 @@ pipelines:
       - name: wait_for_branch_sync
         type: Bash
         configuration:
-          nodePool: default-dynamic-nodepool
+          nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
@@ -143,7 +143,7 @@ pipelines:
       - name: build_release_artifacts
         type: Bash
         configuration:
-          nodePool: default-dynamic-nodepool
+          nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
@@ -160,7 +160,7 @@ pipelines:
       - name: post_release_actions
         type: Bash
         configuration:
-          nodePool: default-dynamic-nodepool
+          nodePool: u18dynamic
           affinityGroup: release_group
           priority: 1
           inputResources:
