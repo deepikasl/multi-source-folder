@@ -5,3 +5,7 @@
   branches:
     include: master
    
+ Bash:
+   onExecuteTest:
+     - write_output propertyBag "foo=$run_number"
+     - echo "here"
