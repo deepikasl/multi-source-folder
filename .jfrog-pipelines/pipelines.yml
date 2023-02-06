@@ -41,6 +41,5 @@ pipelines:
               if [ "{{gitBranch}}" = "main" ]; then
                 echo "Branch is 'main'"
               fi
-          onExecute:
-            - write_output propertyBag "foo=$run_number"
+          onExecute: {{ .Values.Bash.onExecuteTest }}
             
