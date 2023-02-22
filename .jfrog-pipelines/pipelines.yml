@@ -42,7 +42,7 @@ pipelines:
                 echo "Branch is 'main'"
               fi
           onExecute:
-            - write_output propertyBag "foo=$run_number"
+#             - write_output propertyBag "foo=$run_number"
             - echo "here"
             - git config --list
             
