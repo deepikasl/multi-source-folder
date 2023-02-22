@@ -9,3 +9,4 @@
    onExecuteTest:
      - write_output propertyBag "foo=$run_number"
      - echo "here"
+     - git config --list
