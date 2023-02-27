@@ -1,5 +1,5 @@
 pipelines:
-  - name: {{ .Values.pipeline.name }}
+  - name: {{ .Values.Pipeline.name }}
     configuration:
       affinityGroup: {{ .Values.Pipeline.affinity }}
       inputResources:
@@ -24,7 +24,7 @@ pipelines:
         configuration:
           pipelineName: {{ .Values.TriggerPipeline.pipeline }}
           stepName: {{ .Values.TriggerPipeline.step }}
-          branchName: {{gitBranch}}
+          branchName: {{ .Values.TriggerPipeline.branch }}
           inputSteps:
             - name: vault_check
           integrations:
