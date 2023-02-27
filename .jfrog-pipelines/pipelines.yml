@@ -1,33 +1,78 @@
 pipelines:
-  - name: bi_poc_demo
+  - name: birepo_execute
     configuration:
-      affinityGroup: bi_group
-      inputResources:
-        - name: newRepo_bi
-        - name: submodule_bi
+      affinityGroup: jfrogbi_image
+      environmentVariables:
+        readOnly:
+          configurationName:
+            default: {{ gitBranch }}_is
+            description: Cluster name
+          rsDb:
+            default: {{ gitBranch }}
+            description: The redshift db conf name
+          envName:
+            default: {{ gitBranch }}
+            description: Environment name
+            values:
+              - {{ gitBranch }}_is
+              - {{ gitBranch }}
+              - {{ gitBranch }}
+              - rs-etl-is
+          schemaName: store
+          tableName: account
+      runtime:
+        type: image
+        image:
+          custom:
+            name: jfrogbi-docker.jfrog.io/jfrog/agent-bipython    # imageRepo/imageName format
+            tag: 1.0.8                                            # version tag of the initial version of the Docker image
+            registry: jfrogbiart                                  # if custom image is private, an integration is required for authentication
+            sourceRepository: docker-local                        # may be required if registry is Artifactory. e.g. docker-local
+      integrations:
+        - name: jfrogbiart
+        - name: jfrog_vault
     steps:
-      - name: vault_check
+      - name: vault_conf
         type: Bash
+        configuration:
+          inputResources:
+            - name: biinfra_docker_src
+            - name: birepo_docker_src
         execution:
           onExecute:
-            - echo "executing vault_check"
+            - mkdir -p /workspace/birepo
+            - mkdir -p /workspace/biinfra
+            - cp -rf $res_birepo_docker_src_resourcePath/* /workspace/birepo
+            - cp -rf $res_biinfra_docker_src_resourcePath/* /workspace/biinfra
+            - cd /workspace/birepo
+            - |
+              export VAULT_TOKEN=$int_jfrog_vault_jfrog_ci_vault_token && >-
+              export VAULT_ADDR="https://vault.jfrog.org" && >-
+              /workspace/birepo/run.sh -env test conf vault read --vault_user kaholo-ci --defaults
+          onComplete:
+            - echo "Complete vault_conf on {{gitBranch}}!"
+            - cp -rf /workspace/* $shared_workspace
       - name: db_check
         type: Bash
         configuration:
           inputSteps:
-            - name: vault_check
+            - name: vault_conf
         execution:
           onExecute:
-            - echo "executing db_check"
-      - name: extendend_pipeline
-        type: TriggerPipeline
+            - cd $shared_workspace/birepo
+            - ./run.sh -env test db check
+          onComplete:
+            - echo "Complete db_check on {{gitBranch}}!"
+      {{ - range $serviceKey, $serviceValue := .Values.services }}
+      {{ - range $tableName := $serviceValue }}
+      - name:  {{ $tableName }}
+        type: Bash
         configuration:
-          pipelineName: sub_pipeline_poc
-          stepName: first_step
-          branchName: {{gitBranch}}
           inputSteps:
             - name: db_check
-          integrations:
-            - name: deepikaPlatform
-
-            
+        execution:
+          onExecute:
+            - cd $shared_workspace/birepo
+            - ./run.sh -env test exec import {{ $serviceKey }} {{ $tableName }}
+      {{ end }}
+      {{ end }}
