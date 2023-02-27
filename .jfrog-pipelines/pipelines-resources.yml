@@ -1,15 +1,20 @@
 resources:
-  - name: newRepo_bi
-    type: GITRepo
+  - name: biinfra_docker_src
+    type: GitRepo
     configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
+      gitProvider: jfrog_github
+      path: jfrog/biinfra
       branches:
-        include: master
-  - name: submodule_bi
-    type: GITRepo
+        include: {{ gitBranch }}
+      buildOn:
+        commit: false
+  - name: birepo_docker_src
+    type: GitRepo
     configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
+      gitProvider: jfrog_github
+      path: jfrog/birepo
       branches:
-        include: master
+        include: {{ gitBranch }}
+      buildOn:
+        commit: false
+  
