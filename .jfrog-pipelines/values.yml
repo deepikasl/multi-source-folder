@@ -5,3 +5,4 @@ Pipeline:
 TriggerPipeline:
   pipeline: sub_pipeline_poc
   step: first_step
+  branch: bipipeline
