@@ -1,12 +1,12 @@
 templateRepository:
   gitProvider: deepikaGithub
-  path: deepikasl/old-templates
-  branch: main
-  templateFolder: templates/jfrog_name_space/myPipelineTemplate
+  path: deepikasl/multi-source-folder
+  branch: bipipeline
+  templateFolder: templates
  
 publishTemplate:
   namespace: deepikaTemplates
-  name: myPipelineTemplate
+  name: bi_pipelines_template
   version: 1.0.0
   pipelineName: PublishTemplate
   artifactoryIntegration: deepikaArt
