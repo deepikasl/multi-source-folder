@@ -1,0 +1,23 @@
+pipelines:
+  - name: sub_pipeline_poc
+    configuration:
+      affinityGroup: bi_group
+      inputResources:
+        - name: newRepo_bi
+        - name: submodule_bi
+    steps:
+      - name: first_step
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing first step"
+      - name: second_step
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: first_step
+        execution:
+          onExecute:
+            - echo "executing second step"
+
+            
