@@ -26,7 +26,7 @@ pipelines:
           stepName: first_step
           branchName: {{gitBranch}}
           inputSteps:
-            - name: vault_check
+            - name: db_check
           integrations:
             - name: deepikaPlatform
 
