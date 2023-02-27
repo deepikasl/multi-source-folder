@@ -1,0 +1,15 @@
+resources:
+  - name: newRepo_bi
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+  - name: submodule_bi
+    type: GITRepo
+    configuration:
+      path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
+      branches:
+        include: master
