@@ -1,10 +1,5 @@
 pipelines:
   - name: sub_pipeline_poc
-    configuration:
-      affinityGroup: bi_group
-      inputResources:
-        - name: newRepo_bi
-        - name: submodule_bi
     steps:
       - name: first_step
         type: Bash
