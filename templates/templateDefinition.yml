@@ -1,12 +1,12 @@
 pipelines:
-  - name: {{ .Values.Pipeline.name }}
+  - name: pipeline_name
     configuration:
       affinityGroup: {{ .Values.Pipeline.affinity }}
       inputResources:
         - name: newRepo_bi
         - name: submodule_bi
     steps:
-      - name: vault_check
+      - name: {{ .Values.step.name }}
         type: Bash
         execution:
           onExecute:
