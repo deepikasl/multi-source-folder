@@ -5,27 +5,27 @@ pipelines:
       inputResources:
         - name: newRepo_bi
         - name: submodule_bi
-  steps:
-    - name: vault_check
-      type: Bash
-      execution:
-        onExecute:
-          - echo "executing vault_check"
-    - name: db_check
-      type: Bash
-      configuration:
-        inputSteps:
-          - name: vault_check
-      execution:
-        onExecute:
-          - echo "executing db_check"
-    - name: extendend_pipeline
-      type: TriggerPipeline
-      configuration:
-        pipelineName: {{ .Values.TriggerPipeline.pipeline }}
-        stepName: {{ .Values.TriggerPipeline.step }}
-        branchName: {{ .Values.TriggerPipeline.branch }}
-        inputSteps:
-          - name: vault_check
-        integrations:
-          - name: {{ .Values.PlatformIntegration.name }}
+    steps:
+      - name: vault_check
+        type: Bash
+        execution:
+          onExecute:
+            - echo "executing vault_check"
+      - name: db_check
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: vault_check
+        execution:
+          onExecute:
+            - echo "executing db_check"
+      - name: extendend_pipeline
+        type: TriggerPipeline
+        configuration:
+          pipelineName: {{ .Values.TriggerPipeline.pipeline }}
+          stepName: {{ .Values.TriggerPipeline.step }}
+          branchName: {{ .Values.TriggerPipeline.branch }}
+          inputSteps:
+            - name: vault_check
+          integrations:
+            - name: {{ .Values.PlatformIntegration.name }}
