@@ -64,8 +64,8 @@ pipelines:
             - ./run.sh -env test db check
           onComplete:
             - echo "Complete db_check on {{gitBranch}}!"
-      {{ - range $serviceKey, $serviceValue := .Values.services }}
-      {{ - range $tableName := $serviceValue }}
+      {{- range $serviceKey, $serviceValue := .Values.services }}
+      {{- range $tableName := $serviceValue }}
       - name:  {{ $tableName }}
         type: Bash
         configuration:
