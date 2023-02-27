@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: jfrog_github
-      path: jfrog/biinfra
+      path: deepikasl/multi-source-folder
       branches:
         include: {{ gitBranch }}
       buildOn:
@@ -12,7 +12,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: jfrog_github
-      path: jfrog/birepo
+      path: deepikasl/multi-source-folder
       branches:
         include: {{ gitBranch }}
       buildOn:
