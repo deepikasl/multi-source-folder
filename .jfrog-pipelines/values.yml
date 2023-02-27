@@ -1,0 +1,7 @@
+Pipeline:
+  name: bi_pipeline_poc
+  affinity: bi_affinity
+  
+TriggerPipeline:
+  pipeline: sub_pipeline_poc
+  step: first_step
