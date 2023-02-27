@@ -27,8 +27,5 @@ pipelines:
           branchName: {{gitBranch}}
           inputSteps:
             - name: vault_check
-        execution:
-          onExecute:
-            - echo "executing extendend_pipeline"
 
             
