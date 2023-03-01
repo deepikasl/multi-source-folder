@@ -1,5 +1,8 @@
 services:
   store:
-    - account
-    - saas_subscription
-    - bucket
+    - account:
+        priority: 1
+    - saas_subscription:
+        priority: 2
+    - bucket:
+        priority: 3
