@@ -1,37 +1,41 @@
 valuesFilePath: ./values.yml
 pipelines:
-  - name: birepo_execute
+  {{- range $schemaKey, $schemaValue := .Values.services }}
+  - name: birepo_{{ $schemaKey }}
     configuration:
       affinityGroup: jfrogbi_image
       environmentVariables:
+        SDM_ADMIN_TOKEN: ${int_sdm_cred_token}
+        USE_SDM: "true"
         readOnly:
           configurationName:
-            default: {{ gitBranch }}_is
-            description: Cluster name
-          rsDb:
-            default: {{ gitBranch }}
-            description: The redshift db conf name
-          envName:
-            default: {{ gitBranch }}
-            description: Environment name
+            default: {{gitBranch}}
+            description: Configuration name
             values:
-              - {{ gitBranch }}_is
-              - {{ gitBranch }}
-              - {{ gitBranch }}
-              - rs-etl-is
-          schemaName: store
-          tableName: account
+              - test
+              - test_is
+              - prod
+              - prod_is
+          rsDb:
+            {{ if ( eq "$configurationName" "test" ) }}
+            default: redshift-etl
+            {{ else if ( eq "$configurationName" "test_is" ) }}
+            default: rs-etl-is
+            {{ else }}
+            default: rd-db
+            {{ end }}
       runtime:
         type: image
         image:
           custom:
             name: jfrogbi-docker.jfrog.io/jfrog/agent-bipython    # imageRepo/imageName format
-            tag: 1.0.8                                            # version tag of the initial version of the Docker image
+            tag: 2.0.0                                            # version tag of the initial version of the Docker image
             registry: jfrogbiart                                  # if custom image is private, an integration is required for authentication
             sourceRepository: docker-local                        # may be required if registry is Artifactory. e.g. docker-local
       integrations:
         - name: jfrogbiart
         - name: jfrog_vault
+        - name: sdm_cred
     steps:
       - name: vault_conf
         type: Bash
@@ -51,7 +55,7 @@ pipelines:
               export VAULT_ADDR="https://vault.jfrog.org" && >-
               /workspace/birepo/run.sh -env test conf vault read --vault_user kaholo-ci --defaults
           onComplete:
-            - echo "Complete vault_conf on {{gitBranch}}!"
+            - echo "Complete vault_conf on gitBranch!"
             - cp -rf /workspace/* $shared_workspace
       - name: db_check
         type: Bash
@@ -63,17 +67,51 @@ pipelines:
             - cd $shared_workspace/birepo
             - ./run.sh -env test db check
           onComplete:
-            - echo "Complete db_check on {{gitBranch}}!"
-      {{- range $serviceKey, $serviceValue := .Values.services }}
-      {{- range $tableName := $serviceValue }}
-      - name:  {{ $tableName }}
+            - echo "Complete db_check on gitBranch!"
+      - name: sdm_client
         type: Bash
         configuration:
+          runtime:
+            type: image
+            image:
+              custom:
+                name: jfrogbi-docker.jfrog.io/sdmrepo/client
+                registry: jfrogbiart
+                tag: "latest"
+                autoPull: true
+                options: --entrypoint=""
           inputSteps:
             - name: db_check
         execution:
           onExecute:
+            - sdm install --user root
+            - sdm login
+            - echo "Waiting for SDM to start"
+            - |
+              sh -c "/entrypoint.sh & sleep 4 && /sdm.linux connect AWS-jfrog-prod-rds-k8s-prod-uas-us-east-1-postgresql-read-replica && >-
+                        /sdm.linux connect AWS-jfrog-prod-us-east-1-k8s-jfapps-postgresql-read-replica && >-
+                        /sdm.linux connect AWS-jfrog-prod-rds-k8s-prod-uas-us-east-1-postgresql && >-
+                        /sdm.linux connect AWS-prod-euc1-k8s-prod-ba-usage-services-shared-postgresql && >-
+                        /sdm.linux connect AWS-jfrog-prod-k8s-prod-ba-usage-services-shared-postgresql-bacicd && >-
+                        /sdm.linux connect AWS-jfrog-prod-storedb-read-replica-jfapps && >-
+                        /sdm.linux connect AWS-prod-euc1-jbach-mongo-read-only-sdm && >-
+                        /sdm.linux connect AWS-prod-euc1-k8s-prod-ba-usage-services-shared-bajobsprod-postgresql && >- wait"
+          onComplete:
+            - echo "Success login sdm!"
+      {{- range $tableKey, $tableValue := $schemaValue }}
+      {{- range $tableName := $tableValue }}
+      {{- range $scriptkey, $scriptValue := $tableValue }}
+      - name: {{ $scriptkey }}
+        type: Bash
+        configuration:
+          priority: {{ $tableName.priority }}
+          inputSteps:
+            - name: sdm_login
+        execution:
+          onExecute:
             - cd $shared_workspace/birepo
-            - ./run.sh -env test exec import {{ $serviceKey }} {{ $tableName }}
+            - ./run.sh -env test exec import {{ $schemaKey }} {{ $scriptkey }}
       {{ end }}
       {{ end }}
+      {{ end }}
+  {{ end }}
