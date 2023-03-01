@@ -106,7 +106,7 @@ pipelines:
         configuration:
           priority: {{ $tableName.priority }}
           inputSteps:
-            - name: sdm_login
+            - name: sdm_client
         execution:
           onExecute:
             - cd $shared_workspace/birepo
