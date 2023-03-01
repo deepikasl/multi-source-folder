@@ -16,14 +16,6 @@ pipelines:
               - test_is
               - prod
               - prod_is
-          rsDb:
-            {{ if ( eq "$configurationName" "test" ) }}
-            default: redshift-etl
-            {{ else if ( eq "$configurationName" "test_is" ) }}
-            default: rs-etl-is
-            {{ else }}
-            default: rd-db
-            {{ end }}
       runtime:
         type: image
         image:
@@ -45,6 +37,13 @@ pipelines:
             - name: birepo_docker_src
         execution:
           onExecute:
+            {{ if ( eq "$configurationName" "test" ) }}
+            - add_run_variables rsDb="redshift-etl"
+            {{ else if ( eq "$configurationName" "test_is" ) }}
+            - add_run_variables rsDb="rs-etl-is"
+            {{ else }}
+            - add_run_variables rsDb="rs-db"
+            {{ end }}
             - mkdir -p /workspace/birepo
             - mkdir -p /workspace/biinfra
             - cp -rf $res_birepo_docker_src_resourcePath/* /workspace/birepo
@@ -64,6 +63,7 @@ pipelines:
             - name: vault_conf
         execution:
           onExecute:
+            - echo $rsDb
             - cd $shared_workspace/birepo
             - ./run.sh -env test db check
           onComplete:
