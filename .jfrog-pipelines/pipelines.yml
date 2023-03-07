@@ -20,7 +20,6 @@ resources:
     configuration:
       jfrogPlatformProvider: deepikaArt
       repositories:
-        - jfrogpipelines
         - example-repo-local
       artifactPath:
         include:
@@ -52,8 +51,6 @@ resources:
     type: Artifact
     configuration:
       jfrogPlatformProvider: deepikaArt
-      repositories:
-        - jfrogpipelines
       artifactPath:
         include:
           - tools/*
