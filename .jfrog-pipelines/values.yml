@@ -4,6 +4,7 @@
   path: deepikasl/jfrog-pipelines
   branches:
     include: master
+  jfdevCiCommonsDefaultVersion: 1.42.*
    
  Bash:
    onExecuteTest:
