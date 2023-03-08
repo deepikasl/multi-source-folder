@@ -37,6 +37,11 @@ pipelines:
             - name: deepikaGithub
         execution:
           onStart:
+            - task: jfdev-ci-commons/setup-step-commons@v0.0.1
+              input:
+                JFDEV_CI_COMMONS_DEFAULT_VERSION: {{ .Values.jfdevCiCommonsDefaultVersion }}
+                PROJECT_ROOT_DIR: "${res_observability_pre_releases_process_bitbucket_resourcePath}"
+              id: setup_step_commons
             - |
               if [ "{{gitBranch}}" = "main" ]; then
                 echo "Branch is 'main'"
