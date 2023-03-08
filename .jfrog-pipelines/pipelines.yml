@@ -1,95 +1,41 @@
+template: true   # required for local templates
+valuesFilePath: ./values.yml
+
 resources:
-  - name: artifact_test
-    type: Artifact
+  - name: matrix_repo
+    type: GitRepo
     configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - example-repo
-      artifactPath:
-        include:
-          - tools/*
-        exclude:
-          - tools/exclude/*
-      buildOn:
-        deployed: true
+      path: deepikasl/multi-source-folder      # Change to your own path
       branches:
-        include: artifactResource
-        exclude: master
-  - name: artifact_2
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - example-repo-local
-      artifactPath:
-        include:
-          - tools/*
-        exclude:
-          - tools/exclude/*
-      buildOn:
-        deployed: true
-        cached: true
-        deleted: true
-      branches:
-        include: artifactResource
-  - name: artifact_1
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - jfrogpipelines
-        - example-repo-local
-      artifactPath:
-        include:
-          - default/*
-          - tools/*
-      buildOn:
-        deployed: true
-      branches:
-        include: artifactResource
-  - name: artifact_3
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: deepikaArt
-      artifactPath:
-        include:
-          - tools/*
-      buildOn:
-        deployed: true
-      branches:
-        include: artifactResource
+        include: ^dynamicMatrix$
+      gitProvider: deepikaGithub        # Change to your own GitHub integration name
 
 pipelines:
-  - name: my_pipe_1
-    configuration:
-      jfrogCliVersion: 2
+  - name: matrix_single_dimension_pipeline
     steps:
-      - name: step_1
+      - name: first_step
         type: Bash
         configuration:
           inputResources:
-            - name: artifact_1
+            - name: matrix_repo
         execution:
           onExecute:
-            - echo "executing step_1"
-  - name: my_pipe_2
-    steps:
-      - name: step_1
-        type: Bash
-        configuration:
-          inputResources:
-            - name: artifact_2
-        execution:
-          onExecute:
-            - echo "executing step_1"
-  - name: my_pipe_3
-    steps:
-      - name: step_1
-        type: Bash
-        configuration:
-          inputResources:
-            - name: artifact_3
-        execution:
-          onExecute:
-            - echo "executing step_1"
+            - echo "executing"
+            - multiplier=("dog" "goat" "lizard")
+            - add_run_variable step_multiplier=multiplier
             
+      - name: matrix_step
+        type: Matrix
+        stepMode: Bash
+        configuration:
+          inputSteps:
+            - name: first_step
+        stepletMultipliers:
+          environmentVariables:             # Sets of environment variables for steplets
+            {{- range $animalName := ${step_multiplier[@]} }}
+            - animal:    {{ $animalName }}       # - Set 1
+            {{ end }}
+        execution:
+          onExecute:
+            - echo "Executing matrix step on ${steplet_id}"
+            - echo "Variation animal = ${animal}
