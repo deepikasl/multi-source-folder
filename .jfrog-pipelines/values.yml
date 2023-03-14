@@ -6,7 +6,7 @@ Pipeline:
   name: foo
 
 GitRepo:
-  name: fooGitRepo
+  name: fooGitRepo1
   gitProvider: deepikaGithub
   path: deepikasl/jfrog_pipelines
   branches:
@@ -16,7 +16,7 @@ GitRepo:
 artifactoryIntegration: art
 
 Image:
-  name: fooImage
+  name: fooImage1
   sourceRepository: foo
   autoPull: false
 
@@ -33,4 +33,4 @@ DockerPush:
 
 BuildInfo:
   autoPublishBuildInfo: true
-  name: fooBuildInfo
+  name: fooBuildInfo1
