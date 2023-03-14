@@ -1,4 +1,4 @@
 include:
-  template: jfrog-internal/PublishTemplate/1.0.0
+  template: jfrog/PublishTemplate/1.0.0
 valuesFilePath: ./values.yml
               
