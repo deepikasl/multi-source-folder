@@ -8,5 +8,5 @@ publishTemplate:
   namespace: deepikaTemplates
   name: bi_pipelines_template1
   version: 1.0.0
-  pipelineName: PublishTemplate
+  pipelineName: PublishTemplate1
   artifactoryIntegration: deepikaArt
