@@ -1,18 +1,12 @@
-globals:
-  service:
-    # service details with spaces need to be quoted, e.g. '"foo bar"'
-    displayName: "JFDev CI Commons"
-    shortName: "jfci"
-    includedServices: "jfdev_ci_commons"
-    preReleasePipeline: "jfdev_ci_commons_prerelease_pipeline"
-    buildPipeline: "jfdev_ci_commons_build"
-    releasePipeline: "jfdev_ci_commons_release"
-    buildPipelineFirstStep: "trigger_all"
-  pipelineDefinition:
-    servicePreReleasesProcessGitRepoResource: "jfdev_ci_commons_pre_releases_process_bitbucket"
-    loadPreReleasesProcessPipelineStepCommons: 'source "${res_jfdev_ci_commons_pre_releases_process_bitbucket_resourcePath}/build/ci/scripts/lib/pipelineStepCommons.sh"'
-    gitPushSshIntegration: "artifactory_bitbucket_push"
-    preReleaseRetriggerPropertyBag: "jfdev_ci_commons_prerelease_test_retrigger"
-
-Miscellaneous:
-  jfdev_ci_commons_path: "auto/jfdev-ci-commons"
+templateRepository:
+  gitProvider: deepikaGithub
+  path: deepikasl/multi-source-folder
+  branch: bipipeline
+  templateFolder: templates
+ 
+publishTemplate:
+  namespace: deepikaTemplates
+  name: bi_pipelines_template1
+  version: 1.0.0
+  pipelineName: PublishTemplate
+  artifactoryIntegration: deepikaArt
