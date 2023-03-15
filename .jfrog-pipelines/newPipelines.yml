@@ -1,3 +1,3 @@
 include:
-  template: jfrog-internal/PublishTemplate2/1.0.0
+  template: jfrog internal/PublishTemplate2/1.0.0
 valuesFilePath: ./valuesnew.yml
