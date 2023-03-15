@@ -1,0 +1,12 @@
+templateRepository:
+  gitProvider: deepikaGithub
+  path: deepikasl/multi-source-folder
+  branch: bipipeline
+  templateFolder: templates
+ 
+publishTemplate:
+  namespace: deepikaTemplates
+  name: bi_pipelines_template
+  version: 1.0.0
+  pipelineName: PublishTemplate3
+  artifactoryIntegration: deepikaArt
