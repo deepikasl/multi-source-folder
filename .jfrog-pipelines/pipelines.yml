@@ -37,13 +37,26 @@ pipelines:
             - name: birepo_docker_src
         execution:
           onExecute:
-            {{ if ( eq "$configurationName" "test" ) }}
+            {{ if ( eq "$configurationName" "prod" ) }}
             - add_run_variables rsDb="redshift-etl"
-            {{ else if ( eq "$configurationName" "test_is" ) }}
+            - add_run_variables envName="prod"
+            {{ else if ( eq "$configurationName" "prod_is" ) }}
             - add_run_variables rsDb="rs-etl-is"
+            - add_run_variables envName="prod"
+            {{ else if ( eq "$configurationName" "test" ) }}
+            - add_run_variables rsDb="redshift-etl"
+            - add_run_variables envName="test"
             {{ else }}
-            - add_run_variables rsDb="rs-db"
+            - add_run_variables rsDb="rs-etl-is"
+            - add_run_variables envName="test"
             {{ end }}
+#             {{ if ( eq "$configurationName" "test" ) }}
+#             - add_run_variables rsDb="redshift-etl"
+#             {{ else if ( eq "$configurationName" "test_is" ) }}
+#             - add_run_variables rsDb="rs-etl-is"
+#             {{ else }}
+#             - add_run_variables rsDb="rs-db"
+#             {{ end }}
             - mkdir -p /workspace/birepo
             - mkdir -p /workspace/biinfra
             - cp -rf $res_birepo_docker_src_resourcePath/* /workspace/birepo
