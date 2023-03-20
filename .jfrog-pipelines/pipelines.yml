@@ -70,4 +70,5 @@ pipelines:
         execution:
           onExecute:
             - echo "executing step_1"
+            - echo "sync started"
             
