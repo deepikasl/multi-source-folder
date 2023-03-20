@@ -65,6 +65,7 @@ pipelines:
         execution:
           onExecute:
             - echo "hi"
+            - echo "you are here"
       - name: manual_trigger
         type: Bash
         configuration:
