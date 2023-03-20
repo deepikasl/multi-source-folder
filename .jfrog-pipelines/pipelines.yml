@@ -119,6 +119,4 @@ pipelines:
             - pushd $res_newRepo_resourcePath
             - ls
             - pushd myFirstSubModule
-            - ls
-            - ll
             
