@@ -120,4 +120,5 @@ pipelines:
             - ls
             - pushd myFirstSubModule
             - ls
+            - ll
             
