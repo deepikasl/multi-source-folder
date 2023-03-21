@@ -1,10 +1,10 @@
 services:
-  project-1:
+  project_1:
     - first:
         priority: 1
-  project-3:
+  project_3:
     - first:
         priority: 2
-  project-2:
+  project_2:
     - first:
         priority: 1
