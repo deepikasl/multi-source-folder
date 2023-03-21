@@ -1,8 +1,10 @@
 services:
-  store:
+  project-1:
     - first:
         priority: 1
-    - second:
+  project-3:
+    - first:
         priority: 2
-    - third:
-        priority: 3
+  project-2:
+    - first:
+        priority: 1
