@@ -1,5 +1,5 @@
 resources:
-  - name: biinfra_docker_src
+  - name: myRepo_deepika
     type: GitRepo
     configuration:
       gitProvider: jfrog_github
@@ -7,14 +7,5 @@ resources:
       branches:
         include: {{ gitBranch }}
       buildOn:
-        commit: false
-  - name: birepo_docker_src
-    type: GitRepo
-    configuration:
-      gitProvider: jfrog_github
-      path: deepikasl/multi-source-folder
-      branches:
-        include: {{ gitBranch }}
-      buildOn:
-        commit: false
+        commit: true
   
