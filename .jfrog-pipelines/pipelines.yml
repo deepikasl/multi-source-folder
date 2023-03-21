@@ -1,4 +1,4 @@
-valuesFilePath: ./values.yaml
+valuesFilePath: ./values.yml
 pipelines:
   {{- range $schemaKey, $schemaValue := .Values.services }}
   - name: myRepo_{{ $schemaKey }}
