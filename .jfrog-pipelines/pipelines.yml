@@ -1,4 +1,4 @@
-valuesFilePath: ./jira_cloud-values.yaml
+valuesFilePath: ./values.yaml
   {{ $schemaKey := "jira_cloud" }}
 pipelines:
   - name: birepo_{{ $schemaKey }}
