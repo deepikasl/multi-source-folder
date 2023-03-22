@@ -1,8 +1,29 @@
-services:
-  store:
-    - account:
-        priority: 1
-    - saas_subscription:
-        priority: 2
-    - bucket:
-        priority: 3
+jira_cloud_tables:
+  jiraissue:
+    priority: 1
+    type: import
+  project_version:
+    priority: 2
+    type: import
+jira_cloud_etl_tables:
+  dim_jira:
+    priority: 3
+    type: etl
+  dim_jira_security:
+    priority: 4
+    type: etl
+  dim_jira_ktlo:
+    priority: 4
+    type: etl
+  dim_rnd_epics:
+    priority: 4
+    type: etl
+  dim_jira_cases:
+    priority: 4
+    type: etl
+  dim_jira_security_scd:
+    priority: 5
+    type: etl
+  dim_jira_ktlo_scd:
+    priority: 5
+    type: etl
