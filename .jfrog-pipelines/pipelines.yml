@@ -1,15 +1,13 @@
-valuesFilePath: ./values.yml
+valuesFilePath: ./jira_cloud-values.yaml
+  {{ $schemaKey := "jira_cloud" }}
 pipelines:
-  {{- range $schemaKey, $schemaValue := .Values.services }}
   - name: birepo_{{ $schemaKey }}
     configuration:
       affinityGroup: jfrogbi_image
       environmentVariables:
-        SDM_ADMIN_TOKEN: ${int_sdm_cred_token}
-        USE_SDM: "true"
         readOnly:
           configurationName:
-            default: test
+            default: test_is
             description: Configuration name
             values:
               - test
@@ -17,114 +15,101 @@ pipelines:
               - prod
               - prod_is
       runtime:
-        type: image
-        image:
-          custom:
-            name: jfrogbi-docker.jfrog.io/jfrog/agent-bipython    # imageRepo/imageName format
-            tag: 2.0.0                                            # version tag of the initial version of the Docker image
-            registry: jfrogbiart                                  # if custom image is private, an integration is required for authentication
-            sourceRepository: docker-local                        # may be required if registry is Artifactory. e.g. docker-local
-      integrations:
-        - name: jfrogbiart
-        - name: jfrog_vault
-        - name: sdm_cred
+        type: host
     steps:
       - name: vault_conf
         type: Bash
         configuration:
+          runtime:
+            type: host
           inputResources:
-            - name: biinfra_docker_src
-            - name: birepo_docker_src
+            - name: biinfra_git_src
+              trigger: false
+            - name: birepo_git_src
+              trigger: false
         execution:
           onExecute:
-            {{ if ( eq "$configurationName" "prod" ) }}
-            - add_run_variables rsDb="redshift-etl"
-            - add_run_variables envName="prod"
-            {{ else if ( eq "$configurationName" "prod_is" ) }}
-            - add_run_variables rsDb="rs-etl-is"
-            - add_run_variables envName="prod"
-            {{ else if ( eq "$configurationName" "test" ) }}
-            - add_run_variables rsDb="redshift-etl"
-            - add_run_variables envName="test"
-            {{ else }}
-            - add_run_variables rsDb="rs-etl-is"
-            - add_run_variables envName="test"
-            {{ end }}
-#             {{ if ( eq "$configurationName" "test" ) }}
-#             - add_run_variables rsDb="redshift-etl"
-#             {{ else if ( eq "$configurationName" "test_is" ) }}
-#             - add_run_variables rsDb="rs-etl-is"
-#             {{ else }}
-#             - add_run_variables rsDb="rs-db"
-#             {{ end }}
+            - |
+              if [ "$configurationName" == "prod" ]; then
+                add_run_variables rsDb="redshift-etl"
+                add_run_variables envName="prod"
+              elif [ "$configurationName" == "prod_is" ]; then
+                add_run_variables rsDb="rs-etl-is"
+                add_run_variables envName="prod"
+              else
+                add_run_variables rsDb="rs-etl-is"
+                add_run_variables envName="test"
+              fi
+            - add_run_variables vaultUser="kaholo-ci"
             - mkdir -p /workspace/birepo
             - mkdir -p /workspace/biinfra
-            - cp -rf $res_birepo_docker_src_resourcePath/* /workspace/birepo
-            - cp -rf $res_biinfra_docker_src_resourcePath/* /workspace/biinfra
+            - cp -rf $res_birepo_git_src_resourcePath/* /workspace/birepo
+            - cp -rf $res_biinfra_git_src_resourcePath/* /workspace/biinfra
             - cd /workspace/birepo
             - |
               export VAULT_TOKEN=$int_jfrog_vault_jfrog_ci_vault_token && >-
               export VAULT_ADDR="https://vault.jfrog.org" && >-
-              /workspace/birepo/run.sh -env test conf vault read --vault_user kaholo-ci --defaults
+              export SDM_ADDRESS="127.0.0.1" && >-
+              /workspace/birepo/run.sh -env ${envName} conf vault read --vault_user ${vaultUser} --defaults
           onComplete:
-            - echo "Complete vault_conf on gitBranch!"
+            - echo "Complete vault_conf on Branch {{gitBranch}}!"
             - cp -rf /workspace/* $shared_workspace
-      - name: db_check
+      - name: docker_agent_build
         type: Bash
         configuration:
           inputSteps:
             - name: vault_conf
         execution:
           onExecute:
-            - echo $rsDb
-            - cd $shared_workspace/birepo
-            - ./run.sh -env test db check
+            - cd $shared_workspace/biinfra
+            - docker login -u $int_jfrogbiart_user -p $int_jfrogbiart_apikey jfrogbi-docker.jfrog.io
+            - echo "did login"
           onComplete:
-            - echo "Complete db_check on gitBranch!"
-      - name: sdm_client
+            - echo "complete step"
+      - name: db_check
         type: Bash
         configuration:
-          runtime:
-            type: image
-            image:
-              custom:
-                name: jfrogbi-docker.jfrog.io/sdmrepo/client
-                registry: jfrogbiart
-                tag: "latest"
-                autoPull: true
-                options: --entrypoint=""
+          inputSteps:
+            - name: docker_agent_build
+        execution:
+          onExecute:
+            - cd $shared_workspace/birepo
+            - ./run.sh -env ${envName} db check
+          onComplete:
+            - echo "Complete db_check on Branch {{gitBranch}}!"
+      {{- range $tableKey, $tableValue := .Values.jira_cloud_tables }}
+      - name: {{ $tableKey }}
+        type: Bash
+        configuration:
+          priority: {{ $tableValue.priority }}
           inputSteps:
             - name: db_check
         execution:
           onExecute:
-            - sdm install --user root
-            - sdm login
-            - echo "Waiting for SDM to start"
+            - cd $shared_workspace/birepo
             - |
-              sh -c "/entrypoint.sh & sleep 4 && /sdm.linux connect AWS-jfrog-prod-rds-k8s-prod-uas-us-east-1-postgresql-read-replica && >-
-                        /sdm.linux connect AWS-jfrog-prod-us-east-1-k8s-jfapps-postgresql-read-replica && >-
-                        /sdm.linux connect AWS-jfrog-prod-rds-k8s-prod-uas-us-east-1-postgresql && >-
-                        /sdm.linux connect AWS-prod-euc1-k8s-prod-ba-usage-services-shared-postgresql && >-
-                        /sdm.linux connect AWS-jfrog-prod-k8s-prod-ba-usage-services-shared-postgresql-bacicd && >-
-                        /sdm.linux connect AWS-jfrog-prod-storedb-read-replica-jfapps && >-
-                        /sdm.linux connect AWS-prod-euc1-jbach-mongo-read-only-sdm && >-
-                        /sdm.linux connect AWS-prod-euc1-k8s-prod-ba-usage-services-shared-bajobsprod-postgresql && >- wait"
+              if [ "{{ $tableValue.type }}" == "import" ]; then
+                add_run_variables execCmd="./run.sh -env ${envName} exec import {{ $schemaKey }} {{ $tableKey }} --rs_db ${rsDb}"
+              elif [ "{{ $tableValue.type }}" == "etl" ]
+                add_run_variables execCmd="./run.sh -env ${envName} exec etl {{ $schemaKey }} {{ $tableKey }} --rs_db ${rsDb}"
+              else
+                add_run_variables execCmd="./run.sh -env ${envName} exec export {{ $tableKey }} --rs_db ${rsDb}"
+              fi
+            - ${execCmd}
           onComplete:
-            - echo "Success login sdm!"
-      {{- range $tableKey, $tableValue := $schemaValue }}
-      {{- range $tableName := $tableValue }}
-      {{- range $scriptkey, $scriptValue := $tableValue }}
-      - name: {{ $scriptkey }}
+            - echo "Complete running {{ $schemaKey }}:{{ $tableKey }} on Branch {{gitBranch}}!"
+      {{ end }}
+      {{- range $tableKey, $tableValue := .Values.jira_cloud_etl_tables }}
+      - name: {{ $tableKey }}
         type: Bash
         configuration:
-          priority: {{ $tableName.priority }}
+          priority: {{ $tableValue.priority }}
           inputSteps:
-            - name: sdm_client
+            - name: {{ sub $tableValue.priority 1 }}
         execution:
           onExecute:
             - cd $shared_workspace/birepo
-            - ./run.sh -env test exec import {{ $schemaKey }} {{ $scriptkey }}
+            - ${execCmd}
+          onComplete:
+            - echo "Complete running {{ $schemaKey }}:{{ $tableKey }} on Branch {{gitBranch}}!"
       {{ end }}
-      {{ end }}
-      {{ end }}
-  {{ end }}
