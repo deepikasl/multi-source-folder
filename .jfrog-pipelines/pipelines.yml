@@ -5,6 +5,7 @@ resources:
       jfrogPlatformProvider: deepikaArt
       repositories:
         - example-repo
+        - test
         - jfrogpipelines
       artifactPath:
         include:
