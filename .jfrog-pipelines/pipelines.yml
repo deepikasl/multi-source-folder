@@ -13,7 +13,7 @@ resources:
       buildOn:
         deployed: true
       branches:
-        include: artifactResource
+        include: artifact2
         exclude: master
   - name: artifact_2
     type: Artifact
