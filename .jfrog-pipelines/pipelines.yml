@@ -1,4 +1,12 @@
 resources:
+  - name: myRepo_1
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
+
   - name: artifact_test
     type: Artifact
     configuration:
@@ -59,6 +67,7 @@ pipelines:
         configuration:
           inputResources:
             - name: artifact_1
+            - name: myRepo_1
         execution:
           onExecute:
             - echo "executing step_1"
