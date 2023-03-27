@@ -63,8 +63,6 @@ pipelines:
             - name: dvu_cron_trigger
 #               branch: main
         execution:
-          onStart:
-            - echo "here"
           onExecute:
             - echo "hi"
             - echo "you are here"
