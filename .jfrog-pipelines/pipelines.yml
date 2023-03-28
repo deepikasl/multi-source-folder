@@ -26,6 +26,3 @@ pipelines:
             - name: kube
           inputResources:
             - name: S_SYC_HBGDeploy_5978_0006_resource
-        execution:
-          onStart:
-            - echo "Preparing for work..."
