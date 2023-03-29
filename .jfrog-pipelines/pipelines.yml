@@ -23,6 +23,8 @@ pipelines:
         configuration:
           multiNode: true
           timeoutSeconds: 2700 # 45 minutes
+          integrations:
+            - name: entArt
           inputResources:
             - name: myRepo_1
           environmentVariables:
