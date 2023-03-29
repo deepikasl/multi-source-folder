@@ -33,6 +33,10 @@ pipelines:
             MARIADB_DATABASE_VERSION: "10.1.22"
         execution:
           onStart:
+            - PROJECT_ROOT_DIR="$res_myRepo_1_resourcePath"
+            - set -e
+            - echo "$PROJECT_ROOT_DIR"
+            - pushd $PROJECT_ROOT_DIR
             - pushd $res_myRepo_1_resourcePath
           onExecute:
             - echo "executing"
