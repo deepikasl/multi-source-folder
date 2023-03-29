@@ -1,0 +1,3 @@
+[submodule "vt1_private"]
+	path = vt1_private
+	url = git@github.com:deepikasl/vt1_private.git
