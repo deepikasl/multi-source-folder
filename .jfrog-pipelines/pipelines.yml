@@ -36,7 +36,7 @@ pipelines:
             - PROJECT_ROOT_DIR="$res_myRepo_1_resourcePath"
             - set -e
             - echo "$PROJECT_ROOT_DIR"
-            - pushd $PROJECT_ROOT_DIR
+            - pushd $IN_PROJECT_ROOT_DIR
             - pushd $res_myRepo_1_resourcePath
           onExecute:
             - echo "executing"
