@@ -6,6 +6,7 @@ resources:
       gitProvider: deepikaGithub
       branches:
         include: master
+      recurseSubmodules: true
 
   - name: propertyBag
     type: PropertyBag
@@ -31,5 +32,7 @@ pipelines:
             - name: deepikaGithub
         execution:
           onExecute:
+            - pushd $res_myRepo_resourcePath
+            - ls
             - write_output propertyBag "foo=$run_number"
             
