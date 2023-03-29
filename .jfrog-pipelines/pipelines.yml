@@ -15,10 +15,12 @@ pipelines:
         stepMode: Bash
         stepletMultipliers:
           environmentVariables:
+            {{ if (regexMatch "master|^preRelease/.*|^milestone/.*|^release/.*" "{{gitBranch}}") }}
             - DATABASE_TYPE: mariadb
             - DATABASE_TYPE: mssql
             - DATABASE_TYPE: mysql
             - DATABASE_TYPE: oracle
+            {{ end }}
             - DATABASE_TYPE: postgresql
         configuration:
           multiNode: true
