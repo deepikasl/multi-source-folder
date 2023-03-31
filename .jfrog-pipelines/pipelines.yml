@@ -59,6 +59,11 @@ pipelines:
       - name: dependency_version_check
         type: Bash
         configuration:
+          environmentVariables:
+            mySecureEnv:
+              allowCustom: true
+              secure: true
+              default: "someValue"
           inputResources:
             - name: dvu_cron_trigger
 #               branch: main
