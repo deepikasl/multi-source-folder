@@ -41,7 +41,7 @@ pipelines:
             - name: sample_GitRepo
         execution:
           onStart:
-            - echo "test1"
+            - echo "test12"
           onExecute:
             - echo "executing"
             
