@@ -2,7 +2,7 @@ resources:
   - name: myRepo_1
     type: GITRepo
     configuration:
-      path: deepikasl/jfrog_pipelines
+      path: deepikasl/multi-source-folder
       gitProvider: deepikaGithub
       branches:
         include: ^releasePipeline$     
