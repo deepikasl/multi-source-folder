@@ -8,6 +8,20 @@ resources:
         include: ^releasePipeline$     
       buildOn:
         branchDelete: true
+  - name: sample_GitRepo
+    type: GitRepo
+    configuration:
+      gitProvider: deepikaGithub
+      path: deepikasl/multi-source-folder
+      branches:
+        include: {{gitBranch}}
+      pullRequestTargetBranches:
+        include: ^main$
+      buildOn:
+        commit: {{eq "{{gitBranch}}" main}}
+        pullRequestCreate: true
+      cancelPendingRunsOn:
+        newCommit: true
 
 pipelines:
   - name: matrix_pipe
@@ -17,38 +31,18 @@ pipelines:
         stepMode: Bash
         stepletMultipliers:
           environmentVariables:
-            {{ if (regexMatch "master|^preRelease/.*|^milestone/.*|^release/.*" "{{gitBranch}}") }}
-            - DATABASE_TYPE: mariadb
-            - DATABASE_TYPE: mssql
-            - DATABASE_TYPE: mysql
-            - DATABASE_TYPE: oracle
-            {{ end }}
             - DATABASE_TYPE: postgresql
         configuration:
           multiNode: true
           timeoutSeconds: 2700 # 45 minutes
-          integrations:
-            - name: entArt
           inputResources:
-            - name: myRepo_2
-          environmentVariables:
-            MYSQL_DATABASE_VERSION: "5.7"
-            MSSQL_DATABASE_VERSION: "2017-latest"
-            ORACLE_DATABASE_VERSION: "18.4.0-slim-faststart-noauto"
-            POSTGRESQL_DATABASE_VERSION: "13.4"
-            MARIADB_DATABASE_VERSION: "10.1.22"
+            - name: sample_GitRepo
         execution:
           onStart:
-            - task: jfdev-ci-commons/setup-step-commons@v0.0.1
-              input:
-                JFDEV_CI_COMMONS_DEFAULT_VERSION: 0.0.1
-                PROJECT_ROOT_DIR: "${res_myRepo_1_resourcePath}"
-            - PROJECT_ROOT_DIR="$res_myRepo_1_resourcePath"
             - echo "$IN_PROJECT_ROOT_DIR"
             - set -e
             - echo "$PROJECT_ROOT_DIR"
 #             - pushd $IN_PROJECT_ROOT_DIR
-            - pushd $res_myRepo_1_resourcePath
           onExecute:
             - echo "executing"
             
