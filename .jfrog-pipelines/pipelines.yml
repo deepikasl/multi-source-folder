@@ -41,10 +41,7 @@ pipelines:
             - name: sample_GitRepo
         execution:
           onStart:
-            - echo "$IN_PROJECT_ROOT_DIR"
-            - set -e
-            - echo "$PROJECT_ROOT_DIR"
-#             - pushd $IN_PROJECT_ROOT_DIR
+            - echo "test1"
           onExecute:
             - echo "executing"
             
