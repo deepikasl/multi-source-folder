@@ -5,7 +5,7 @@ resources:
       path: deepikasl/jfrog_pipelines
       gitProvider: deepikaGithub
       branches:
-        include: master
+        include: ^master|releasePipeline2$       
 
 pipelines:
   - name: matrix_pipe
