@@ -1,5 +1,5 @@
 resources:
-  - name: myRepo_1
+  - name: myRepo_2
     type: GITRepo
     configuration:
       path: deepikasl/multi-source-folder
@@ -30,7 +30,7 @@ pipelines:
           integrations:
             - name: entArt
           inputResources:
-            - name: myRepo_1
+            - name: myRepo_2
           environmentVariables:
             MYSQL_DATABASE_VERSION: "5.7"
             MSSQL_DATABASE_VERSION: "2017-latest"
