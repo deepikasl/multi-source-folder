@@ -15,8 +15,8 @@ resources:
       path: deepikasl/multi-source-folder
       branches:
         include: {{gitBranch}}
-      pullRequestSourceBranches:
-        include: {{gitBranch}}
+#       pullRequestSourceBranches:
+#         include: {{gitBranch}}
       pullRequestTargetBranches:
         include: ^buildOnDeleteBranch$
       buildOn:
