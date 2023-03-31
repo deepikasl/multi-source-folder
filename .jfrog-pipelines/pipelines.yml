@@ -18,7 +18,7 @@ resources:
       pullRequestTargetBranches:
         include: ^main$
       buildOn:
-        commit: {{eq "{{gitBranch}}" main}}
+        commit: {{ eq "{{gitBranch}}" "main" }}
         pullRequestCreate: true
       cancelPendingRunsOn:
         newCommit: true
