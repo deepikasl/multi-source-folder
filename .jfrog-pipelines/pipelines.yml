@@ -56,7 +56,7 @@ pipelines:
       environmentVariables:
         readOnly:
           pipelineEnv:
-            secure: true
+#             secure: true
             default: "somePipValue"
       integrations:
         - name: deepikaGithub
@@ -67,7 +67,7 @@ pipelines:
           environmentVariables:
             mySecureEnv:
               allowCustom: true
-              secure: true
+#               secure: true
               default: "someValue"
           inputResources:
             - name: dvu_cron_trigger
