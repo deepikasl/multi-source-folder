@@ -53,6 +53,11 @@ resources:
 pipelines:
   - name: demo_manual_main
     configuration:
+      environmentVariables:
+        readOnly:
+          pipelineEnv:
+            secure: true
+            default: "somePipValue"
       integrations:
         - name: deepikaGithub
     steps:
