@@ -1,11 +1,11 @@
 resources:
-  - name: myRepo_1
-    type: GITRepo
+  - name: sample_repo
+    type: GitRepo
     configuration:
       path: deepikasl/jfrog_pipelines
       gitProvider: deepikaGithub
       branches:
-        include: ^master|releasePipeline2$       
+        include: ^master$       
 
 pipelines:
   - name: matrix_pipe
