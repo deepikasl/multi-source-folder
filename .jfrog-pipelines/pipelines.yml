@@ -27,8 +27,7 @@ pipelines:
               secure: true
               default: "someValue"
           inputResources:
-            - name: dvu_cron_trigger
-#               branch: main
+            - name: myRepo_1
         execution:
           onExecute:
             - printenv
