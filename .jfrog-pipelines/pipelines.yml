@@ -13,6 +13,8 @@ pipelines:
       - name: first_step
         type: Bash
         configuration:
+          integrations:
+            - name: int_default_artifactory
           inputResources:
             - name: sample_repo
         execution:
