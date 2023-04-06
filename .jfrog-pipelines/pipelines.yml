@@ -5,7 +5,7 @@ resources:
       path: deepikasl/jfrog_pipelines
       gitProvider: deepikaGithub
       branches:
-        include: submodule_provate
+        include: submodule_vt1
       recurseSubmodules: true
 
   - name: propertyBag
