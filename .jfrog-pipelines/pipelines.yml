@@ -24,7 +24,7 @@ pipelines:
 #                 issue_key: TAS-1
 #                 jira_integration_name: deepikajira
 #                 transition_name: To Do
-            - task: jira-transition@v0.0.1
+            - task: jira-transition@v0.0.2
               input:
                 issue_key: TAS-1
                 jira_integration_name: deepikajira
