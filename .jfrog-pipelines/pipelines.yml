@@ -43,8 +43,6 @@ pipelines:
           onExecute:
             - pushd $res_public_submodule_resourcePath
             - ls
-            - cd vt1_submodule
-            - ls
             - popd
             - pushd $res_private_submodule_resourcePath
             - ls
