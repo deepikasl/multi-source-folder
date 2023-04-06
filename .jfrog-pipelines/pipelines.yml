@@ -2,7 +2,7 @@ resources:
   - name: myRepo
     type: GITRepo
     configuration:
-      path: deepikasl/jfrog_pipelines
+      path: deepikasl/multi-source-folder
       gitProvider: deepikaGithub
       branches:
         include: submodule_vt1
