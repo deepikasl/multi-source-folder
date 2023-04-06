@@ -1,11 +1,19 @@
 resources:
-  - name: myRepo
+  - name: public_submodule
     type: GITRepo
     configuration:
       path: deepikasl/multi-source-folder
       gitProvider: deepikaGithub
       branches:
         include: submodule_vt1
+      recurseSubmodules: true
+  - name: private_submodule
+    type: GITRepo
+    configuration:
+      path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
+      branches:
+        include: submodule_provate
       recurseSubmodules: true
 
   - name: propertyBag
@@ -25,14 +33,20 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: myRepo
+            - name: public_submodule
+            - name: private_submodule
           outputResources:
             - name: propertyBag
           integrations:
             - name: deepikaGithub
         execution:
           onExecute:
-            - pushd $res_myRepo_resourcePath
+            - pushd $res_public_submodule_resourcePath
             - ls
-            - write_output propertyBag "foo=$run_number"
+            - pushd vt1_submodule
+            - ls
+            - popd
+            - pushd $res_private_submodule_resourcePath
+            - ls
+            - popd
             
