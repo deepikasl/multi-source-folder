@@ -19,7 +19,12 @@ pipelines:
             - name: sample_repo
         execution:
           onStart:
-            - task: jira-transition@v0.0.9
+            - task: jira-transition@v0.0.6
+              input:
+                issue_key: TAS-1
+                jira_integration_name: deepikajira
+                transition_name: To Do
+            - task: jira-transition@v0.0.1
               input:
                 issue_key: TAS-1
                 jira_integration_name: deepikajira
