@@ -74,7 +74,7 @@ pipelines:
 #               branch: main
         execution:
           onExecute:
-            - printenv
+            - echo "$mySecureEnv"
             - echo "hi"
             - echo "you are here"
       - name: manual_trigger
