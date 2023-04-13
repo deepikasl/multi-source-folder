@@ -1,47 +1,32 @@
 resources:
-  - name: myRepo_2
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: ^releasePipeline$     
-      buildOn:
-        branchDelete: true
-  - name: sample_GitRepo
+  - name: Input_TIA
     type: GitRepo
     configuration:
-      gitProvider: deepikaGithub
       path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
       branches:
-        include: {{gitBranch}}
-      pullRequestSourceBranches:
-        include: {{gitBranch}}
-      pullRequestTargetBranches:
-        include: ^main$
-      buildOn:
-        commit: {{ eq "{{gitBranch}}" "main" }}
-        pullRequestCreate: true
-      cancelPendingRunsOn:
-        newCommit: true
-
+        include: master 
+  - name: Output_TIA
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: deepikaArt
 pipelines:
-  - name: matrix_pipe
+  - name: pipeline_Test_IMOnline_APICore
     steps:
-      - name: access_multidb_itest
-        type: Matrix
-        stepMode: Bash
-        stepletMultipliers:
-          environmentVariables:
-            - DATABASE_TYPE: postgresql
+      - name: mvn_build_step
+        type: MvnBuild
         configuration:
-          multiNode: true
-          timeoutSeconds: 2700 # 45 minutes
+          deployerSnapshotRepo: ecomm-mvn-coreapi-libs-snapshot-local
+          deployerReleaseRepo: ecomm-mvn-coreapi-libs-release-local
           inputResources:
-            - name: sample_GitRepo
-        execution:
-          onStart:
-            - echo "test1"
-          onExecute:
-            - echo "executing"
-            
+            - name: Input_TIA
+          integrations:
+            - name: deepikaArt
+      - name: publish_build
+        type: PublishBuildInfo
+        configuration:
+          forceXrayScan: True
+          inputSteps:
+            - name: mvn_build_step
+          outputResources:
+            - name: Output_TIA
