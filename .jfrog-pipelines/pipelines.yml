@@ -20,13 +20,11 @@ pipelines:
       - name: first_step
         type: Bash          
         execution:
-          affinityGroup: myAffinity
           onExecute:
             - echo "first_step"
       - name: second_step
         type: Bash   
         configuration:
-          affinityGroup: myAffinity
           inputSteps:
             - name: first_step
         execution:
