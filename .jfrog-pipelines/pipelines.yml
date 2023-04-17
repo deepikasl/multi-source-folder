@@ -16,6 +16,8 @@ resources:
 
 pipelines:
   - name: myPipeline
+    configuration:
+      chronological: true
     steps:
       - name: first_step
         type: Bash          
