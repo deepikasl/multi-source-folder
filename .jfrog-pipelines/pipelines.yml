@@ -41,6 +41,7 @@ pipelines:
             - name: second_step
           integrations:
             - name: deepikaTestIntegration
+            - name: firstIntdeepikapipe
         execution:
           onStart:
             - javac -version
