@@ -20,6 +20,7 @@ pipelines:
       chronological: true
       inputResources:
         - name: myRepo
+          trigger: false
     steps:
       - name: first_step
         type: Bash          
@@ -44,7 +45,7 @@ pipelines:
             - name: deepikaTestIntegration
             - name: firstIntdeepikapipe
             - name: anotherIntegration
-            - name: secondInt
+#             - name: secondInt
           outputResources:
             - name: propertyBag
         execution:
