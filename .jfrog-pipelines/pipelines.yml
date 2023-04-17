@@ -39,6 +39,8 @@ pipelines:
             - name: myRepo
           inputSteps:
             - name: second_step
+          integrations:
+            - name: deepikaTestIntegration
         execution:
           onStart:
             - javac -version
