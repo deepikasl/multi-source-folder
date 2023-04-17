@@ -14,7 +14,7 @@ pipelines:
         type: Bash
         configuration:
           integrations:
-            - name: {{.jfrog-pipelines.rootBucket}}
+            - name: {{.jfrog-pipelines.localArtifactory}}
         execution:
           onExecute:
             - echo "first_step"
