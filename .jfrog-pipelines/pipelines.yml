@@ -43,6 +43,8 @@ pipelines:
             - name: deepikaTestIntegration
             - name: firstIntdeepikapipe
             - name: anotherIntegration
+          outputResources:
+            - name: propertyBag
         execution:
           onStart:
             - javac -version
