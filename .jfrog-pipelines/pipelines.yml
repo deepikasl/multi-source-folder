@@ -43,7 +43,6 @@ pipelines:
             - name: deepikaTestIntegration
             - name: firstIntdeepikapipe
             - name: anotherIntegration
-            - name: secondInt
         execution:
           onStart:
             - javac -version
