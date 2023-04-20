@@ -9,6 +9,8 @@ resources:
       gitProvider: {{ .Values.GitRepo.gitProvider }}
       branches:
         include: master
+      buildOn:
+        pullRequestCreate: {{ regexMatch ".*renovatebot.*" `{{"{{gitBranch}}"}}` }}
 
   - name: propertyBag_template
     type: PropertyBag
