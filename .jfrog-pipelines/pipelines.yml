@@ -13,7 +13,6 @@ pipelines:
       environmentVariables:
         readOnly:
           pipelineEnv:
-            secure: true
             default: "somePipValue"
       integrations:
         - name: deepikaGithub
@@ -22,9 +21,8 @@ pipelines:
         type: Bash
         configuration:
           environmentVariables:
-            mySecureEnv:
+            mySampleEnv:
               allowCustom: true
-              secure: true
               default: "someValue"
           inputResources:
             - name: myRepo_1
