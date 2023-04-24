@@ -39,6 +39,15 @@ pipelines:
       - name: third_step
         type: Bash
         configuration:
+          runtime:
+            type: image
+            image:
+              custom:
+                registry: docker #integration name
+                name: entplus.jfrog.io/devops-docker/jfrog/devops/jfrog-saas-deployer
+                tag: "latest"
+                autoPull: true
+                options: --entrypoint=""
           inputSteps:
             - name: second_step
           integrations:
