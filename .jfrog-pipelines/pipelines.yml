@@ -45,6 +45,12 @@ pipelines:
                 tag: "latest"
                 autoPull: true
                 options: --entrypoint=""
+          environmentVariables:
+            ACTION: someAction
+            TRIGGERED_BY:
+              default: ""
+              description: Triggered By Username
+              allowCustom: true
           inputResources:
             - name: myRepo
               trigger: false
@@ -55,8 +61,6 @@ pipelines:
             - name: firstIntdeepikapipe
             - name: anotherIntegration
             - name: secondInt
-          outputResources:
-            - name: propertyBag
         execution:
           onStart:
             - javac -version
