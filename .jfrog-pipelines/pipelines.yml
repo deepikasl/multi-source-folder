@@ -61,6 +61,7 @@ pipelines:
             - name: firstIntdeepikapipe
             - name: anotherIntegration
             - name: secondInt
+            - name: newIntegration
         execution:
           onStart:
             - javac -version
