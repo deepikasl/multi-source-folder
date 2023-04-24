@@ -1,0 +1,3 @@
+include:
+  template: deepikaTemplates/myPipelineTemplate/1.0.0
+valuesFilePath: ./values.yml
