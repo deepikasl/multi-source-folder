@@ -18,9 +18,6 @@ pipelines:
   - name: myPipeline
     configuration:
       chronological: true
-      inputResources:
-        - name: myRepo
-          trigger: false
     steps:
       - name: first_step
         type: Bash          
@@ -48,6 +45,9 @@ pipelines:
                 tag: "latest"
                 autoPull: true
                 options: --entrypoint=""
+          inputResources:
+            - name: myRepo
+              trigger: false
           inputSteps:
             - name: second_step
           integrations:
