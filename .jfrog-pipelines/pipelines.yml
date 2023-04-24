@@ -18,6 +18,7 @@ pipelines:
         execution:
           onExecute:
             - echo "first_step"
+            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
       - name: second_step
         type: Bash   
         configuration:
@@ -26,3 +27,4 @@ pipelines:
         execution:
           onExecute:
             - echo "second_step"
+            - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
