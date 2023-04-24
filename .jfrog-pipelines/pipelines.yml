@@ -36,6 +36,7 @@ pipelines:
       - name: third_step
         type: Bash
         configuration:
+          timeoutSeconds: 900
           runtime:
             type: image
             image:
