@@ -53,7 +53,7 @@ resources:
 pipelines:
   - name: demo_manual_main
     configuration:
-      jfrogCliVersion: 2
+#       jfrogCliVersion: 2
       environmentVariables:
         readOnly:
           pipelineEnv:
