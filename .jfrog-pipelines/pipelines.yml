@@ -19,7 +19,7 @@ pipelines:
           onExecute:
             - echo "first_step"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
-            - jfrog config add jftest --url https://deepika11921.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
+            - jfrog config add jftest --url https://stg-repo.jfrog.info --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
             - touch test.txt
             - echo "hello" > test.txt
             - jfrog rt upload test.txt deeps-sampleRepo/test.txt
