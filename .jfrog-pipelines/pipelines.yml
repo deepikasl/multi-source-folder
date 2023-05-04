@@ -20,7 +20,7 @@ pipelines:
             - echo "first_step"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
             - jfrog config add jftest --url https://deepika11921.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
-            - jfrog rt dl deeps-sampleRepo --flat
+            - jfrog rt dl deeps-sampleRepo/error.log --flat
       - name: second_step
         type: Bash   
         configuration:
