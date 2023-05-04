@@ -74,6 +74,10 @@ pipelines:
 #               branch: main
         execution:
           onExecute:
+            - jfrog config add jftest --url https://stg-repo.jfrog.info --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
+            - touch test.txt
+            - echo "hello" > test.txt
+            - jfrog rt upload test.txt deeps-sampleRepo/test.txt
             - echo "$mySecureEnv"
             - echo "hi"
             - echo "you are here"
