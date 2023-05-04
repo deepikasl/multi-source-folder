@@ -8,7 +8,7 @@ resources:
         include: master
 
 pipelines:
-  - name: myPipeline_native_read
+  - name: myPipeline_native_write
     steps:
       - name: first_step
         type: Bash
