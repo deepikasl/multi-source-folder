@@ -19,8 +19,8 @@ pipelines:
           onExecute:
             - echo "first_step"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
-            - jfrog config add jftest --url http://2f43-136-226-244-117.ngrok.io --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
-            - jfrog rt dl example-repo-local --server-id http://2f43-136-226-244-117.ngrok.io --flat
+            - jfrog config add jftest --url https://f119121.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
+            - jfrog rt dl example-repo-local --flat
             - touch test.txt
             - echo "hello" > test.txt
             - jfrog rt upload test.txt example-repo-local/test.txt
