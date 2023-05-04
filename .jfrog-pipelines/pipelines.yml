@@ -1,5 +1,5 @@
 resources:
-  - name: myRepo_native
+  - name: myRepo_native_write
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
