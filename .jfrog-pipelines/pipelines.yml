@@ -74,7 +74,7 @@ pipelines:
 #               branch: main
         execution:
           onExecute:
-            - jfrog version
+            - jfrog --version
             - echo ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
             - jfrog config add jftest --url https://stg-repo.jfrog.info --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
             - touch test.txt
