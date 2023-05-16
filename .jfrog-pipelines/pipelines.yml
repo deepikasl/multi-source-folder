@@ -60,7 +60,7 @@ pipelines:
             secure: true
             default: "somePipValue"
       integrations:
-        - name: deepikaGithub
+        - name: deepikaGeneric
     steps:
       - name: dependency_version_check
         type: Bash
@@ -75,15 +75,7 @@ pipelines:
 #               branch: main
         execution:
           onExecute:
-            - jfrog --version
-            - echo ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
-            - jfrog config add jftest --url https://stg-repo.jfrog.info --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
-            - touch test.txt
-            - echo "hello" > test.txt
-            - jfrog rt upload test.txt deeps-sampleRepo/test.txt
-            - echo "$mySecureEnv"
-            - echo "hi"
-            - echo "you are here"
+            - printenv
       - name: manual_trigger
         type: Bash
         configuration:
