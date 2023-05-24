@@ -11,7 +11,8 @@ resources:
     type: FileSpec
     configuration:
       sourceArtifactory: deepikaArt
-      aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
+#       aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
+      aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}})'
 
 pipelines:
   - name: deepika_filespec_test
