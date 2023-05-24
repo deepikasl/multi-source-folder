@@ -14,15 +14,16 @@ resources:
       query: 'items.find({"repo":"jfrogpipelines","name":{"$match":"*.json"}})'
 #       aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
 #       aql: '{"@build.name":{"$eq":"artifactory"}}'
-#       aql: '{"repo":"jfrogpipelines","name":{"$match":"*.json"}}'
+#       aql: '{"repo":"jfrogpipelines","name":{"$match":"*.yml"}}'
   
   - name: myFileSpecAql
     type: FileSpec
     configuration:
       sourceArtifactory: deepikaArt
 #       aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
-#       aql: '{"@build.name":{"$eq":"artifactory"}}'
-      aql: myAql
+#       aql: '{items.find({"@build.name":{"$eq":"artifactory"}})}'
+        aql: '{"repo":"jfrogpipelines","name":{"$match":"*.yml"}}'
+#       aql: myAql
 
 pipelines:
   - name: deepika_filespec_test
