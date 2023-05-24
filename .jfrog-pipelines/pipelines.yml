@@ -34,7 +34,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: myFileSpecAql
+            - name: myAql
         execution:
           onExecute:
               - echo "hi"
