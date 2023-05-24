@@ -6,6 +6,15 @@ resources:
       pattern: "jfrogpipelines/templates/jfrog_name_space/ReleaseTemplate/1.0.0/templateDefinition.yml"
       recursive: false
       flat: true
+      
+  - name: myAql
+    type: aql
+    configuration:
+      sourceArtifactory: deepikaArt
+      query: 'items.find({"repo":"jfrogpipelines","name":{"$match":"*.json"}})'
+#       aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
+#       aql: '{"@build.name":{"$eq":"artifactory"}}'
+#       aql: '{"repo":"jfrogpipelines","name":{"$match":"*.json"}}'
   
   - name: myFileSpecAql
     type: FileSpec
@@ -13,7 +22,7 @@ resources:
       sourceArtifactory: deepikaArt
 #       aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
 #       aql: '{"@build.name":{"$eq":"artifactory"}}'
-      aql: '{"repo":"jfrogpipelines","name":{"$match":"*.json"}}'
+      aql: myAql
 
 pipelines:
   - name: deepika_filespec_test
