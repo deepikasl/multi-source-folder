@@ -12,7 +12,7 @@ resources:
     configuration:
       sourceArtifactory: deepikaArt
 #       aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
-      aql: 'items.find({"@build.name":{"$eq":"artifactory"}})'
+      aql: 'items.find({\"@build.name\":{\"$eq\":\"artifactory\"}})'
 
 pipelines:
   - name: deepika_filespec_test
