@@ -28,13 +28,13 @@ resources:
 pipelines:
   - name: deepika_filespec_test
     configuration:
-      jfrogCliVersion: 2
+#       jfrogCliVersion: 2
     steps:
       - name: filespec_test
         type: Bash
         configuration:
           inputResources:
-            - name: myAql
+            - name: myFileSpecAql
         execution:
           onExecute:
               - echo "hi"
