@@ -2,10 +2,16 @@ resources:
   - name: myFileSpec
     type: FileSpec
     configuration:
-      sourceArtifactory: deepikaReadArt
+      sourceArtifactory: deepikaArt
       pattern: "jfrogpipelines/templates/jfrog_name_space/ReleaseTemplate/1.0.0/templateDefinition.yml"
       recursive: false
       flat: true
+  
+  - name: myFileSpecAql
+    type: FileSpec
+    configuration:
+      sourceArtifactory: deepikaArt
+      aql: "items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)"
 
 pipelines:
   - name: deepika_filespec_test
@@ -14,7 +20,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: myFileSpec
+            - name: myFileSpecAql
         execution:
           onExecute:
               - echo "hi"
