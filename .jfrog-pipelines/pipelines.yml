@@ -22,7 +22,7 @@ resources:
       sourceArtifactory: deepikaArt
 #       aql: 'items.find({"repo":"version-stg","name":{"$match":"host-*.json"}}).sort({"$desc":["updated"]}).limit(1)'
 #       aql: '{items.find({"@build.name":{"$eq":"artifactory"}})}'
-        aql: '{"repo":"jfrogpipelines","name":{"$match":"*.yml"}}'
+      aql: '{"repo":"jfrogpipelines","name":{"$match":"*.yml"}}'
 #       aql: myAql
 
 pipelines:
