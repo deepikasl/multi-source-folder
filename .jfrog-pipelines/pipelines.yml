@@ -96,7 +96,7 @@ pipelines:
             - name: deepikaGithub
         execution:
           onExecute:
-            - write_output propertyBag "foo=$run_number"
+            - write_output propertyBag_1 "foo=$run_number"
       - name: submodule_test
         type: Bash
         configuration:
