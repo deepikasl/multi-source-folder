@@ -59,8 +59,6 @@ pipelines:
           pipelineEnv:
             secure: true
             default: "somePipValue"
-      integrations:
-        - name: deepikaGeneric
     steps:
       - name: dependency_version_check
         type: Bash
@@ -70,6 +68,8 @@ pipelines:
               allowCustom: true
               secure: true
               default: "someValue"
+          integrations:
+            - name: deepikaGeneric
           inputResources:
             - name: dvu_cron_trigger
 #               branch: main
