@@ -22,7 +22,7 @@ pipelines:
             - jfrog config add jftest-$step_id --url http://localhost:8082 --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
             - touch test.txt
             - echo "hello" > test.txt
-            - jfrog rt upload test.txt deeps-sampleRepo/test.txt jftest_$step_id
+            - jfrog rt upload test.txt deeps-deeps-sampleRepo/test.txt jftest_$step_id
       - name: second_step
         type: Bash   
         configuration:
