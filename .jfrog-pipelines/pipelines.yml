@@ -15,18 +15,16 @@ pipelines:
         configuration:
           integrations:
             - name: {{.jfrog-pipelines.localArtifactory}}
-            - name: deepikaGithub
-            - name: some_key
         execution:
           onExecute:
             - echo "first_step"
             - printenv
             - echo "$int_some_key_publicKey"
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
-            - jfrog config add jftest-$step_id --url http://localhost:8082 --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
+            - jfrog config add jftest-$step_id --url https://f119126.jfrog-pipelines.com --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
             - touch test.txt
             - echo "hello" > test.txt
-            - jfrog rt upload test.txt deeps-deeps-sampleRepo/test.txt --server-id jftest-$step_id
+            - jfrog rt upload test.txt deeps-sampleRepo/test.txt --server-id jftest-$step_id
       - name: second_step
         type: Bash   
         configuration:
