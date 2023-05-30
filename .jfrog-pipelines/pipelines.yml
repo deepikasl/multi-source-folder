@@ -15,9 +15,11 @@ pipelines:
         configuration:
           integrations:
             - name: {{.jfrog-pipelines.localArtifactory}}
+            - name: deepikaGithub
         execution:
           onExecute:
             - echo "first_step"
+            - printenv
             - echo "$JFROG_LOCAL_ARTIFACTORY_TOKEN"
             - jfrog config add jftest-$step_id --url http://localhost:8082 --access-token ${JFROG_LOCAL_ARTIFACTORY_TOKEN}
             - touch test.txt
