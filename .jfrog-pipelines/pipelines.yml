@@ -83,7 +83,6 @@ pipelines:
             - jfrog rt upload test.txt deeps-sampleRepo/test.txt
             - echo "$mySecureEnv"
             - echo "hi"
-            - echo "you are here"
       - name: manual_trigger
         type: Bash
         configuration:
