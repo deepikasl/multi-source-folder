@@ -5,6 +5,13 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
+  - name: prop_repo
+    type: GITRepo
+    configuration:
+      path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
+      branches:
+        include: {{gitBranch}}
 
 pipelines:
   - name: myPipeline_pb
@@ -14,6 +21,7 @@ pipelines:
         configuration:
           inputResources:
             - name: propertyBag_deepika
+            - name: prop_repo
         execution:
           onExecute:
             - echo "first_step"
