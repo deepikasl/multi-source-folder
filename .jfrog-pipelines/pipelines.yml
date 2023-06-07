@@ -1,13 +1,5 @@
 resources:
-  - name: myRepo
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-
-  - name: propertyBag
+  - name: propertyBag_deepika
     type: PropertyBag
     configuration:
       foo: bar
@@ -16,56 +8,13 @@ resources:
 
 pipelines:
   - name: myPipeline
-    configuration:
-      chronological: true
     steps:
       - name: first_step
-        type: Bash          
+        type: Bash  
+        configuration:
+          inputResources:
+            - name: propertyBag_deepika
         execution:
           onExecute:
             - echo "first_step"
-      - name: second_step
-        type: Bash   
-        configuration:
-          inputSteps:
-            - name: first_step
-        execution:
-          onExecute:
-            - echo "second_step"
-            - echo "logic to be put from onComplete section"
-      - name: third_step
-        type: Bash
-        configuration:
-          timeoutSeconds: 900
-          runtime:
-            type: image
-            image:
-              custom:
-                registry: docker #integration name
-                name: entplus.jfrog.io/devops-docker/jfrog/devops/jfrog-saas-deployer
-                tag: "latest"
-                autoPull: true
-                options: --entrypoint=""
-          environmentVariables:
-            ACTION: someAction
-            TRIGGERED_BY:
-              default: ""
-              description: Triggered By Username
-              allowCustom: true
-          inputResources:
-            - name: myRepo
-              trigger: false
-          inputSteps:
-            - name: second_step
-          integrations:
-            - name: deepikaTestIntegration
-            - name: firstIntdeepikapipe
-            - name: anotherIntegration
-            - name: secondInt
-            - name: newIntegration
-        execution:
-          onStart:
-            - javac -version
-            - mvn --version
-          
-            
+            - printenv
