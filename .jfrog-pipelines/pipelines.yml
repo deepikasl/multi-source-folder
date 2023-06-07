@@ -7,7 +7,7 @@ resources:
       foo2: bar2
 
 pipelines:
-  - name: myPipeline
+  - name: myPipeline_pb
     steps:
       - name: first_step
         type: Bash  
