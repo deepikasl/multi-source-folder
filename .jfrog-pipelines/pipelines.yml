@@ -18,6 +18,7 @@ pipelines:
     steps:
       - name: dependency_version_check
         type: Bash
+        configuration:
           inputResources:
             - name: dvu_cron_trigger
             - name: propertyBag
