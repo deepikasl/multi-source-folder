@@ -6,20 +6,21 @@ resources:
       environmentVariables:
         first: env
         second: env
+  - name: propertyBag
+    type: PropertyBag
+    configuration:
+      foo: bar
+      foo1: bar1
+      foo2: bar2
   
 pipelines:
   - name: demo_manual_main
     steps:
       - name: dependency_version_check
         type: Bash
-        configuration:
-          environmentVariables:
-            mySecureEnv:
-              allowCustom: true
-              secure: true
-              default: "someValue"
           inputResources:
             - name: dvu_cron_trigger
+            - name: propertyBag
         execution:
           onExecute:
             - printenv
