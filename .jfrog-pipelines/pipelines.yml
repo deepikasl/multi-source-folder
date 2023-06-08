@@ -6,6 +6,11 @@ resources:
       environmentVariables:
         first: env
         second: env
+  - name: dvu_cron
+    type: CronTrigger
+    configuration:
+      interval: '* 2 * * *' # Every day at 2 AM
+
   - name: propertyBag
     type: PropertyBag
     configuration:
@@ -22,6 +27,7 @@ pipelines:
           inputResources:
             - name: dvu_cron_trigger
             - name: propertyBag
+            - name: dvu_cron
         execution:
           onExecute:
             - printenv
