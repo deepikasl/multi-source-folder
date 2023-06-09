@@ -1,33 +1,22 @@
 resources:
-  - name: dvu_cron_trigger
+  - name: dvu_cron_trigger_1
     type: CronTrigger
     configuration:
       interval: '* 2 * * *' # Every day at 2 AM
-      environmentVariables:
-        first: env
-        second: env
-  - name: dvu_cron
-    type: CronTrigger
-    configuration:
-      interval: '* 2 * * *' # Every day at 2 AM
-
-  - name: propertyBag
-    type: PropertyBag
-    configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
   
 pipelines:
-  - name: demo_manual_main
+  - name: demo_manual_main_pre
+    preRun: 
+      execution: 
+        onExecute: 
+          - printenv 
+          - echo "Executing Pre Run"
     steps:
       - name: dependency_version_check
         type: Bash
         configuration:
           inputResources:
-            - name: dvu_cron_trigger
-            - name: propertyBag
-            - name: dvu_cron
+            - name: dvu_cron_trigger_1
         execution:
           onExecute:
-            - printenv
+            - echo "hi"
