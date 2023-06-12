@@ -1,5 +1,5 @@
 resources:
-  - name: myRepo_1
+  - name: myRepo_11
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
@@ -66,7 +66,7 @@ pipelines:
         configuration:
           inputResources:
             - name: artifact_1
-            - name: myRepo_1
+            - name: myRepo_11
         execution:
           onExecute:
             - echo "executing step_1"
