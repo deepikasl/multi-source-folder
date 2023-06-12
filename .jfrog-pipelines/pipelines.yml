@@ -9,6 +9,16 @@ resources:
         deployed: true
       branches:
         include: "^.+$"
+  - name: ei2095_docker_dev_artifact_test_2
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: deepika_jfrog
+      repositories:
+        - docker-dev-deepika_gen
+      buildOn:
+        deployed: true
+      branches:
+        include: "^.+$"
 
 pipelines:
   - name: ei2095_iotics_node_package
@@ -18,6 +28,7 @@ pipelines:
         configuration:
           inputResources:
             - name: ei2095_docker_dev_artifact_test
+            - name: ei2095_docker_dev_artifact_test_2
         execution:
           onExecute:
             - printenv
