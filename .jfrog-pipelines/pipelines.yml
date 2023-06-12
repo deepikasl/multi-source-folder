@@ -10,11 +10,10 @@ resources:
   - name: artifact_test
     type: Artifact
     configuration:
-      jfrogPlatformProvider: deepikaArt
+      jfrogPlatformProvider: deepika_jfrog
       repositories:
         - example-repo
         - test1
-        - jfrogpipelines
       artifactPath:
         include:
           - tools/*
@@ -28,7 +27,7 @@ resources:
   - name: artifact_2
     type: Artifact
     configuration:
-      jfrogPlatformProvider: deepikaArt
+      jfrogPlatformProvider: deepika_jfrog
       repositories:
         - example-repo-local
       artifactPath:
@@ -45,7 +44,7 @@ resources:
   - name: artifact_1
     type: Artifact
     configuration:
-      jfrogPlatformProvider: deepikaArt
+      jfrogPlatformProvider: deepika_jfrog
       repositories:
         - example-repo-local
       artifactPath:
