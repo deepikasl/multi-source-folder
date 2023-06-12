@@ -1,84 +1,23 @@
 resources:
-  - name: myRepo_1
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-
-  - name: artifact_test
+  - name: ei2095_docker_dev_artifact_test
     type: Artifact
     configuration:
-      jfrogPlatformProvider: deepikaArt
+      jfrogPlatformProvider: deepika_jfrog
       repositories:
-        - example-repo
-        - test1
-        - jfrogpipelines
-      artifactPath:
-        include:
-          - tools/*
-        exclude:
-          - tools/exclude/*
+        - docker-dev-deepika
       buildOn:
         deployed: true
       branches:
-        include: artifact2
-        exclude: master
-  - name: artifact_2
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - example-repo-local
-      artifactPath:
-        include:
-          - tools/*
-        exclude:
-          - tools/exclude/*
-      buildOn:
-        deployed: true
-        cached: true
-        deleted: true
-      branches:
-        include: artifactResource
-  - name: artifact_1
-    type: Artifact
-    configuration:
-      jfrogPlatformProvider: deepikaArt
-      repositories:
-        - example-repo-local
-      artifactPath:
-        include:
-          - default/*
-          - tools/*
-      buildOn:
-        deployed: true
-      branches:
-        include: artifactResource
+        include: "^.+$"
 
 pipelines:
-  - name: my_pipe_1
-    configuration:
-      jfrogCliVersion: 2
+  - name: ei2095_iotics_node_package
     steps:
-      - name: step_1
+      - name: build
         type: Bash
         configuration:
           inputResources:
-            - name: artifact_1
-            - name: myRepo_1
+            - name: ei2095_docker_dev_artifact_test
         execution:
           onExecute:
-            - echo "executing step_1"
-  - name: my_pipe_2
-    steps:
-      - name: step_1
-        type: Bash
-        configuration:
-          inputResources:
-            - name: artifact_2
-        execution:
-          onExecute:
-            - echo "executing step_1"
-            
+            - printenv
