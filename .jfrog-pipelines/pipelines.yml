@@ -25,5 +25,4 @@ pipelines:
         execution:
           onExecute:
             - echo "first_step"
-            - echo "$foo"
             - printenv
