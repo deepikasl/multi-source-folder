@@ -10,6 +10,8 @@ resources:
     type: CronTrigger
     configuration:
       interval: '* 2 * * *' # Every day at 2 AM
+      environmentVariables:
+        third: env
 
   - name: propertyBag
     type: PropertyBag
