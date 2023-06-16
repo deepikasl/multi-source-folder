@@ -25,4 +25,5 @@ pipelines:
         execution:
           onExecute:
             - echo "first_step"
+            - echo "custom variable value is: $foo"
             - printenv
