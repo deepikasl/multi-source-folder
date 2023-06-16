@@ -2,7 +2,7 @@ resources:
   - name: dvu_cron_trigger
     type: CronTrigger
     configuration:
-      interval: '*/1 * * * *' # Every day at 2 AM
+      interval: '*/10 * * * *' # Every day at 2 AM
       environmentVariables:
         first: env
         second: env
