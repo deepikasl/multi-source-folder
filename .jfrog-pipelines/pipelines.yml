@@ -76,13 +76,14 @@ pipelines:
         execution:
           onExecute:
             - jfrog --version
-            - echo ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
-            - jfrog config add jftest --url https://stg-repo.jfrog.info --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
-            - touch test.txt
-            - echo "hello" > test.txt
-            - jfrog rt upload test.txt deeps-sampleRepo/test.txt
-            - echo "$mySecureEnv"
-            - echo "hi"
+            - printenv
+#             - echo ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
+#             - jfrog config add jftest --url https://stg-repo.jfrog.info --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
+#             - touch test.txt
+#             - echo "hello" > test.txt
+#             - jfrog rt upload test.txt deeps-sampleRepo/test.txt
+#             - echo "$mySecureEnv"
+#             - echo "hi"
       - name: manual_trigger
         type: Bash
         configuration:
