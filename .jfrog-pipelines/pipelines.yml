@@ -126,6 +126,10 @@ pipelines:
             - pushd myFirstSubModule
             - ls
   - name: second_pipeline
+    configuration:
+      retentionPolicy:
+         maxAgeDays: 1
+         minRuns: 1
     steps:
       - name: submodule_test
         type: Bash
