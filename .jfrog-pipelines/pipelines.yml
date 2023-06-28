@@ -56,7 +56,7 @@ pipelines:
             - name: sample_GitRepo
           integrations:
             - name: deepikaArt 
-        execution:
-          onStart:
-            - echo "test1234"
+        # execution:
+        #   onStart:
+        #     - echo "test1234"
             
