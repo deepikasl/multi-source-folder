@@ -39,9 +39,9 @@ pipelines:
           timeoutSeconds: 2700 # 45 minutes
           inputResources:
             - name: sample_GitRepo
-        execution:
-          # onStart:
-          #   - echo "test1234"
-          onExecute:
-            - echo "executing"
+        # execution:
+        #   # onStart:
+        #   #   - echo "test1234"
+        #   onExecute:
+        #     - echo "executing"
             
