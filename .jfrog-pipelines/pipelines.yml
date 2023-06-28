@@ -40,8 +40,8 @@ pipelines:
           inputResources:
             - name: sample_GitRepo
         execution:
-          onStart:
-            - echo "test1234"
+          # onStart:
+          #   - echo "test1234"
           onExecute:
             - echo "executing"
             
