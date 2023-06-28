@@ -74,6 +74,8 @@ pipelines:
             - name: dvu_cron_trigger
 #               branch: main
         execution:
+          onStart:
+            - printenv
           onExecute:
             - jfrog --version
             - printenv
