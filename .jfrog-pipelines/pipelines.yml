@@ -49,6 +49,16 @@ resources:
       foo: bar
       foo1: bar1
       foo2: bar2
+  - name: gitRepo_branch_create
+    type: GITRepo
+    configuration:
+      path: deepikasl/multi-source-folder
+      gitProvider: deepikaGithub
+      branches:
+        include: .*
+      buildOn:
+        branchCreate: true
+        commit: false
 
 pipelines:
   - name: demo_manual_main
@@ -71,7 +81,7 @@ pipelines:
               secure: true
               default: "someValue"
           inputResources:
-            - name: dvu_cron_trigger
+            - name: gitRepo_branch_create
 #               branch: main
         execution:
           onStart:
