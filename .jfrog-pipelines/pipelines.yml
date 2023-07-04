@@ -47,6 +47,7 @@ resources:
       jfrogPlatformProvider: deepika_jfrog
       repositories:
         - example-repo-local
+        - pipe-deepika-artifact-sample
       artifactPath:
         include:
           - default/*
