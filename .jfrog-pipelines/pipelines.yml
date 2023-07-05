@@ -56,6 +56,19 @@ resources:
         deployed: true
       branches:
         include: artifactResource
+  - name: artifact_deepika_1
+    type: Artifact
+    configuration:
+      jfrogPlatformProvider: nishith_jfrog
+      repositories:
+        - pipe-deepika-artifact-sample
+      artifactPath:
+        include:
+          - tools/*
+      buildOn:
+        deployed: true
+      branches:
+        include: artifact2
 
 pipelines:
   - name: my_pipe_1
@@ -66,7 +79,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: artifact_deepika
+            - name: artifact_deepika_1
             - name: myRepo_11
         execution:
           onExecute:
