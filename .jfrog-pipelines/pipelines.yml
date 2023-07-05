@@ -41,7 +41,7 @@ resources:
         deleted: true
       branches:
         include: artifactResource
-  - name: artifact_1
+  - name: artifact_deepika
     type: Artifact
     configuration:
       jfrogPlatformProvider: nishith_jfrog
@@ -66,7 +66,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: artifact_1
+            - name: artifact_deepika
             - name: myRepo_11
         execution:
           onExecute:
