@@ -150,7 +150,8 @@ pipelines:
             - name: newRepo_1
         execution:
           onExecute:
-            - pushd $res_newRepo_resourcePath
-            - ls
-            - pushd myFirstSubModule
+            - printenv 
+            # - pushd $res_newRepo_resourcePath
+            # - ls
+            # - pushd myFirstSubModule
             
