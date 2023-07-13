@@ -5,9 +5,9 @@ resources:
       path: deepikasl/multi-source-folder
       gitProvider: deepikaGithub
       branches:
-        include: ^releasePipeline$     
+        include: {{gitBranch}}     
       buildOn:
-        branchDelete: true
+        branchCreate: true
   - name: sample_GitRepo
     type: GitRepo
     configuration:
@@ -38,7 +38,7 @@ pipelines:
           multiNode: true
           timeoutSeconds: 2700 # 45 minutes
           inputResources:
-            - name: sample_GitRepo
+            - name: myRepo_2
         execution:
           onStart:
             - echo "test1"
