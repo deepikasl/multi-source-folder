@@ -8,55 +8,17 @@ resources:
         include: ^releasePipeline$     
       buildOn:
         branchDelete: true
-  - name: sample_GitRepo
-    type: GitRepo
-    configuration:
-      gitProvider: deepikaGithub
-      path: deepikasl/multi-source-folder
-      branches:
-        include: {{gitBranch}}
-#       pullRequestSourceBranches:
-#         include: {{gitBranch}}
-      pullRequestTargetBranches:
-        include: ^buildOnDeleteBranch$
-      buildOn:
-        commit: {{ eq "{{gitBranch}}" "buildOnDeleteBranch" }}
-        pullRequestCreate: true
-      cancelPendingRunsOn:
-        newCommit: true
 
 pipelines:
-  - name: matrix_pipe
+  - name: sample_skip_pipeline
     steps:
-      - name: access_multidb_itest
-        type: Matrix
-        stepMode: Bash
-        stepletMultipliers:
-          environmentVariables:
-            - DATABASE_TYPE: postgresql
+      - name: sample_skip_step
+        type: Bash
         configuration:
-          multiNode: true
-          timeoutSeconds: 2700 # 45 minutes
           inputResources:
-            - name: sample_GitRepo
+            - name: myRepo_2
         execution:
-          # onStart:
-          #   - echo "test1234"
           onExecute:
             - echo "executing"
-
-      - name: docker_build
-        type: DockerBuild
-        configuration:
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName: docker.artprod.mycompany.com/docker_local/dbp  # replace with your image path and name
-          dockerImageTag: ${run_number}
-          inputResources:
-            - name: sample_GitRepo
-          integrations:
-            - name: deepikaArt 
-        # execution:
-        #   onStart:
-        #     - echo "test1234"
+            - exit 118
             
