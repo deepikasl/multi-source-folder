@@ -1,71 +1,103 @@
 resources:
-  - name: myRepo
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      branches:
-        include: master
-
   - name: propertyBag
     type: PropertyBag
     configuration:
       foo: bar
+  - name: propertyBag1
+    type: PropertyBag
+    configuration:
       foo1: bar1
+  - name: propertyBag2
+    type: PropertyBag
+    configuration:
       foo2: bar2
+  - name: propertyBag3
+    type: PropertyBag
+    configuration:
+      foo3: bar3
+
 
 pipelines:
-  - name: myPipeline
-    configuration:
-      chronological: true
+  - name: pipeline1
     steps:
       - name: first_step
-        type: Bash          
+        type: Bash  
+        configuration:
+          outputResources:
+            - name: propertyBag
         execution:
           onExecute:
-            - echo "first_step"
-      - name: second_step
-        type: Bash   
+            - write_output propertyBag "foo=$run_number" 
+  - name: pipeline2
+    steps:
+      - name: first_step
+        type: Bash  
         configuration:
-          inputSteps:
-            - name: first_step
-        execution:
-          onExecute:
-            - echo "second_step"
-            - echo "logic to be put from onComplete section"
-      - name: third_step
-        type: Bash
-        configuration:
-          timeoutSeconds: 900
-          runtime:
-            type: image
-            image:
-              custom:
-                registry: docker #integration name
-                name: entplus.jfrog.io/devops-docker/jfrog/devops/jfrog-saas-deployer
-                tag: "latest"
-                autoPull: true
-                options: --entrypoint=""
-          environmentVariables:
-            ACTION: someAction
-            TRIGGERED_BY:
-              default: ""
-              description: Triggered By Username
-              allowCustom: true
           inputResources:
-            - name: myRepo
-              trigger: false
-          inputSteps:
-            - name: second_step
-          integrations:
-            - name: deepikaTestIntegration
-            - name: firstIntdeepikapipe
-            - name: anotherIntegration
-            - name: secondInt
-            - name: newIntegration
+            - name: propertyBag
+          outputResources:
+            - name: propertyBag1
         execution:
-          onStart:
-            - javac -version
-            - mvn --version
+          onExecute:
+            - write_output propertyBag1 "foo1=$run_number"
+  - name: pipeline3
+    steps:
+      - name: first_step
+        type: Bash  
+        configuration:
+          inputResources:
+            - name: propertyBag1
+        execution:
+          onExecute:
+            - echo "executing"
+  - name: pipeline4
+    steps:
+      - name: first_step
+        type: Bash  
+        configuration:
+          inputResources:
+            - name: propertyBag1
+          outputResources:
+            - name: propertyBag2
+        execution:
+          onExecute:
+            - write_output propertyBag2 "foo2=$run_number" 
+  - name: pipeline5
+    configuration:
+      dependencyMode:
+        waitOnParentComplete: true
+    steps:
+      - name: first_step
+        type: Bash  
+        configuration:
+          inputResources:
+            - name: propertyBag2
+          outputResources:
+            - name: propertyBag3
+        execution:
+          onExecute:
+            - write_output propertyBag3 "foo3=$run_number"
+  - name: pipeline6
+    steps:
+      - name: first_step
+        type: Bash  
+        configuration:
+          inputResources:
+            - name: propertyBag3
+        execution:
+          onExecute:
+            - echo "executing pipeline6"
+  - name: pipeline7
+    steps:
+      - name: first_step
+        type: Bash  
+        configuration:
+          inputResources:
+            - name: propertyBag3
+        execution:
+          onExecute:
+            - echo "executing pipeline7"
+
+
           
             
