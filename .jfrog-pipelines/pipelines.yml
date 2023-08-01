@@ -1,9 +1,9 @@
 resources:
-  - name: propertyBag
+  - name: propertyBag_e
     type: PropertyBag
     configuration:
       foo: bar
-  - name: propertyBag1
+  - name: propertyBag1_e
     type: PropertyBag
     configuration:
       foo1: bar1
@@ -24,29 +24,29 @@ pipelines:
         type: Bash  
         configuration:
           outputResources:
-            - name: propertyBag
+            - name: propertyBag_e
         execution:
           onExecute:
-            - write_output propertyBag "foo=$run_number" 
+            - write_output propertyBag_e "foo=$run_number" 
   - name: pipeline2
     steps:
       - name: first_step
         type: Bash  
         configuration:
           inputResources:
-            - name: propertyBag
+            - name: propertyBag_e
           outputResources:
-            - name: propertyBag1
+            - name: propertyBag1_e
         execution:
           onExecute:
-            - write_output propertyBag1 "foo1=$run_number"
+            - write_output propertyBag1_e "foo1=$run_number"
   - name: pipeline3
     steps:
       - name: first_step
         type: Bash  
         configuration:
           inputResources:
-            - name: propertyBag1
+            - name: propertyBag1_e
         execution:
           onExecute:
             - echo "executing"
@@ -56,7 +56,7 @@ pipelines:
         type: Bash  
         configuration:
           inputResources:
-            - name: propertyBag1
+            - name: propertyBag1_e
           outputResources:
             - name: propertyBag2
         execution:
