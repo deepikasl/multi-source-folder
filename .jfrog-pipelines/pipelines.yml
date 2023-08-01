@@ -1,3 +1,5 @@
+valuesFilePath: ./values.yml
+
 resources:
   - name: xsc_aql_rb
     type: Aql
