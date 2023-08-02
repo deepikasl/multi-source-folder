@@ -66,6 +66,7 @@ pipelines:
     configuration:
       dependencyMode:
         waitOnParentComplete: true
+        waitOnChildComplete: true
     steps:
       - name: first_step
         type: Bash  
