@@ -21,63 +21,90 @@ pipelines:
   - name: pipeline1
     steps:
       - name: first_step
-        type: Bash  
+        type: TriggerPipeline  
         configuration:
-          outputResources:
-            - name: propertyBag_e
+          pipelineName:   pipeline2
+          stepName:       first_step
+          waitForRunCompletion: false
+          integrations:
+            - name: deepikaArt
         execution:
           onExecute:
-            - write_output propertyBag_e "foo=$run_number" 
+            - echo "executing first_step $pipeline_name"
   - name: pipeline2
     steps:
       - name: first_step
-        type: Bash  
+        type: TriggerPipeline  
         configuration:
-          inputResources:
-            - name: propertyBag_e
-          outputResources:
-            - name: propertyBag1_e
+          pipelineName:   pipeline3
+          stepName:       first_step
+          waitForRunCompletion: false
+          integrations:
+            - name: deepikaArt
         execution:
           onExecute:
-            - write_output propertyBag1_e "foo1=$run_number"
+            - echo "executing first_step $pipeline_name"
+      - name: second_step
+        type: TriggerPipeline  
+        configuration:
+          pipelineName:   pipeline4
+          stepName:       first_step
+          waitForRunCompletion: false
+          integrations:
+            - name: deepikaArt
+        execution:
+          onExecute:
+            - echo "executing second_step $pipeline_name"
   - name: pipeline3
     steps:
       - name: first_step
-        type: Bash  
+        type: TriggerPipeline  
         configuration:
-          inputResources:
-            - name: propertyBag1_e
+          pipelineName:   pipeline4
+          stepName:       first_step
+          waitForRunCompletion: false
+          integrations:
+            - name: deepikaArt
         execution:
           onExecute:
-            - echo "executing"
+            - echo "executing first_step $pipeline_name"
   - name: pipeline4
     steps:
       - name: first_step
-        type: Bash  
+        type: TriggerPipeline  
         configuration:
-          inputResources:
-            - name: propertyBag1_e
-          outputResources:
-            - name: propertyBag2
+          pipelineName:   pipeline5
+          stepName:       first_step
+          waitForRunCompletion: false
+          integrations:
+            - name: deepikaArt
         execution:
           onExecute:
-            - write_output propertyBag2 "foo2=$run_number" 
+            - echo "executing first_step $pipeline_name"
   - name: pipeline5
-    configuration:
-      dependencyMode:
-        waitOnParentComplete: true
-        waitOnChildComplete: true
     steps:
       - name: first_step
-        type: Bash  
+        type: TriggerPipeline  
         configuration:
-          inputResources:
-            - name: propertyBag2
-          outputResources:
-            - name: propertyBag3
+          pipelineName:   pipeline6
+          stepName:       first_step
+          waitForRunCompletion: true
+          integrations:
+            - name: deepikaArt
         execution:
           onExecute:
-            - write_output propertyBag3 "foo3=$run_number"
+            - echo "executing first_step $pipeline_name"
+      - name: second_step
+        type: TriggerPipeline  
+        configuration:
+          pipelineName:   pipeline7
+          stepName:       first_step
+          waitForRunCompletion: true
+          integrations:
+            - name: deepikaArt
+        execution:
+          onExecute:
+            - echo "executing second_step $pipeline_name"
   - name: pipeline6
     steps:
       - name: first_step
