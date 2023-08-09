@@ -47,6 +47,8 @@ pipelines:
       - name: second_step
         type: TriggerPipeline  
         configuration:
+          inputSteps:
+            - name: first_step
           pipelineName:   pipeline4
           stepName:       first_step
           waitForRunCompletion: false
@@ -97,6 +99,8 @@ pipelines:
       - name: second_step
         type: TriggerPipeline  
         configuration:
+          inputSteps:
+            - name: first_step
           pipelineName:   pipeline7
           stepName:       first_step
           waitForRunCompletion: true
