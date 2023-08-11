@@ -32,4 +32,12 @@ pipelines:
         execution:
           onExecute:
             - write_output propertyBag "foo=$run_number"
+      - name: second_step
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: manual_trigger
+        execution:
+          onExecute:
+            - echo "here"
 
