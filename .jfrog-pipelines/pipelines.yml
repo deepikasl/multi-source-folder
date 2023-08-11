@@ -17,6 +17,7 @@ resources:
 pipelines:
   - name: demo_manual
     configuration:
+      reTriggerOnSyncFailure: false
       integrations:
         - name: deepikaGithub
     steps:
