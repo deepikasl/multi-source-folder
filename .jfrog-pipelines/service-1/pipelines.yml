@@ -1,11 +1,11 @@
 resources:
-  - name: newRepo
+  - name: newRepo1
     type: GITRepo
     configuration:
-      path: deepikasl/jfrog_pipelines
+      path: deepikasl/multi-source-folder
       gitProvider: deepikaGithub
       branches:
-        include: master
+        include: monorepo
   - name: propertyBag_1
     type: PropertyBag
     configuration:
