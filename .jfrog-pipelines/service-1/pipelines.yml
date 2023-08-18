@@ -19,7 +19,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: newRepo
+            - name: newRepo1
           outputResources:
             - name: propertyBag_1
           integrations:
