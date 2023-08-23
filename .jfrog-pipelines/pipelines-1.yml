@@ -61,7 +61,7 @@ valuesFilePath: values.yml
   {{ $ := . }}
     {{ if $.conf }}
     {{- range $cmd := $.conf.commands }}
-         - {{ $cmd }}
+- {{ $cmd }}
     {{- end }}
     {{ end }}
   {{ end }}
