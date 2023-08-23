@@ -45,7 +45,7 @@ configurations:
 
   steps:
 
-    codeQuality:
+    build:
 
       # [Maven] Default to plugin: maven-checkstyle-plugin
       commands:
@@ -67,10 +67,10 @@ configurations:
         - 'some command'
 
 
-    build:
+    # build:
 
-      commands:
-        - 'npm run build'
+    #   commands:
+    #     - 'npm run build'
 
 
     publish:
