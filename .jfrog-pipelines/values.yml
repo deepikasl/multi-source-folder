@@ -1,36 +1,83 @@
-sample_step_1:
-  name: sample_step_1
-  type: Bash
+# [Required]
+metadata:
 
-Pipeline:
-  name: foo
+  # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
+  serviceName:  api
 
-GitRepo:
-  name: fooGitRepo1
-  gitProvider: deepikaGithub
-  path: deepikasl/jfrog_pipelines
-  branches:
-    exclude: 'master'
-    include: {{gitBranch}}
+  # [Optional]
+  node: "16"
 
-artifactoryIntegration: art
+  # [Optional] Defaults to Ubuntu18 with node 18
+  # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
+  # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/choosing-your-runtime-image
+  #  runtime:
+  #    registry: docker
+  #    sourceRepository: apps-docker-local
+  #    name: test.mycompany.io/apps-docker-local/ci/builder-node14
+  #    tag: 1.0.0
 
-Image:
-  name: fooImage1
-  sourceRepository: foo
-  autoPull: false
+  # [Optional] If not provided then default nodePool configured in platform will be used
+  #  nodePool: some_nodepool
 
-DockerBuild:
-  name: foobuild
-  dockerImageName: foo
-  dockerFileName: foo
-  dockerFileLocation: '.'
-  dockerImageTag: ${run_number}
+# [Required]
+inputs:
 
-DockerPush:
-  name: foopush
-  targetRepository: foo
+  # [Required] Configure Git repository where application code is present
+  sourceRepository:
+    # Support all the Git Resource configuration properties
+    # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/gitrepo
+    path: deepikasl/demoNode
+    gitProvider: deepikaGit
+    branches:
+      include: main
 
-BuildInfo:
-  autoPublishBuildInfo: true
-  name: fooBuildInfo1
+  # [Required]
+  integrations:
+
+    # [Required] Artifactory api key to configure Jfrog CLI
+    artifactory: deepikaArt
+
+# [Required]
+configurations:
+
+  # [Optional] Defaults to repository root folder
+  sourceDirectory: ''
+
+controls:
+
+  # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
+  triggerBy:
+
+    # Connected source Git repository change [Defaults to true]
+    # sourceRepository: true
+
+    # Other resource change from other pipelines
+    # externalResources:
+    #   - resourceName: dream_app_commons_build_result
+
+    # Incoming webhook
+    # incomingWebhooks:
+    #   - webhookName: 'testWebhook' # IncommingWebhook integration name
+
+
+  # [Optional]
+  logging:
+
+    # [Optional] Defaults to false
+    enableDebug: true
+
+  # [Optional] Exporting important files during run as RUN FILES
+  exporting:
+
+    # [Optional] Defaults to false
+    enabled: true
+
+  # [Optional] Enable notifications
+  notifications:
+    email:
+      integrationName: 'mySMTP' # SMTP
+      content: ''
+
+    slack:
+      integrationName: 'mySlack'
+      content: ''
