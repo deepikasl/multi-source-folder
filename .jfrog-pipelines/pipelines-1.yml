@@ -1,8 +1,8 @@
-# template:
-#   namespace: deepikasl
-#   name: Node
-#   version: 1.0.0
-#   development: true
+template:
+  namespace: deepikasl
+  name: Node
+  version: 1.0.0
+  development: true
 
 valuesFilePath: values.yml
 # Template Variables
@@ -59,11 +59,11 @@ valuesFilePath: values.yml
 # Steps shared template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
-  {{ if $.conf }}
-  {{- range $cmd := $.conf.commands }}
-- {{ $cmd }}
-  {{- end }}
-  {{ end }}
+    {{ if $.conf }}
+    {{- range $cmd := $.conf.commands }}
+    - {{ $cmd }}
+    {{- end }}
+    {{ end }}
   {{ end }}
 
 # code quality step
