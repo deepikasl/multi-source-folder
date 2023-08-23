@@ -214,16 +214,16 @@ pipelines:
 
       -  name: {{ .Values.metadata.serviceName }}_clam_scan
          type: Bash
-        configuration:
-          affinityGroup: {{ .Values.metadata.serviceName }}
-          inputResources:
-            - name: {{ $gitResName }}
-              trigger: {{ $isGitTriggerEnabled }}
-          inputSteps:
+         configuration:
+           affinityGroup: {{ .Values.metadata.serviceName }}
+           inputResources:
+             - name: {{ $gitResName }}
+               trigger: {{ $isGitTriggerEnabled }}
+           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
-        execution:
-          onExecute:
-            {{ template "step.clamScan.onExecute" $templateParams }}
+         execution:
+           onExecute:
+             {{ template "step.clamScan.onExecute" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
