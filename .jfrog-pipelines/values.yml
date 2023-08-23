@@ -65,6 +65,11 @@ configurations:
       commands:
         - jfrog rt publish
 
+    clamScan:
+
+      commands:
+        - npm run build
+
 controls:
 
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
