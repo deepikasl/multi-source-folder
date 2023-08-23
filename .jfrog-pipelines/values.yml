@@ -47,8 +47,18 @@ configurations:
 
     codeQuality:
 
+      # [Maven] Default to plugin: maven-checkstyle-plugin
       commands:
-        - 'npm run lint:api'
+        - 'mvn clean sonar:sonar'
+
+      # [Gradle]
+      # commands:
+      #  - 'gradle sonar'
+
+    # codeQuality:
+
+    #   commands:
+    #     - 'npm run lint:api'
 
 
     sonarScan:
