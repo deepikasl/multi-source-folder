@@ -1,3 +1,267 @@
-# include:
-#   template: deepikaTemplates/myPipelineTemplate/1.0.0
-# valuesFilePath: ./values.yml
+template:
+  namespace: deepikasl
+  name: Node
+  version: 1.0.0
+  development: true
+
+valuesFilePath: values.yml
+# Template Variables
+
+# Names
+{{ $serviceName := .Values.metadata.serviceName }}
+{{ $gitResName := print $serviceName "_git_source" }}
+{{ $buildInfoResultResName := print $serviceName "_build_result" }}
+{{ $buildInfoResName := print $serviceName "_build_info" }}
+{{ $pipelineName := print $serviceName "_build" }}
+{{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
+
+# Build Trigger
+{{ $isControlsAvailable := default false .Values.controls }}
+{{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
+{{ $isQualityAvailable := default false (and $isControlsAvailable .Values.controls.enableQuality) }}
+{{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
+{{ $isExternalTriggerAvailable := default false (and $isTriggerByAvailable .Values.controls.triggerBy.externalResources) }}
+{{ $isCronTriggerEnabled := default false (and $isTriggerByAvailable .Values.controls.triggerBy.cron (eq .Values.controls.triggerBy.cron.enabled true)) }}
+{{ $isWebhookTriggerEnabled := default false (and $isTriggerByAvailable .Values.controls.triggerBy.incomingWebhooks) }}
+
+# Logging
+{{ $isDebugLogsEnabled := and $isControlsAvailable .Values.controls.logging (eq true .Values.controls.logging.enableDebug) }}
+
+# Exporting
+{{ $isExportingEnabled := and $isControlsAvailable .Values.controls.exporting (eq true .Values.controls.exporting.enabled) }}
+
+# Notifications
+{{ $isNotificationsAvailable := default false (and $isControlsAvailable .Values.controls.notifications) }}
+{{ $isEmailNotificationsAvailable := default false (and $isNotificationsAvailable .Values.controls.notifications.email) }}
+{{ $isSlackNotificationsAvailable := default false (and $isNotificationsAvailable .Values.controls.notifications.slack) }}
+
+# -----------------------------------------------------------------
+# Reusable templates
+# These are resolved using 'template' thus indentation is important
+# -----------------------------------------------------------------
+{{ $resultResources := dict "codeQualityResName" $codeQualityResName "unitTestResName" $unitTestResName "buildInfoResultResName" $buildInfoResultResName }}
+{{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory) }}
+
+# Git repo resource
+{{ define "res.gitRepo.config" }}
+  {{ range $key, $value := .Values.inputs.sourceRepository }}
+  {{ $isObject := or (eq $key "files") (eq $key "branches") (eq $key "pullRequestSourceBranches") (eq $key "pullRequestTargetBranches") (eq $key "tags") (eq $key "buildOn") (eq $key "cancelPendingRunsOn") (eq $key "pin") }}
+  {{ if (eq $isObject false )}}
+      {{ $key }}: {{ $value }}
+  {{ else }}
+      {{ $key }}:
+  {{ range $depthKey, $depthValue := $value }}
+        {{ $depthKey }}: {{ $depthValue }}
+  {{ end }}
+  {{ end }}
+  {{ end }}
+{{ end }}
+
+# Steps shared template
+{{ define "step.shared.onExecute.command" }}
+  {{ $ := . }}
+  {{ if $.conf }}
+  {{- range $cmd := $.conf.commands }}
+- {{ $cmd }}
+  {{- end }}
+  {{ end }}
+  {{ end }}
+
+# code quality step
+{{ define "step.codeQuality.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+        - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+          {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# sonar scan step
+{{ define "step.sonarScan.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# unit test step
+{{ define "step.test.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.test }}
+  {{ $ := set $ "resultResource" $.unitTestResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+            - save_tests {{ $.values.configurations.steps.test.reportFolder }}
+{{ end }}
+
+# build step
+{{ define "step.build.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# publish step
+{{ define "step.publish.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+            - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
+            - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+{{ end }}
+# -----------------------------------------------------------------
+
+# Resource definitions
+resources:
+  - name: {{ $gitResName }}
+    type: GitRepo
+    configuration:
+      {{ template "res.gitRepo.config" . }}
+
+  - name: {{ $codeQualityResName }}
+    type: PropertyBag
+    configuration:
+      timestamp: ''
+
+  - name: {{ $unitTestResName }}
+    type: PropertyBag
+    configuration:
+      timestamp: ''
+
+  - name: {{ $buildInfoResultResName }}
+    type: PropertyBag
+    configuration:
+      timestamp: ''
+
+  - name: {{ $buildInfoResName }}
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: {{ .Values.inputs.integrations.artifactory }}
+      buildName: ''
+      buildNumber: ''
+
+  {{ if $isCronTriggerEnabled }}
+  - name: {{ $cronResName }}
+    type: CronTrigger
+    configuration:
+      interval: '{{ .Values.controls.triggerBy.cron.expression }}'
+  {{ end }}
+
+  {{ if $isWebhookTriggerEnabled }}
+  {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
+  - name: "{{ $serviceName }}_webhook_{{ $webhook.webhookName }}"
+    type: IncomingWebhook
+    configuration:
+      webhookName: {{ $webhook.webhookName }}
+  {{ end }}
+  {{ end }}
+
+# Pipeline definition
+pipelines:
+  - name: {{ $pipelineName }}
+    configuration:
+      runtime:
+        type: image
+        image:
+          {{ if .Values.metadata.runtime }}
+          custom:
+          {{ range $key, $value := .Values.metadata.runtime }}
+            {{ $key }}: {{ $value }}
+          {{ end }}
+          {{ else }}
+          auto:
+            language: node
+            versions:
+              - "18"
+          {{ end }}
+      integrations:
+        - name: {{ .Values.inputs.integrations.artifactory }}
+        {{ if $isEmailNotificationsAvailable}}
+        - name: {{ .Values.controls.notifications.email.integrationName }}
+        {{ end }}
+        {{ if $isSlackNotificationsAvailable }}
+        - name: {{ .Values.controls.notifications.slack.integrationName }}
+        {{ end }}
+
+      # Setting nodePool
+      {{ if .Values.metadata.nodePool }}
+      nodePool: {{ .Values.metadata.nodePool }}
+      {{ end }}
+
+    steps:
+      {{ if $isQualityAvailable }}
+      - name: {{ .Values.metadata.serviceName }}_quality
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          integrations:
+           - name: {{ .Values.inputs.integrations.artifactory }}
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+        execution:
+          onExecute:
+            {{ template "step.codeQuality.onExecute" $templateParams }}
+      - name: {{ .Values.metadata.serviceName }}_sonar_scan
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          integrations:
+           - name: {{ .Values.inputs.integrations.artifactory }}
+           - name: {{ .Values.inputs.integrations.sonar }}
+          inputSteps:
+            - name: {{ .Values.metadata.serviceName }}_quality
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+        execution:
+          onExecute:
+            {{ template "step.codeQuality.onExecute" $templateParams }}
+      {{ end }}
+
+      - name: {{ .Values.metadata.serviceName }}_build
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+        execution:
+          onExecute:
+            {{ template "step.build.onExecute" $templateParams }}
+
+      - name: {{ .Values.metadata.serviceName }}_clam_scan
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+          inputSteps:
+            - name: {{ .Values.metadata.serviceName }}_build
+        execution:
+          onExecute:
+            {{ template "step.clamScan.onExecute" $templateParams }}
+
+      - name: {{ .Values.metadata.serviceName }}_publish
+        type: Bash
+        configuration:
+          affinityGroup: build
+          inputSteps:
+            - name: build
+              status:
+                - success
+            - name: unit_tests
+              status:
+                - success
+            - name: code_quality
+              status:
+                - success
+          outputResources:
+            - name: {{ $buildInfoResultResName }}
+            - name: {{ $buildInfoResName }}
+        execution:
+          onExecute:
+            {{ template "step.publish.onExecute" $templateParams }}
