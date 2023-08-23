@@ -43,6 +43,28 @@ configurations:
   # [Optional] Defaults to repository root folder
   sourceDirectory: ''
 
+  steps:
+
+    codeQuality:
+
+      commands:
+        - npm run lint:api
+
+    sonarScan:
+
+      commands:
+        - some command
+
+    build:
+
+      commands:
+        - npm run build
+
+    publish:
+
+      commands:
+        - jfrog rt publish
+
 controls:
 
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
