@@ -90,6 +90,14 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
+# sonar scan step
+{{ define "step.clamScan.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
 # publish step
 {{ define "step.publish.onExecute" }}
   {{ $ := . }}
