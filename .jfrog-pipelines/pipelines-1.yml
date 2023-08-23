@@ -39,7 +39,7 @@ valuesFilePath: values.yml
 # Reusable templates
 # These are resolved using 'template' thus indentation is important
 # -----------------------------------------------------------------
-{{ $resultResources := dict "unitTestResName" $unitTestResName "buildInfoResultResName" $buildInfoResultResName }}
+{{ $resultResources := dict "buildInfoResultResName" $buildInfoResultResName }}
 {{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory) }}
 
 # Git repo resource
@@ -83,16 +83,6 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
-# unit test step
-{{ define "step.test.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.test }}
-  {{ $ := set $ "resultResource" $.unitTestResName }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-            {{ template "step.shared.onExecute.command" $ }}
-            - save_tests {{ $.values.configurations.steps.test.reportFolder }}
-{{ end }}
-
 # build step
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
@@ -119,11 +109,6 @@ resources:
     type: GitRepo
     configuration:
       {{ template "res.gitRepo.config" . }}
-
-  - name: {{ $unitTestResName }}
-    type: PropertyBag
-    configuration:
-      timestamp: ''
 
   - name: {{ $buildInfoResultResName }}
     type: PropertyBag
