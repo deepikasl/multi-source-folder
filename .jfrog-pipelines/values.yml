@@ -62,7 +62,6 @@ configurations:
       commands:
         - 'npm run build'
 
-
     publish:
 
       commands:
@@ -72,8 +71,7 @@ configurations:
     clamScan:
 
       commands:
-        - 'npm run build'
-        
+        - 'npm run build'     
 
 controls:
 
