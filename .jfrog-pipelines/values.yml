@@ -45,20 +45,10 @@ configurations:
 
   steps:
 
-    build:
+    codeQuality:
 
-      # [Maven] Default to plugin: maven-checkstyle-plugin
       commands:
-        - 'mvn clean sonar:sonar'
-
-      # [Gradle]
-      # commands:
-      #  - 'gradle sonar'
-
-    # codeQuality:
-
-    #   commands:
-    #     - 'npm run lint:api'
+        - 'npm run lint:api'
 
 
     sonarScan:
@@ -67,10 +57,10 @@ configurations:
         - 'some command'
 
 
-    # build:
+    build:
 
-    #   commands:
-    #     - 'npm run build'
+      commands:
+        - 'npm run build'
 
 
     publish:
