@@ -39,7 +39,7 @@ valuesFilePath: values.yml
 # Reusable templates
 # These are resolved using 'template' thus indentation is important
 # -----------------------------------------------------------------
-{{ $resultResources := dict "codeQualityResName" $codeQualityResName "unitTestResName" $unitTestResName "buildInfoResultResName" $buildInfoResultResName }}
+{{ $resultResources := dict "unitTestResName" $unitTestResName "buildInfoResultResName" $buildInfoResultResName }}
 {{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory) }}
 
 # Git repo resource
@@ -119,11 +119,6 @@ resources:
     type: GitRepo
     configuration:
       {{ template "res.gitRepo.config" . }}
-
-  - name: {{ $codeQualityResName }}
-    type: PropertyBag
-    configuration:
-      timestamp: ''
 
   - name: {{ $unitTestResName }}
     type: PropertyBag
