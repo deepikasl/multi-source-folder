@@ -1,8 +1,8 @@
-template:
-  namespace: deepikasl
-  name: Node
-  version: 1.0.0
-  development: true
+# template:
+#   namespace: deepikasl
+#   name: Node
+#   version: 1.0.0
+#   development: true
 
 valuesFilePath: values.yml
 # Template Variables
