@@ -212,7 +212,7 @@ pipelines:
       #     onExecute:
       #       {{ template "step.build.onExecute" $templateParams }}
 
-       - name: {{ .Values.metadata.serviceName }}_clam_scan
+      - name: {{ .Values.metadata.serviceName }}_clam_scan
         type: Bash
         configuration:
           affinityGroup: {{ .Values.metadata.serviceName }}
