@@ -21,7 +21,6 @@ valuesFilePath: values.yml
 {{ $isQualityAvailable := default false (and $isControlsAvailable .Values.controls.enableQuality) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 {{ $isExternalTriggerAvailable := default false (and $isTriggerByAvailable .Values.controls.triggerBy.externalResources) }}
-{{ $isCronTriggerEnabled := default false (and $isTriggerByAvailable .Values.controls.triggerBy.cron (eq .Values.controls.triggerBy.cron.enabled true)) }}
 {{ $isWebhookTriggerEnabled := default false (and $isTriggerByAvailable .Values.controls.triggerBy.incomingWebhooks) }}
 
 # Logging
@@ -121,13 +120,6 @@ resources:
       sourceArtifactory: {{ .Values.inputs.integrations.artifactory }}
       buildName: ''
       buildNumber: ''
-
-  {{ if $isCronTriggerEnabled }}
-  - name: {{ $cronResName }}
-    type: CronTrigger
-    configuration:
-      interval: '{{ .Values.controls.triggerBy.cron.expression }}'
-  {{ end }}
 
   {{ if $isWebhookTriggerEnabled }}
   {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
