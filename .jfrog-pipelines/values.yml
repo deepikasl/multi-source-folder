@@ -50,25 +50,30 @@ configurations:
       commands:
         - 'npm run lint:api'
 
+
     sonarScan:
 
       commands:
         - 'some command'
+
 
     build:
 
       commands:
         - 'npm run build'
 
+
     publish:
 
       commands:
         - 'jfrog rt publish'
 
+
     clamScan:
 
       commands:
         - 'npm run build'
+        
 
 controls:
 
