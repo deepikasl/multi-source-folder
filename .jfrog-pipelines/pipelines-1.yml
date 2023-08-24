@@ -287,12 +287,19 @@ pipelines:
           runtime:
             type: image
             image:
-              {{ if (eq .Values.controls.build.runtime "custom") }}
+              {{ if (eq .Values.controls.build.runtime custom) }}
               custom:
                 registry: deepikaArt
                 sourceRepository: docker-staging-local
                 name: docker.jfrog.io/sonar-scanner
                 tag: ${SONAR_DOCKER_TAG:-latest}
+              {{ else }}
+              auto:
+                language: node
+                versions:
+                  {{- range $version := .values.configurations.steps.build.runtime.versions }}
+                  - {{ $version }}
+                  {{- end }} 
               {{ end }}
         execution:
           onStart:
