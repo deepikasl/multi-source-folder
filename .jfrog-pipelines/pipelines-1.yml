@@ -338,7 +338,7 @@ pipelines:
           runtime:
             type: image
             image:
-              {{ if (eq $.values.controls.sonarScan.runtime "custom") }}
+              {{ if (eq .Values.controls.sonarScan.runtime "custom") }}
               custom:
                 {{ range $key, $value := .Values.configurations.steps.sonarScan.runtime.custom }}
                 {{ $key }}: {{ $value }}
