@@ -126,8 +126,8 @@ resources:
 pipelines:
   - name: {{ $pipelineName }}
     configuration:
-      integrations:
-        {{ template "pipeline.config.integrations" . }}
+      # integrations:
+      #   {{ template "pipeline.config.integrations" . }}
 
       # Setting nodePool
       {{ if .Values.metadata.nodePool }}
