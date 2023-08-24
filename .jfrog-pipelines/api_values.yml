@@ -88,8 +88,7 @@ configurations:
       runtime:
         custom:
           registry: deepikaArt
-          # sourceRepository: docker-staging-local
-          name: releases-docker.jfrog.io/jfrog/pipelines-u18node
+          name: art-docker/alpine/3.1
           tag: 16.10.0
       onStart:
         - echo "onStart"
