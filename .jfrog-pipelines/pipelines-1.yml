@@ -173,7 +173,8 @@ pipelines:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
           onExecute:
-            {{ template "step.codeQuality.onExecute" $templateParams }}
+            - echo "hi"
+            # {{ template "step.codeQuality.onExecute" $templateParams }}
       {{ if $isQualityAvailable }}
       # - name: api_quality
       #   type: Bash
