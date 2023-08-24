@@ -165,6 +165,27 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
+{{ define "step.sonarScan.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.sonarScan.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.sonarScan.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 # clam scan step
 {{ define "step.clamScan.onExecute" }}
   {{ $ := . }}
@@ -273,8 +294,14 @@ pipelines:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
         execution:
+          onStart:
+            {{ template "step.sonarScan.onStart" $templateParams }}
           onExecute:
-            {{ template "step.codeQuality.onExecute" $templateParams }}
+            {{ template "step.sonarScan.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.sonarScan.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.sonarScan.onFailure" $templateParams }}
       {{ end }}
 
       - name: {{ .Values.metadata.serviceName }}_clam_scan
