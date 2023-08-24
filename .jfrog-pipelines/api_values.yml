@@ -88,7 +88,7 @@ configurations:
       runtime:
         custom:
           registry: deepikaArt
-          sourceRepository: docker-staging-local
+          # sourceRepository: docker-staging-local
           name: releases-docker.jfrog.io/jfrog/pipelines-u18node
           tag: 16.10.0
       onStart:
