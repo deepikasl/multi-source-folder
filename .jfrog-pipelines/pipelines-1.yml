@@ -59,11 +59,41 @@ valuesFilePath: values.yml
             {{ end }}
 {{ end }}
 
-# Steps shared template
+# Steps shared onExecute template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
             {{ if $.conf }}
             {{- range $cmd := $.conf.onExecute }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onStart template
+{{ define "step.shared.onStart.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onStart }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onSuccess template
+{{ define "step.shared.onSuccess.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onSuccess }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onFailure template
+{{ define "step.shared.onFailure.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onFailure }}
             - {{ $cmd }}
             {{- end }}
             {{ end }}
@@ -75,6 +105,27 @@ valuesFilePath: values.yml
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
             - cd $shared_workspace{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.build.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.build.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.build.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
 # code quality step
@@ -158,6 +209,8 @@ pipelines:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
         execution:
+          onStart:
+            {{ template "step.build.onStart" $templateParams }}
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
       {{ if $isQualityAvailable }}
