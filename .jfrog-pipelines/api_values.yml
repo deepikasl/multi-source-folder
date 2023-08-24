@@ -89,7 +89,7 @@ configurations:
         custom:
           registry: deepikaArt
           name: art-docker/alpine
-          tag: "3.1"
+          tag: latest
       onStart:
         - echo "onStart"
       onExecute:
