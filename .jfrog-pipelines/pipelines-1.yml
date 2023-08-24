@@ -158,8 +158,8 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            - echo "hi"
-            # {{ template "step.build.onExecute" $templateParams }}
+            # - echo "hi"
+            {{ template "step.build.onExecute" $templateParams }}
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
