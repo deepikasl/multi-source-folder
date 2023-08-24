@@ -15,6 +15,7 @@ inputs:
   integrations:
 
     artifactory: deepikaArt
+    sonar: deepikaSonar
 
 configurations:
 
