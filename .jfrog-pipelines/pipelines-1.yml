@@ -297,7 +297,9 @@ pipelines:
               auto:
                 language: node
                 versions:
-                  {{- range $version := .values.configurations.steps.build.runtime.versions }}
+                  - "16.10.0"
+                versions:
+                  {{- range $version := .Values.configurations.steps.build.runtime.versions }}
                   - {{ $version }}
                   {{- end }} 
               {{ end }}
