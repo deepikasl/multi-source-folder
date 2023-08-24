@@ -16,11 +16,6 @@ valuesFilePath: values.yml
 {{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.enablePublish true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 
-# Notifications
-{{ $isNotificationsAvailable := default false (and $isControlsAvailable .Values.controls.notifications) }}
-{{ $isEmailNotificationsAvailable := default false (and $isNotificationsAvailable .Values.controls.notifications.email) }}
-{{ $isSlackNotificationsAvailable := default false (and $isNotificationsAvailable .Values.controls.notifications.slack) }}
-
 # -----------------------------------------------------------------
 # Reusable templates
 # These are resolved using 'template' thus indentation is important
