@@ -158,11 +158,16 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            {{ template "step.build.onExecute" $templateParams }}
+            - echo "hi"
+            # {{ template "step.build.onExecute" $templateParams }}
+
+      {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
         configuration:
           affinityGroup: {{ .Values.metadata.serviceName }}
+          integrations:
+           - name: {{ .Values.inputs.integrations.artifactory }}
           inputResources:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
@@ -170,22 +175,7 @@ pipelines:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
           onExecute:
-            {{ template "step.build.onExecute" $templateParams }}
-      {{ if $isQualityAvailable }}
-      # - name: {{ .Values.metadata.serviceName }}_quality
-      #   type: Bash
-      #   configuration:
-      #     affinityGroup: {{ .Values.metadata.serviceName }}
-      #     integrations:
-      #      - name: {{ .Values.inputs.integrations.artifactory }}
-      #     inputResources:
-      #       - name: {{ $gitResName }}
-      #         trigger: {{ $isGitTriggerEnabled }}
-      #     inputSteps:
-      #       - name: {{ .Values.metadata.serviceName }}_build
-      #   execution:
-      #     onExecute:
-      #       {{ template "step.codeQuality.onExecute" $templateParams }}
+            {{ template "step.codeQuality.onExecute" $templateParams }}
       - name: {{ .Values.metadata.serviceName }}_sonar_scan
         type: Bash
         configuration:
