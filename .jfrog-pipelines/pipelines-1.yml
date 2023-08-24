@@ -289,10 +289,9 @@ pipelines:
             image:
               {{ if (eq $.values.configurations.steps.publish "custom") }}
               custom:
-                registry: deepikaArt
-                sourceRepository: docker-staging-local
-                name: docker.jfrog.io/sonar-scanner
-                tag: ${SONAR_DOCKER_TAG:-latest}
+                {{ range $key, $value := .Values.configurations.steps.build.runtime.custom }}
+                {{ $key }}: {{ $value }}
+                {{ end }}
               {{ else }}
               auto:
                 language: node
