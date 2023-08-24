@@ -287,7 +287,7 @@ pipelines:
           runtime:
             type: image
             image:
-              {{ if (eq $.values.configurations.steps.publish "custom") }}
+              {{ if (eq $.values.configurations.steps.build.runtime "custom") }}
               custom:
                 {{ range $key, $value := .Values.configurations.steps.build.runtime.custom }}
                 {{ $key }}: {{ $value }}
@@ -335,6 +335,22 @@ pipelines:
         type: Bash
         configuration:
           affinityGroup: {{ .Values.metadata.serviceName }}_quality
+          runtime:
+            type: image
+            image:
+              {{ if (eq $.values.configurations.steps.sonarScan.runtime "custom") }}
+              custom:
+                {{ range $key, $value := .Values.configurations.steps.sonarScan.runtime.custom }}
+                {{ $key }}: {{ $value }}
+                {{ end }}
+              {{ else }}
+              auto:
+                language: node
+                versions:
+                  {{- range $version := .Values.configurations.steps.sonarScan.runtime.versions }}
+                  - {{ $version }}
+                  {{- end }} 
+              {{ end }}
           integrations:
            - name: {{ .Values.inputs.integrations.artifactory }}
            - name: {{ .Values.inputs.integrations.sonar }}
