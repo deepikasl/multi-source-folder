@@ -43,6 +43,12 @@ valuesFilePath: values.yml
   {{ end }}
 {{ end }}
 
+{{ define "pipeline.config.integrations" }}
+  {{ $ := . }}
+            {{- range $int := $.values.inputs.pipeline.configuration.integrations }}
+            - name: {{ $int }}
+{{ end }}
+
 # Steps shared template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
@@ -120,28 +126,8 @@ resources:
 pipelines:
   - name: {{ $pipelineName }}
     configuration:
-      runtime:
-        type: image
-        image:
-          {{ if .Values.metadata.runtime }}
-          custom:
-          {{ range $key, $value := .Values.metadata.runtime }}
-            {{ $key }}: {{ $value }}
-          {{ end }}
-          {{ else }}
-          auto:
-            language: node
-            versions:
-              - "18"
-          {{ end }}
       integrations:
-        - name: {{ .Values.inputs.integrations.artifactory }}
-        {{ if $isEmailNotificationsAvailable}}
-        - name: {{ .Values.controls.notifications.email.integrationName }}
-        {{ end }}
-        {{ if $isSlackNotificationsAvailable }}
-        - name: {{ .Values.controls.notifications.slack.integrationName }}
-        {{ end }}
+        {{ template "pipeline.config.integrations" . }}
 
       # Setting nodePool
       {{ if .Values.metadata.nodePool }}
