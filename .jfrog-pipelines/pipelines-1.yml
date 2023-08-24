@@ -358,6 +358,7 @@ pipelines:
           onFailure:
             {{ template "step.clamScan.onFailure" $templateParams }}
 
+      {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
         configuration:
@@ -376,3 +377,4 @@ pipelines:
             {{ template "step.publish.onSuccess" $templateParams }}
           onFailure:
             {{ template "step.publish.onFailure" $templateParams }}
+      {{ end }}
