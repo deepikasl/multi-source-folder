@@ -12,8 +12,8 @@ valuesFilePath: values.yml
 # Build Trigger
 {{ $isControlsAvailable := default false .Values.controls }}
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
-{{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.enableQuality true)) }}
-{{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.enablePublish true)) }}
+{{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
+{{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.publish.enabled true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 
 # -----------------------------------------------------------------
@@ -358,7 +358,7 @@ pipelines:
           onFailure:
             {{ template "step.clamScan.onFailure" $templateParams }}
 
-      {{ if $isQualityAvailable }}
+      {{ if $isPublishAvailable }}
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
         configuration:
