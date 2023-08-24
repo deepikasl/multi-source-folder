@@ -50,6 +50,13 @@ valuesFilePath: values.yml
             {{- end }}
 {{ end }}
 
+{{ define "pipeline.config.environmentVariables" }}
+  {{ $ := . }}
+            {{ range $key, $value := .Values.inputs.pipeline.configuration.environmentVariables }}
+            {{ $key }}: {{ $value }}
+            {{ end }}
+{{ end }}
+
 # Steps shared template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
