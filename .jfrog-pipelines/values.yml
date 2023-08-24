@@ -1,50 +1,32 @@
-artifactoryIntegration: art
-kubernetesIntegration: k8s
+Pipeline:
+  name: foo
 
 GitRepo:
   name: fooGitRepo
-  gitProvider: deepikaGithub
-  path: deepikasl/jfrog_pipelines
+  gitProvider: github
+  path: jfrog/jfrog-pipelines-simple-example
   branches:
-    exclude: master
+    exclude: 'master'
     include: {{gitBranch}}
-  files:
-    include: myCharts.*
+
+artifactoryIntegration: art
+
+Image:
+  name: fooImage
+  sourceRepository: foo
+  autoPull: false
+
+DockerBuild:
+  name: foobuild
+  dockerImageName: foo
+  dockerFileName: foo
+  dockerFileLocation: '.'
+  dockerImageTag: ${run_number}
+
+DockerPush:
+  name: foopush
+  targetRepository: foo
 
 BuildInfo:
+  autoPublishBuildInfo: true
   name: fooBuildInfo
-  buildName: foo
-  buildNumber: ${run_number}
-
-BuildInfoPromoted:
-  name: fooBuildInfoPromoted
-
-HelmChart:
-  name: fooHelmChart
-  chartName: foo
-  chartVersion: 1.0.0
-  helmVersion: 3
-  repository: foo
-
-Pipeline:
-  name: fooHelmDeploy
-
-HelmPublish:
-  name: HelmPublish
-  chartPath: '.'
-
-PromoteBuild:
-  name: fooPromoteBuild
-  targetRepository: fooPromote
-  autoPromotion: true
-
-HelmDeploy:
-  name: fooDeploy
-  releaseName: foo
-  chartPath: '.'
-  flags: '--wait --timeout 900s'
-  lint: true
-  lintFlags: '--strict'
-  valueFilePaths:
-    - values.yaml
-  test: true
