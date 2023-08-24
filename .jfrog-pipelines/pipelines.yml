@@ -7,12 +7,12 @@ resources:
       branches:
         include: master
 
-#   - name: propertyBag
-#     type: PropertyBag
-#     configuration:
-#       foo: bar
-#       foo1: bar1
-#       foo2: bar2
+  - name: branchSnapshot
+    type: PropertyBag
+    configuration:
+      foo: bar
+      foo1: bar1
+      foo2: bar2
 
 pipelines:
   - name: pipelines_build
@@ -104,4 +104,17 @@ pipelines:
         execution:
           onStart:
             - echo "executing nodepoolService_build $pipeline_name"
+      - name: createSnapshot
+        type: Bash  
+        configuration:
+          inputSteps:
+            - name: api_build
+            - name: www_build
+            - name: micro_build
+            - name: nodepoolService_build
+          outputResources:
+            - name: branchSnapshot
+        execution:
+          onExecute:
+            - echo "executing createSnapshot"
             
