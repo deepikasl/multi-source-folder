@@ -45,7 +45,7 @@ valuesFilePath: values.yml
 
 {{ define "pipeline.config.integrations" }}
   {{ $ := . }}
-            {{- range $int := $.values.inputs.pipeline.configuration.integrations }}
+            {{- range $int := $.Values.inputs.pipeline.configuration.integrations }}
             - name: {{ $int }}
 {{ end }}
 
