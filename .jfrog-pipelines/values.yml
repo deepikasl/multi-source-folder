@@ -33,33 +33,38 @@ configurations:
   sourceDirectory: ''
 
   steps:
+    build:
+      onStart:
+        - cd $shared_workspace
+
+      onExecute:
+        - npm run build
+
+      onFailure:
+        - send_notification
+
+      onSuccess:
+        - send_notification
 
     codeQuality:
-
       onExecute:
         - npm run lint:api
 
 
     sonarScan:
-
-      onExecute:
+      onStart:
         - npm run build
-
-
-    build:
 
       onExecute:
         - npm run build
 
 
     publish:
-
       onExecute:
         - jfrog rt publish
 
 
     clamScan:
-
       onExecute:
         - npm run build
         
