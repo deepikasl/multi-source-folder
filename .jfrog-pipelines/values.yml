@@ -13,6 +13,9 @@ inputs:
       environmentVariables:
         foo: bar
         test: env
+      retentionPolicy:
+        maxAgeDays: 90
+        minRuns: 90
 
   sourceRepository:
     path: deepikasl/jfrog_pipelines
