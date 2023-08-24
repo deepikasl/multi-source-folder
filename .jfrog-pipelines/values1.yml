@@ -1,0 +1,30 @@
+Pipeline:
+  name: foo
+
+GitRepo:
+  name: fooGitRepo
+  gitProvider: deepikaGithub
+  path: deepikasl/jfrog_pipelines
+  branches:
+    include: master
+
+artifactoryIntegration: art
+
+Image:
+  name: fooImage
+  sourceRepository: foo
+  autoPull: false
+
+DockerBuild:
+  name: foobuild
+  dockerImageName: foo
+  dockerFileName: Dockerfile
+  dockerFileLocation: '.'
+  dockerImageTag: ${run_number}
+
+DockerPush:
+  name: foopush
+
+BuildInfo:
+  autoPublishBuildInfo: true
+  name: fooBuildInfo
