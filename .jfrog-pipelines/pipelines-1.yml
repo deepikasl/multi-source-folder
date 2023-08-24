@@ -69,13 +69,13 @@ valuesFilePath: values.yml
 #             {{ template "step.shared.onExecute.command" $ }}
 # {{ end }}
 
-# # build step
-# {{ define "step.build.onExecute" }}
-#   {{ $ := . }}
-#   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-#             - cd $shared_workspace{{ $.rootDirectory }}
-#             {{ template "step.shared.onExecute.command" $ }}
-# {{ end }}
+# build step
+{{ define "step.build.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
 
 # # sonar scan step
 # {{ define "step.clamScan.onExecute" }}
