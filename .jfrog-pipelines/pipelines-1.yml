@@ -160,7 +160,6 @@ pipelines:
           onExecute:
             - echo "hi"
             # {{ template "step.build.onExecute" $templateParams }}
-
       {{ if $isQualityAvailable }}
       - name: api_quality
         type: Bash
