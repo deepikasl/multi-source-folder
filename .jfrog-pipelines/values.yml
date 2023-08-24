@@ -31,6 +31,9 @@ configurations:
 
   steps:
     build:
+      runtime:
+        versions:
+          - "16.10.0"
       onStart:
         - on_start
       onExecute:
@@ -81,6 +84,9 @@ configurations:
         - send_notification
         
 controls:
+
+  build:
+    runtime: auto
 
   codeQuality:
     enabled: true
