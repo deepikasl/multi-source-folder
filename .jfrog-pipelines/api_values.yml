@@ -88,7 +88,7 @@ configurations:
       runtime:
         custom:
           registry: deepikaArt
-          name: art-docker/alpine
+          name: stg-repo.jfrog.info/art-docker/alpine
           tag: latest
       onStart:
         - echo "onStart"
