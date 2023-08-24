@@ -53,14 +53,6 @@ valuesFilePath: values.yml
             {{ end }}
 {{ end }}
 
-# # sonar scan step
-# {{ define "step.sonarScan.onExecute" }}
-#   {{ $ := . }}
-#   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-#             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-#             {{ template "step.shared.onExecute.command" $ }}
-# {{ end }}
-
 # build step
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
@@ -77,24 +69,32 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
-# # sonar scan step
-# {{ define "step.clamScan.onExecute" }}
-#   {{ $ := . }}
-#   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-#             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-#             {{ template "step.shared.onExecute.command" $ }}
-# {{ end }}
+# sonar scan step
+{{ define "step.sonarScan.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
 
-# # publish step
-# {{ define "step.publish.onExecute" }}
-#   {{ $ := . }}
-#   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
-#   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-#             - cd $shared_workspace{{ $.rootDirectory }}
-#             {{ template "step.shared.onExecute.command" $ }}
-#             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
-#             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
-# {{ end }}
+# clam scan step
+{{ define "step.clamScan.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# publish step
+{{ define "step.publish.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
+            - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
+            - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+{{ end }}
 # -----------------------------------------------------------------
 
 # Resource definitions
@@ -189,8 +189,7 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            - echo "hi"
-            # {{ template "step.codeQuality.onExecute" $templateParams }}
+            {{ template "step.codeQuality.onExecute" $templateParams }}
       {{ end }}
 
       - name: {{ .Values.metadata.serviceName }}_clam_scan
@@ -204,8 +203,7 @@ pipelines:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
           onExecute:
-            - echo "hi"
-            # {{ template "step.clamScan.onExecute" $templateParams }}
+            {{ template "step.clamScan.onExecute" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
@@ -220,5 +218,4 @@ pipelines:
             - name: {{ $buildInfoResName }}
         execution:
           onExecute:
-            - echo "hi"
-            # {{ template "step.publish.onExecute" $templateParams }}
+            {{ template "step.publish.onExecute" $templateParams }}
