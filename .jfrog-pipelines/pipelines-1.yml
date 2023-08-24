@@ -202,7 +202,8 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            {{ template "step.codeQuality.onExecute" $templateParams }}
+            - echo "hi"
+            # {{ template "step.codeQuality.onExecute" $templateParams }}
       {{ end }}
 
       - name: {{ .Values.metadata.serviceName }}_clam_scan
@@ -216,7 +217,8 @@ pipelines:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
           onExecute:
-            {{ template "step.clamScan.onExecute" $templateParams }}
+            - echo "hi"
+            # {{ template "step.clamScan.onExecute" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
@@ -237,4 +239,5 @@ pipelines:
             - name: {{ $buildInfoResName }}
         execution:
           onExecute:
-            {{ template "step.publish.onExecute" $templateParams }}
+            - echo "hi"
+            # {{ template "step.publish.onExecute" $templateParams }}
