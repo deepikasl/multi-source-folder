@@ -63,7 +63,7 @@ valuesFilePath: values.yml
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
             {{ if $.conf }}
-            {{- range $cmd := $.conf.commands }}
+            {{- range $cmd := $.conf.onExecute }}
             - {{ $cmd }}
             {{- end }}
             {{ end }}
