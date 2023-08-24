@@ -82,6 +82,12 @@ configurations:
         
 controls:
 
+  codeQuality:
+    enabled: true
+
+  publish:
+    enabled: true
+
   enableQuality: true
   enablePublish: true
 
