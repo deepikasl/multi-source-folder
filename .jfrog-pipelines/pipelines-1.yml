@@ -225,13 +225,7 @@ pipelines:
         configuration:
           affinityGroup: build
           inputSteps:
-            - name: build
-              status:
-                - success
-            - name: unit_tests
-              status:
-                - success
-            - name: code_quality
+            - name: {{ .Values.metadata.serviceName }}_build
               status:
                 - success
           outputResources:
