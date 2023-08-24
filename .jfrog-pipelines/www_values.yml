@@ -61,8 +61,8 @@ configurations:
         custom:
           registry: deepikaArt
           sourceRepository: docker-staging-local
-          name: docker.jfrog.io/sonar-scanner
-          tag: latest
+          name: releases-docker.jfrog.io/jfrog/pipelines-u18node
+          tag: 16.10.0
       onStart:
         - echo "onStart"
       onExecute:
@@ -89,8 +89,8 @@ configurations:
         custom:
           registry: deepikaArt
           sourceRepository: docker-staging-local
-          name: docker.jfrog.io/clam-scanner
-          tag: latest
+          name: releases-docker.jfrog.io/jfrog/pipelines-u18node
+          tag: 16.10.0
       onStart:
         - echo "onStart"
       onExecute:
