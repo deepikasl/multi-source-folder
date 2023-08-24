@@ -1,15 +1,11 @@
-# include:
-#   template: jfrog/DockerBuildAndPush/1.0.0    
-# valuesFilePath: ./values.yml
-
-# resources:
-#   - name: myRepo
-#     type: GITRepo
-#     configuration:
-#       path: deepikasl/jfrog_pipelines
-#       gitProvider: deepikaGithub
-#       branches:
-#         include: master
+resources:
+  - name: myRepo
+    type: GITRepo
+    configuration:
+      path: deepikasl/jfrog_pipelines
+      gitProvider: deepikaGithub
+      branches:
+        include: master
 
 #   - name: propertyBag
 #     type: PropertyBag
@@ -18,22 +14,55 @@
 #       foo1: bar1
 #       foo2: bar2
 
-# pipelines:
-#   - name: demo_manual
-#     configuration:
-#       integrations:
-#         - name: deepikaGithub
-#     steps:
-#       - name: manual_trigger
-#         type: Bash
-#         configuration:
-#           inputResources:
-#             - name: myRepo
-#           outputResources:
-#             - name: propertyBag
-#           integrations:
-#             - name: deepikaGithub
-#         execution:
-#           onExecute:
-#             - write_output propertyBag "foo=$run_number"
+pipelines:
+  - name: pipelines_build
+    configuration:
+      integrations:
+        - name: deepikaGithub
+    steps:
+      - name: create_repositories
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myRepo
+          integrations:
+            - name: deepikaGithub
+        execution:
+          onExecute:
+            - echo "executing create_repositories"
+      - name: packages_build
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myRepo
+          integrations:
+            - name: deepikaGithub
+          inputSteps:
+            - name: create_repositories
+        execution:
+          onExecute:
+            - echo "executing packages_build"
+      - name: templates_build
+        type: Bash
+        configuration:
+          inputResources:
+            - name: myRepo
+          integrations:
+            - name: deepikaGithub
+        execution:
+          onExecute:
+            - echo "executing templates_build"
+      - name: api_build
+        type: TriggerPipeline  
+        configuration:
+          pipelineName:   api_build
+          stepName:       api_build
+          inputSteps:
+            - name: packages_build
+            - name: templates_build
+          integrations:
+            - name: deepikaArt
+        execution:
+          onStart:
+            - echo "executing api_build $pipeline_name"
             
