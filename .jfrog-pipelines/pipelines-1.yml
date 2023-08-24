@@ -287,7 +287,7 @@ pipelines:
           runtime:
             type: image
             image:
-              {{ if (eq $.values.controls.build.runtime "custom") }}
+              {{ if (eq .Values.controls.build.runtime "custom") }}
               custom:
                 {{ range $key, $value := .Values.configurations.steps.build.runtime.custom }}
                 {{ $key }}: {{ $value }}
@@ -321,6 +321,22 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
+          runtime:
+            type: image
+            image:
+              {{ if (eq .Values.controls.codeQuality.runtime "custom") }}
+              custom:
+                {{ range $key, $value := .Values.configurations.steps.codeQuality.runtime.custom }}
+                {{ $key }}: {{ $value }}
+                {{ end }}
+              {{ else }}
+              auto:
+                language: node
+                versions:
+                  {{- range $version := .Values.configurations.steps.codeQuality.runtime.versions }}
+                  - {{ $version }}
+                  {{- end }} 
+              {{ end }}
         execution:
           onStart:
             {{ template "step.codeQuality.onStart" $templateParams }}
@@ -374,6 +390,22 @@ pipelines:
         type: Bash
         configuration:
           affinityGroup: {{ .Values.metadata.serviceName }}
+          runtime:
+            type: image
+            image:
+              {{ if (eq .Values.controls.clamScan.runtime "custom") }}
+              custom:
+                {{ range $key, $value := .Values.configurations.steps.clamScan.runtime.custom }}
+                {{ $key }}: {{ $value }}
+                {{ end }}
+              {{ else }}
+              auto:
+                language: node
+                versions:
+                  {{- range $version := .Values.configurations.steps.clamScan.runtime.versions }}
+                  - {{ $version }}
+                  {{- end }} 
+              {{ end }}
           inputResources:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
@@ -394,6 +426,22 @@ pipelines:
         type: Bash
         configuration:
           affinityGroup: {{ .Values.metadata.serviceName }}
+          runtime:
+            type: image
+            image:
+              {{ if (eq .Values.controls.publish.runtime "custom") }}
+              custom:
+                {{ range $key, $value := .Values.configurations.steps.publish.runtime.custom }}
+                {{ $key }}: {{ $value }}
+                {{ end }}
+              {{ else }}
+              auto:
+                language: node
+                versions:
+                  {{- range $version := .Values.configurations.steps.publish.runtime.versions }}
+                  - {{ $version }}
+                  {{- end }} 
+              {{ end }}
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
               status:
