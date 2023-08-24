@@ -158,7 +158,6 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            # - echo "hi"
             {{ template "step.build.onExecute" $templateParams }}
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
@@ -174,8 +173,7 @@ pipelines:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
           onExecute:
-            - echo "hi"
-            # {{ template "step.codeQuality.onExecute" $templateParams }}
+            {{ template "step.codeQuality.onExecute" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_sonar_scan
         type: Bash
