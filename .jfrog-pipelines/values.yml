@@ -36,31 +36,31 @@ configurations:
 
     codeQuality:
 
-      commands:
+      onExecute:
         - npm run lint:api
 
 
     sonarScan:
 
-      commands:
+      onExecute:
         - npm run build
 
 
     build:
 
-      commands:
+      onExecute:
         - npm run build
 
 
     publish:
 
-      commands:
+      onExecute:
         - jfrog rt publish
 
 
     clamScan:
 
-      commands:
+      onExecute:
         - npm run build
         
 
