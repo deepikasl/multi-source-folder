@@ -213,6 +213,10 @@ pipelines:
             {{ template "step.build.onStart" $templateParams }}
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.build.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.build.onFailure" $templateParams }}
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
