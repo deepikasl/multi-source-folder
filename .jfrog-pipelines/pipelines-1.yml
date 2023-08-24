@@ -53,14 +53,6 @@ valuesFilePath: values.yml
             {{ end }}
 {{ end }}
 
-# # code quality step
-# {{ define "step.codeQuality.onExecute" }}
-#   {{ $ := . }}
-#   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-#           - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-#           {{ template "step.shared.onExecute.command" $ }}
-# {{ end }}
-
 # # sonar scan step
 # {{ define "step.sonarScan.onExecute" }}
 #   {{ $ := . }}
@@ -75,6 +67,14 @@ valuesFilePath: values.yml
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
             - cd $shared_workspace{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# code quality step
+{{ define "step.codeQuality.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+          - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+          {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 # # sonar scan step
