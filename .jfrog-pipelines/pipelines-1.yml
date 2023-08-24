@@ -57,7 +57,7 @@ valuesFilePath: values.yml
 {{ define "step.codeQuality.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-        - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+          - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
           {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
