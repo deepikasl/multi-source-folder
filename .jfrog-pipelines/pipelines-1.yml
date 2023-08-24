@@ -43,58 +43,58 @@ valuesFilePath: values.yml
   {{ end }}
 {{ end }}
 
-# Steps shared template
-{{ define "step.shared.onExecute.command" }}
-  {{ $ := . }}
-    {{ if $.conf }}
-    {{- range $cmd := $.conf.commands }}
-  - {{ $cmd }}
-    {{- end }}
-    {{ end }}
-  {{ end }}
+# # Steps shared template
+# {{ define "step.shared.onExecute.command" }}
+#   {{ $ := . }}
+#     {{ if $.conf }}
+#     {{- range $cmd := $.conf.commands }}
+#   - {{ $cmd }}
+#     {{- end }}
+#     {{ end }}
+#   {{ end }}
 
-# code quality step
-{{ define "step.codeQuality.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-          - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-          {{ template "step.shared.onExecute.command" $ }}
-{{ end }}
+# # code quality step
+# {{ define "step.codeQuality.onExecute" }}
+#   {{ $ := . }}
+#   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+#           - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+#           {{ template "step.shared.onExecute.command" $ }}
+# {{ end }}
 
-# sonar scan step
-{{ define "step.sonarScan.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-            {{ template "step.shared.onExecute.command" $ }}
-{{ end }}
+# # sonar scan step
+# {{ define "step.sonarScan.onExecute" }}
+#   {{ $ := . }}
+#   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
+#             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+#             {{ template "step.shared.onExecute.command" $ }}
+# {{ end }}
 
-# build step
-{{ define "step.build.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd $shared_workspace{{ $.rootDirectory }}
-            {{ template "step.shared.onExecute.command" $ }}
-{{ end }}
+# # build step
+# {{ define "step.build.onExecute" }}
+#   {{ $ := . }}
+#   {{ $ := set $ "conf" $.values.configurations.steps.build }}
+#             - cd $shared_workspace{{ $.rootDirectory }}
+#             {{ template "step.shared.onExecute.command" $ }}
+# {{ end }}
 
-# sonar scan step
-{{ define "step.clamScan.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-            {{ template "step.shared.onExecute.command" $ }}
-{{ end }}
+# # sonar scan step
+# {{ define "step.clamScan.onExecute" }}
+#   {{ $ := . }}
+#   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
+#             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+#             {{ template "step.shared.onExecute.command" $ }}
+# {{ end }}
 
-# publish step
-{{ define "step.publish.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
-  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-            - cd $shared_workspace{{ $.rootDirectory }}
-            {{ template "step.shared.onExecute.command" $ }}
-            - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
-            - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
-{{ end }}
+# # publish step
+# {{ define "step.publish.onExecute" }}
+#   {{ $ := . }}
+#   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+#   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+#             - cd $shared_workspace{{ $.rootDirectory }}
+#             {{ template "step.shared.onExecute.command" $ }}
+#             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
+#             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+# {{ end }}
 # -----------------------------------------------------------------
 
 # Resource definitions
