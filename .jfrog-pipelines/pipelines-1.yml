@@ -160,7 +160,7 @@ pipelines:
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
         configuration:
-          affinityGroup: {{ .Values.metadata.serviceName }}
+          affinityGroup: {{ .Values.metadata.serviceName }}_quality
           integrations:
            - name: {{ .Values.inputs.integrations.artifactory }}
           inputResources:
@@ -175,7 +175,7 @@ pipelines:
       - name: {{ .Values.metadata.serviceName }}_sonar_scan
         type: Bash
         configuration:
-          affinityGroup: {{ .Values.metadata.serviceName }}
+          affinityGroup: {{ .Values.metadata.serviceName }}_quality
           integrations:
            - name: {{ .Values.inputs.integrations.artifactory }}
            - name: {{ .Values.inputs.integrations.sonar }}
@@ -205,7 +205,7 @@ pipelines:
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
         configuration:
-          affinityGroup: build
+          affinityGroup: {{ .Values.metadata.serviceName }}
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
               status:
