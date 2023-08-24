@@ -9,7 +9,6 @@ valuesFilePath: values.yml
 {{ $pipelineName := print $serviceName "_build" }}
 {{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
 
-# Build Trigger
 {{ $isControlsAvailable := default false .Values.controls }}
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
 {{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
@@ -285,6 +284,16 @@ pipelines:
           inputResources:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
+          runtime:
+            type: image
+            image:
+              {{ if (eq .Values.controls.build.runtime custom) }}
+              custom:
+                registry: deepikaArt
+                sourceRepository: docker-staging-local
+                name: docker.jfrog.io/sonar-scanner
+                tag: ${SONAR_DOCKER_TAG:-latest}
+              {{ end }}
         execution:
           onStart:
             {{ template "step.build.onStart" $templateParams }}
