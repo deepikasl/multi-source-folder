@@ -57,6 +57,13 @@ valuesFilePath: values.yml
             {{ end }}
 {{ end }}
 
+{{ define "pipeline.config.retentionPolicy" }}
+  {{ $ := . }}
+            {{ range $key, $value := .Values.inputs.pipeline.configuration.retentionPolicy }}
+            {{ $key }}: {{ $value }}
+            {{ end }}
+{{ end }}
+
 # Steps shared template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
@@ -139,6 +146,8 @@ pipelines:
       environmentVariables:
         readOnly:
           {{ template "pipeline.config.environmentVariables" . }}
+      retentionPolicy:
+        {{ template "pipeline.config.retentionPolicy" . }}
 
       # Setting nodePool
       {{ if .Values.metadata.nodePool }}
