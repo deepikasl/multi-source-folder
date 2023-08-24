@@ -194,6 +194,27 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
+{{ define "step.clamScan.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.clamScan.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.clamScan.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 # publish step
 {{ define "step.publish.onExecute" }}
   {{ $ := . }}
@@ -203,6 +224,20 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+{{ end }}
+
+{{ define "step.publish.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.publish.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 # -----------------------------------------------------------------
 
@@ -314,8 +349,14 @@ pipelines:
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
+          onStart:
+            {{ template "step.clamScan.onStart" $templateParams }}
           onExecute:
             {{ template "step.clamScan.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.clamScan.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.clamScan.onFailure" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
@@ -331,3 +372,7 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.publish.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.publish.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.publish.onFailure" $templateParams }}
