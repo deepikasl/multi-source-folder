@@ -52,14 +52,6 @@ valuesFilePath: values.yml
             {{- end }}
             {{ end }}
 {{ end }}
-# {{ define "step.shared.onExecute.command" }}
-#   {{ $ := . }}
-#     {{ if $.conf }}
-#     {{- range $cmd := $.conf.commands }}
-#   - {{ $cmd }}
-#     {{- end }}
-#     {{ end }}
-#   {{ end }}
 
 # # code quality step
 # {{ define "step.codeQuality.onExecute" }}
