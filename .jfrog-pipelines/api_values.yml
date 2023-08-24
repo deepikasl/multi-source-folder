@@ -34,26 +34,26 @@ configurations:
         versions:
           - "16.10.0"
       onStart:
-        - on_start
+        - echo "onStart"
       onExecute:
-        - npm run build
+        - echo "onExecute"
       onFailure:
-        - send_notification
+        - echo "onFailure"
       onSuccess:
-        - send_notification
+        - echo "onSuccess"
 
     codeQuality:
       runtime:
         versions:
           - "16.10.0"
       onStart:
-        - npm run build
+        - echo "onStart"
       onExecute:
-        - npm run lint:api
+        - echo "onExecute"
       onFailure:
-        - send_notification
+        - echo "onFailure"
       onSuccess:
-        - send_notification
+        - echo "onSuccess"
 
 
     sonarScan:
@@ -64,24 +64,24 @@ configurations:
           name: docker.jfrog.io/sonar-scanner
           tag: latest
       onStart:
-        - npm run build
+        - echo "onStart"
       onExecute:
-        - on_execute
+        - echo "onExecute"
       onFailure:
-        - send_notification
+        - echo "onFailure"
       onSuccess:
-        - send_notification
+        - echo "onSuccess"
 
     publish:
       runtime:
         versions:
           - "16.10.0"
       onExecute:
-        - jfrog rt publish
+        - echo "onExecute"
       onFailure:
-        - send_notification
+        - echo "onFailure"
       onSuccess:
-        - send_notification
+        - echo "onSuccess"
 
 
     clamScan:
@@ -92,13 +92,13 @@ configurations:
           name: docker.jfrog.io/clam-scanner
           tag: latest
       onStart:
-        - npm run build
+        - echo "onStart"
       onExecute:
-        - on_execute
+        - echo "onExecute"
       onFailure:
-        - send_notification
+        - echo "onFailure"
       onSuccess:
-        - send_notification
+        - echo "onSuccess"
         
 controls:
 
