@@ -1,7 +1,5 @@
 metadata:
-
   serviceName:  api
-
   node: "18"
 
 inputs:
@@ -24,7 +22,6 @@ inputs:
       include: master
 
   integrations:
-
     artifactory: deepikaArt
     sonar: deepikaSonar
 
@@ -35,44 +32,58 @@ configurations:
   steps:
     build:
       onStart:
-        - cd $shared_workspace
-
+        - on_start
       onExecute:
         - npm run build
-
       onFailure:
         - send_notification
-
       onSuccess:
         - send_notification
 
     codeQuality:
+      onStart:
+        - npm run build
       onExecute:
         - npm run lint:api
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
 
 
     sonarScan:
       onStart:
         - npm run build
-
       onExecute:
-        - npm run build
-
+        - on_execute
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
 
     publish:
       onExecute:
         - jfrog rt publish
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
 
 
     clamScan:
-      onExecute:
+      onStart:
         - npm run build
+      onExecute:
+        - on_execute
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
         
-
 controls:
 
   enableQuality: true
-  isPublishAvailable: true
+  enablePublish: true
 
   triggerBy:
     sourceRepository: true
