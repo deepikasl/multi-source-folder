@@ -43,15 +43,15 @@ valuesFilePath: values.yml
   {{ end }}
 {{ end }}
 
-# Steps shared template
-{{ define "step.shared.onExecute.command" }}
-  {{ $ := . }}
-    {{ if $.conf }}
-    {{- range $cmd := $.conf.commands }}
-  - {{ $cmd }}
-    {{- end }}
-    {{ end }}
-  {{ end }}
+# # Steps shared template
+# {{ define "step.shared.onExecute.command" }}
+#   {{ $ := . }}
+#     {{ if $.conf }}
+#     {{- range $cmd := $.conf.commands }}
+#   - {{ $cmd }}
+#     {{- end }}
+#     {{ end }}
+#   {{ end }}
 
 # # code quality step
 # {{ define "step.codeQuality.onExecute" }}
