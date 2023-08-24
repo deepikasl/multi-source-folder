@@ -1,46 +1,23 @@
-# [Required]
 metadata:
 
-  # [Required] All the underlying pipelines & resources names will be prefixed with appName for easy identifications & search
   serviceName:  api
 
-  # [Optional]
   node: "16"
 
-  # [Optional] Defaults to Ubuntu18 with node 18
-  # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
-  # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/choosing-your-runtime-image
-  #  runtime:
-  #    registry: docker
-  #    sourceRepository: apps-docker-local
-  #    name: test.mycompany.io/apps-docker-local/ci/builder-node14
-  #    tag: 1.0.0
-
-  # [Optional] If not provided then default nodePool configured in platform will be used
-  #  nodePool: some_nodepool
-
-# [Required]
 inputs:
 
-  # [Required] Configure Git repository where application code is present
   sourceRepository:
-    # Support all the Git Resource configuration properties
-    # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/gitrepo
-    path: deepikasl/demoNode
-    gitProvider: deepikaGit
+    path: deepikasl/jfrog-pipelines
+    gitProvider: deepikaGithub
     branches:
-      include: main
+      include: master
 
-  # [Required]
   integrations:
 
-    # [Required] Artifactory api key to configure Jfrog CLI
     artifactory: deepikaArt
 
-# [Required]
 configurations:
 
-  # [Optional] Defaults to repository root folder
   sourceDirectory: ''
 
   steps:
@@ -72,15 +49,18 @@ configurations:
     clamScan:
 
       commands:
-        - 'npm run build'     
+        - 'npm run build'
+        
 
 controls:
 
-  # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
+  enableQuality: true
+  isPublishAvailable: true
+
   triggerBy:
 
     # Connected source Git repository change [Defaults to true]
-    # sourceRepository: true
+    sourceRepository: true
 
     # Other resource change from other pipelines
     # externalResources:
