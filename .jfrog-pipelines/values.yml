@@ -2,7 +2,7 @@ metadata:
 
   serviceName:  api
 
-  node: "16"
+  node: "18"
 
 inputs:
 
@@ -26,31 +26,31 @@ configurations:
     codeQuality:
 
       commands:
-        - 'npm run lint:api'
+        - npm run lint:api
 
 
     sonarScan:
 
       commands:
-        - 'some command'
+        - npm run build
 
 
     build:
 
       commands:
-        - 'npm run build'
+        - npm run build
 
 
     publish:
 
       commands:
-        - 'jfrog rt publish'
+        - jfrog rt publish
 
 
     clamScan:
 
       commands:
-        - 'npm run build'
+        - npm run build
         
 
 controls:
@@ -59,30 +59,8 @@ controls:
   isPublishAvailable: true
 
   triggerBy:
-
-    # Connected source Git repository change [Defaults to true]
     sourceRepository: true
 
-    # Other resource change from other pipelines
-    # externalResources:
-    #   - resourceName: dream_app_commons_build_result
-
-    # Incoming webhook
-    # incomingWebhooks:
-    #   - webhookName: 'testWebhook' # IncommingWebhook integration name
-
-
-  # [Optional]
-  logging:
-
-    # [Optional] Defaults to false
-    enableDebug: true
-
-  # [Optional] Exporting important files during run as RUN FILES
-  exporting:
-
-    # [Optional] Defaults to false
-    enabled: true
 
   # [Optional] Enable notifications
   notifications:
@@ -93,3 +71,4 @@ controls:
     slack:
       integrationName: 'mySlack'
       content: ''
+      
