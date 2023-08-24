@@ -5,6 +5,11 @@ metadata:
   node: "18"
 
 inputs:
+  pipeline:
+    configuration:
+      integrations:
+        - deepikaArt
+        - mySlack
 
   sourceRepository:
     path: deepikasl/jfrog_pipelines
@@ -71,4 +76,3 @@ controls:
     slack:
       integrationName: 'mySlack'
       content: ''
-      
