@@ -65,4 +65,43 @@ pipelines:
         execution:
           onStart:
             - echo "executing api_build $pipeline_name"
+      - name: www_build
+        type: TriggerPipeline  
+        configuration:
+          pipelineName:   www_build
+          stepName:       www_build
+          inputSteps:
+            - name: packages_build
+            - name: templates_build
+          integrations:
+            - name: deepikaToken
+        execution:
+          onStart:
+            - echo "executing www_build $pipeline_name"
+      - name: micro_build
+        type: TriggerPipeline  
+        configuration:
+          pipelineName:   micro_build
+          stepName:       micro_build
+          inputSteps:
+            - name: packages_build
+            - name: templates_build
+          integrations:
+            - name: deepikaToken
+        execution:
+          onStart:
+            - echo "executing micro_build $pipeline_name"
+      - name: nodepoolService_build
+        type: TriggerPipeline  
+        configuration:
+          pipelineName:   nodepoolService_build
+          stepName:       nodepoolService_build
+          inputSteps:
+            - name: packages_build
+            - name: templates_build
+          integrations:
+            - name: deepikaToken
+        execution:
+          onStart:
+            - echo "executing nodepoolService_build $pipeline_name"
             
