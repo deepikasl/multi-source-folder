@@ -71,14 +71,3 @@ controls:
 
   triggerBy:
     sourceRepository: true
-
-
-  # [Optional] Enable notifications
-  notifications:
-    email:
-      integrationName: 'mySMTP' # SMTP
-      content: ''
-
-    slack:
-      integrationName: 'mySlack'
-      content: ''
