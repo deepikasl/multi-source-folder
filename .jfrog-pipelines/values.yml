@@ -3,11 +3,10 @@ Pipeline:
 
 GitRepo:
   name: fooGitRepo
-  gitProvider: github
-  path: jfrog/jfrog-pipelines-simple-example
+  gitProvider: deepikaGithub
+  path: deepikasl/jfrog_pipelines
   branches:
-    exclude: 'master'
-    include: {{gitBranch}}
+    include: master
 
 artifactoryIntegration: art
 
