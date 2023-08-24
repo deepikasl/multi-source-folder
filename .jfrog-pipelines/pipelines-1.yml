@@ -1,9 +1,3 @@
-# template:
-#   namespace: deepikasl
-#   name: Node
-#   version: 1.0.0
-#   development: true
-
 valuesFilePath: values.yml
 # Template Variables
 
@@ -18,16 +12,9 @@ valuesFilePath: values.yml
 # Build Trigger
 {{ $isControlsAvailable := default false .Values.controls }}
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
-{{ $isQualityAvailable := default false (and $isControlsAvailable .Values.controls.enableQuality) }}
+{{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.enableQuality true)) }}
+{{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.enablePublish true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
-{{ $isExternalTriggerAvailable := default false (and $isTriggerByAvailable .Values.controls.triggerBy.externalResources) }}
-{{ $isWebhookTriggerEnabled := default false (and $isTriggerByAvailable .Values.controls.triggerBy.incomingWebhooks) }}
-
-# Logging
-{{ $isDebugLogsEnabled := and $isControlsAvailable .Values.controls.logging (eq true .Values.controls.logging.enableDebug) }}
-
-# Exporting
-{{ $isExportingEnabled := and $isControlsAvailable .Values.controls.exporting (eq true .Values.controls.exporting.enabled) }}
 
 # Notifications
 {{ $isNotificationsAvailable := default false (and $isControlsAvailable .Values.controls.notifications) }}
@@ -129,15 +116,6 @@ resources:
       buildName: ''
       buildNumber: ''
 
-  {{ if $isWebhookTriggerEnabled }}
-  {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
-  - name: "{{ $serviceName }}_webhook_{{ $webhook.webhookName }}"
-    type: IncomingWebhook
-    configuration:
-      webhookName: {{ $webhook.webhookName }}
-  {{ end }}
-  {{ end }}
-
 # Pipeline definition
 pipelines:
   - name: {{ $pipelineName }}
@@ -171,6 +149,16 @@ pipelines:
       {{ end }}
 
     steps:
+      - name: {{ .Values.metadata.serviceName }}_build
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+        execution:
+          onExecute:
+            {{ template "step.build.onExecute" $templateParams }}
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
@@ -181,6 +169,8 @@ pipelines:
           inputResources:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
+          inputSteps:
+            - name: {{ .Values.metadata.serviceName }}_build
         execution:
           onExecute:
             {{ template "step.codeQuality.onExecute" $templateParams }}
@@ -201,17 +191,6 @@ pipelines:
             {{ template "step.codeQuality.onExecute" $templateParams }}
       {{ end }}
 
-      # - name: {{ .Values.metadata.serviceName }}_build
-      #   type: Bash
-      #   configuration:
-      #     affinityGroup: {{ .Values.metadata.serviceName }}
-      #     inputResources:
-      #       - name: {{ $gitResName }}
-      #         trigger: {{ $isGitTriggerEnabled }}
-      #   execution:
-      #     onExecute:
-      #       {{ template "step.build.onExecute" $templateParams }}
-
       - name: {{ .Values.metadata.serviceName }}_clam_scan
         type: Bash
         configuration:
@@ -221,9 +200,9 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
-          execution:
-            onExecute:
-              {{ template "step.clamScan.onExecute" $templateParams }}
+        execution:
+          onExecute:
+            {{ template "step.clamScan.onExecute" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_publish
         type: Bash
