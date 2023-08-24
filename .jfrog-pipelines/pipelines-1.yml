@@ -47,6 +47,7 @@ valuesFilePath: values.yml
   {{ $ := . }}
             {{- range $int := .Values.inputs.pipeline.configuration.integrations }}
             - name: {{ $int }}
+            {{- end }}
 {{ end }}
 
 # Steps shared template
