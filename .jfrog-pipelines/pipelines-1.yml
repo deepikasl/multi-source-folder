@@ -149,6 +149,17 @@ pipelines:
       {{ end }}
 
     steps:
+      - name: {{ .Values.metadata.serviceName }}_build
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+        execution:
+          onExecute:
+            - echo "hi"
+            # {{ template "step.build.onExecute" $templateParams }}
       - name: api_quality
         type: Bash
         configuration:
@@ -158,22 +169,11 @@ pipelines:
           inputResources:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
+          inputSteps:
+            - name: {{ .Values.metadata.serviceName }}_build
         execution:
           onExecute:
             {{ template "step.codeQuality.onExecute" $templateParams }}
-      - name: {{ .Values.metadata.serviceName }}_build
-        type: Bash
-        configuration:
-          affinityGroup: {{ .Values.metadata.serviceName }}
-          inputResources:
-            - name: {{ $gitResName }}
-              trigger: {{ $isGitTriggerEnabled }}
-          inputSteps:
-            - name: api_quality
-        execution:
-          onExecute:
-            - echo "hi"
-            # {{ template "step.build.onExecute" $templateParams }}
       {{ if $isQualityAvailable }}
       # - name: api_quality
       #   type: Bash
