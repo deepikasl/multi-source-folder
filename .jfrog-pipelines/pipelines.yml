@@ -61,7 +61,7 @@ pipelines:
             - name: packages_build
             - name: templates_build
           integrations:
-            - name: deepikaArt
+            - name: deepikaToken
         execution:
           onStart:
             - echo "executing api_build $pipeline_name"
