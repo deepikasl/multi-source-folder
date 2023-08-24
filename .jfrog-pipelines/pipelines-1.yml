@@ -161,7 +161,7 @@ pipelines:
             - echo "hi"
             # {{ template "step.build.onExecute" $templateParams }}
       {{ if $isQualityAvailable }}
-      - name: api_quality
+      - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
         configuration:
           affinityGroup: {{ .Values.metadata.serviceName }}
