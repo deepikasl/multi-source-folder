@@ -136,6 +136,27 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
+{{ define "step.codeQuality.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.codeQuality.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.codeQuality.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+            - cd $shared_workspace{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 # sonar scan step
 {{ define "step.sonarScan.onExecute" }}
   {{ $ := . }}
@@ -230,8 +251,14 @@ pipelines:
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
+          onStart:
+            {{ template "step.codeQuality.onStart" $templateParams }}
           onExecute:
             {{ template "step.codeQuality.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.codeQuality.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.codeQuality.onFailure" $templateParams }}
 
       - name: {{ .Values.metadata.serviceName }}_sonar_scan
         type: Bash
