@@ -1,0 +1,123 @@
+metadata:
+  serviceName:  nodepoolService
+
+inputs:
+  pipeline:
+    configuration:
+      integrations:
+        - deepikaArt
+        - mySlack
+      environmentVariables:
+        foo: bar
+        test: env
+      retentionPolicy:
+        maxAgeDays: 90
+        minRuns: 10
+
+  sourceRepository:
+    path: deepikasl/jfrog_pipelines
+    gitProvider: deepikaGithub
+    branches:
+      include: master
+
+  integrations:
+    artifactory: deepikaArt
+    sonar: deepikaSonar
+
+configurations:
+
+  sourceDirectory: ''
+
+  steps:
+    build:
+      runtime:
+        versions:
+          - "16.10.0"
+      onStart:
+        - on_start
+      onExecute:
+        - npm run build
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+    codeQuality:
+      runtime:
+        versions:
+          - "16.10.0"
+      onStart:
+        - npm run build
+      onExecute:
+        - npm run lint:api
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+
+    sonarScan:
+      runtime:
+        custom:
+          registry: deepikaArt
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/sonar-scanner
+          tag: latest
+      onStart:
+        - npm run build
+      onExecute:
+        - on_execute
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+    publish:
+      runtime:
+        versions:
+          - "16.10.0"
+      onExecute:
+        - jfrog rt publish
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+
+
+    clamScan:
+      runtime:
+        custom:
+          registry: deepikaArt
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/clam-scanner
+          tag: latest
+      onStart:
+        - npm run build
+      onExecute:
+        - on_execute
+      onFailure:
+        - send_notification
+      onSuccess:
+        - send_notification
+        
+controls:
+
+  build:
+    runtime: auto
+
+  codeQuality:
+    enabled: true
+    runtime: auto
+
+  sonarScan:
+    runtime: custom
+
+  clamScan:
+    runtime: custom
+
+  publish:
+    enabled: true
+    runtime: auto
+
+  triggerBy:
+    sourceRepository: true
