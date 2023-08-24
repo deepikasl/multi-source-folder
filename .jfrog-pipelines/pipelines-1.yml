@@ -103,28 +103,28 @@ valuesFilePath: values.yml
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.build.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.build.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.build.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -139,21 +139,21 @@ valuesFilePath: values.yml
 {{ define "step.codeQuality.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -178,7 +178,7 @@ valuesFilePath: values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-            - cd $shared_workspace{{ $.rootDirectory }}
+            # - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
