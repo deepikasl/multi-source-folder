@@ -11,7 +11,7 @@ inputs:
         foo: bar
         test: env
       retentionPolicy:
-        maxAgeDays: 90
+        maxAgeDays: 30
         minRuns: 10
 
   sourceRepository:
