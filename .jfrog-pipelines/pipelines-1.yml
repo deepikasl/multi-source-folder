@@ -136,6 +136,9 @@ pipelines:
     configuration:
       integrations:
         {{ template "pipeline.config.integrations" . }}
+      environmentVariables:
+        readOnly:
+          {{ template "pipeline.config.environmentVariables" . }}
 
       # Setting nodePool
       {{ if .Values.metadata.nodePool }}
