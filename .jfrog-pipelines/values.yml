@@ -112,8 +112,12 @@ controls:
   sonarScan:
     runtime: custom
 
+  clamScan:
+    runtime: custom
+
   publish:
     enabled: true
+    runtime: auto
 
   triggerBy:
     sourceRepository: true
