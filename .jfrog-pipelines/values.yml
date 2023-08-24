@@ -1,6 +1,5 @@
 metadata:
   serviceName:  api
-  node: "18"
 
 inputs:
   pipeline:
@@ -44,6 +43,9 @@ configurations:
         - send_notification
 
     codeQuality:
+      runtime:
+        versions:
+          - "16.10.0"
       onStart:
         - npm run build
       onExecute:
@@ -55,6 +57,12 @@ configurations:
 
 
     sonarScan:
+      runtime:
+        custom:
+          registry: deepikaArt
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/sonar-scanner
+          tag: latest
       onStart:
         - npm run build
       onExecute:
@@ -65,6 +73,9 @@ configurations:
         - send_notification
 
     publish:
+      runtime:
+        versions:
+          - "16.10.0"
       onExecute:
         - jfrog rt publish
       onFailure:
@@ -74,6 +85,12 @@ configurations:
 
 
     clamScan:
+      runtime:
+        custom:
+          registry: deepikaArt
+          sourceRepository: docker-staging-local
+          name: docker.jfrog.io/clam-scanner
+          tag: latest
       onStart:
         - npm run build
       onExecute:
@@ -90,12 +107,13 @@ controls:
 
   codeQuality:
     enabled: true
+    runtime: auto
+
+  sonarScan:
+    runtime: custom
 
   publish:
     enabled: true
-
-  enableQuality: true
-  enablePublish: true
 
   triggerBy:
     sourceRepository: true
