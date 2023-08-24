@@ -43,11 +43,11 @@ valuesFilePath: values.yml
   {{ end }}
 {{ end }}
 
-{{ define "pipeline.config.integrations" }}
-  {{ $ := . }}
-            {{- range $int := $.values.inputs.pipeline.configuration.integrations }}
-            - name: {{ $int }}
-{{ end }}
+# {{ define "pipeline.config.integrations" }}
+#   {{ $ := . }}
+#             {{- range $int := $.values.inputs.pipeline.configuration.integrations }}
+#             - name: {{ $int }}
+# {{ end }}
 
 # Steps shared template
 {{ define "step.shared.onExecute.command" }}
