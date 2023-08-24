@@ -88,8 +88,8 @@ configurations:
       runtime:
         custom:
           registry: deepikaArt
-          name: stg-repo.jfrog.info/art-docker/alpine
-          tag: latest
+          name: stg-repo.jfrog.info/jfrog/router
+          tag: 1.0.0-m015
       onStart:
         - echo "onStart"
       onExecute:
