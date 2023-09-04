@@ -263,7 +263,7 @@ resources:
 pipelines:
   - name: {{ $pipelineName }}
     configuration:
-      jfrogCliVersion: 2
+      jfrogCliVersion: {{ .Values.metadata.jfrogCliVersion default 2}}
       integrations:
         {{ template "pipeline.config.integrations" . }}
       environmentVariables:
