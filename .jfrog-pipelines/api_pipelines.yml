@@ -1,4 +1,4 @@
-valuesFilePath: api_values.yml
+valuesFilePath: values.yml
 # Template Variables
 
 # Names
@@ -13,6 +13,7 @@ valuesFilePath: api_values.yml
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
 {{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
 {{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.publish.enabled true)) }}
+{{ $isLintAvailable := default false (and $isControlsAvailable (eq .Values.controls.lint.enabled true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 
 # -----------------------------------------------------------------
@@ -310,6 +311,39 @@ pipelines:
             {{ template "step.build.onSuccess" $templateParams }}
           onFailure:
             {{ template "step.build.onFailure" $templateParams }}
+      {{ if $isLintAvailable }}
+      - name: {{ .Values.metadata.serviceName }}_lint
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          runtime:
+            type: image
+            image:
+              {{ if (eq .Values.controls.lint.runtime "custom") }}
+              custom:
+                {{ range $key, $value := .Values.configurations.steps.lint.runtime.custom }}
+                {{ $key }}: {{ $value }}
+                {{ end }}
+              {{ else }}
+              auto:
+                language: node
+                versions:
+                  {{- range $version := .Values.configurations.steps.lint.runtime.versions }}
+                  - {{ $version }}
+                  {{- end }} 
+              {{ end }}
+          inputSteps:
+            - name: {{ .Values.metadata.serviceName }}_build
+              status:
+                - success
+        execution:
+          onExecute:
+            {{ template "step.lint.onExecute" $templateParams }}
+          onSuccess:
+            {{ template "step.lint.onSuccess" $templateParams }}
+          onFailure:
+            {{ template "step.lint.onFailure" $templateParams }}
+      {{ end }}
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
