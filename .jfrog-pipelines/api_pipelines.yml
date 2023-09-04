@@ -14,6 +14,7 @@ valuesFilePath: api_values.yml
 {{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
 {{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.publish.enabled true)) }}
 {{ $isLintAvailable := default false (and $isControlsAvailable (eq .Values.controls.lint.enabled true)) }}
+{{ $isClamScanAvailable := default false (and $isControlsAvailable (eq .Values.controls.clamScan.enabled true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 
 # -----------------------------------------------------------------
@@ -103,28 +104,28 @@ valuesFilePath: api_values.yml
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.build.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.build.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.build.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -132,28 +133,28 @@ valuesFilePath: api_values.yml
 {{ define "step.codeQuality.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -161,28 +162,28 @@ valuesFilePath: api_values.yml
 {{ define "step.sonarScan.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.sonarScan.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.sonarScan.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.sonarScan.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -190,28 +191,28 @@ valuesFilePath: api_values.yml
 {{ define "step.clamScan.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.clamScan.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.clamScan.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.clamScan.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -220,7 +221,7 @@ valuesFilePath: api_values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-            # - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            # - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
@@ -229,14 +230,14 @@ valuesFilePath: api_values.yml
 {{ define "step.publish.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.publish.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 # -----------------------------------------------------------------
@@ -421,6 +422,7 @@ pipelines:
             {{ template "step.sonarScan.onFailure" $templateParams }}
       {{ end }}
 
+      {{ if $isClamScanAvailable }}
       - name: {{ .Values.metadata.serviceName }}_clam_scan
         type: Bash
         configuration:
@@ -455,6 +457,7 @@ pipelines:
             {{ template "step.clamScan.onSuccess" $templateParams }}
           onFailure:
             {{ template "step.clamScan.onFailure" $templateParams }}
+      {{ end }}
 
       {{ if $isPublishAvailable }}
       - name: {{ .Values.metadata.serviceName }}_publish
