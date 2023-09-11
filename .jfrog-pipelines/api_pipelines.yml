@@ -67,8 +67,8 @@ valuesFilePath: api_values.yml
             {{- range $cmd := $.conf.onExecute }}
             - {{ $cmd }}
             {{- end }}
-            {{ else }}
-            - {{ $default }}
+            {{ else if $.default}}
+            - {{ $.default }}
             {{ end }}
 {{ end }}
 
