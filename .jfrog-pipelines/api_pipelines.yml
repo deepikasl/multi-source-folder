@@ -67,6 +67,8 @@ valuesFilePath: api_values.yml
             {{- range $cmd := $.conf.onExecute }}
             - {{ $cmd }}
             {{- end }}
+            {{ else }}
+            - {{ $default }}
             {{ end }}
 {{ end }}
 
@@ -104,6 +106,7 @@ valuesFilePath: api_values.yml
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
+  {{ $ := set $ "default" "npm run build" }}
             - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
