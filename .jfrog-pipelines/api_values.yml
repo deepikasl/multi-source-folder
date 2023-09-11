@@ -33,8 +33,8 @@ configurations:
       runtime:
         versions:
           - "16.10.0"
-      onStart:
-        - echo "onStart"
+      # onStart:
+      #   - echo "onStart"
       # onExecute:
       #   - echo "onExecute"
       onFailure:
