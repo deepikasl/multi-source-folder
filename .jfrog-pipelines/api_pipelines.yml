@@ -132,10 +132,41 @@ valuesFilePath: api_values.yml
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
+# lint step
+{{ define "step.lint.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+  {{ $ := set $ "default" "npm run lint" }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.lint.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.lint.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.lint.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 # code quality step
 {{ define "step.codeQuality.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+  {{ $ := set $ "default" "npm run clean" }}
             - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
@@ -224,6 +255,7 @@ valuesFilePath: api_values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+  {{ $ := set $ "default" "npm publish" }}
             - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
