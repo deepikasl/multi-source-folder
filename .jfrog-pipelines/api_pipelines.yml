@@ -339,8 +339,10 @@ pipelines:
                   {{- end }}
               {{ end }}
         execution:
+          {{ if .Values.configurations.steps.build.onStart }}
           onStart:
             {{ template "step.build.onStart" $templateParams }}
+          {{ end }}
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
           onSuccess:
