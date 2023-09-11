@@ -35,8 +35,8 @@ configurations:
           - "16.10.0"
       onStart:
         - echo "onStart"
-      onExecute:
-        - echo "onExecute"
+      # onExecute:
+      #   - echo "onExecute"
       onFailure:
         - echo "onFailure"
       onSuccess:
