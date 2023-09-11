@@ -221,7 +221,7 @@ valuesFilePath: api_values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-            # - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
@@ -301,7 +301,7 @@ pipelines:
                 versions:
                   {{- range $version := .Values.configurations.steps.build.runtime.versions }}
                   - {{ $version }}
-                  {{- end }} 
+                  {{- end }}
               {{ end }}
         execution:
           onStart:
@@ -345,6 +345,7 @@ pipelines:
           onFailure:
             {{ template "step.lint.onFailure" $templateParams }}
       {{ end }}
+
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
