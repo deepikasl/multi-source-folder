@@ -1,23 +1,9 @@
 pipelines:
-  - name: some_Deployment
+  - name: some_Deployment_deepika
     configuration:
       retentionPolicy:
         maxAgeDays: 1
         minRuns: 10
-      jfrogCliVersion: 2
-      environmentVariables:
-        readOnly:
-          JFROG_CLI_PLUGINS_SERVER: test
-          JFROG_CLI_BUILD_NUMBER: ${run_id}
-    postRun:
-      configuration:
-        environmentVariables:
-          readOnly:
-            JFROG_CLI_LOG_LEVEL:
-              default: "DEBUG"
-      execution:
-        onExecute:
-          - echo "hello"
     steps:
       - name: dependency_version_check
         type: Bash
