@@ -32,4 +32,4 @@ pipelines:
             - printenv
           onExecute:
             - jfrog --version
-          - printenv
+            - printenv
