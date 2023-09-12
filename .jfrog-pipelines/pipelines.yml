@@ -1,35 +1,35 @@
 pipelines:
-- name: some_Deployment
-  configuration:
-    retentionPolicy:
-      maxAgeDays: 1
-      minRuns: 10
-    jfrogCliVersion: 2
-    environmentVariables:
-      readOnly:
-        JFROG_CLI_PLUGINS_SERVER: test
-        JFROG_CLI_BUILD_NUMBER: ${run_id}
-  postRun:
+  - name: some_Deployment
     configuration:
+      retentionPolicy:
+        maxAgeDays: 1
+        minRuns: 10
+      jfrogCliVersion: 2
       environmentVariables:
         readOnly:
-          JFROG_CLI_LOG_LEVEL:
-            default: "DEBUG"
-    execution:
-      onExecute:
-      - echo "hello"
-  steps:
-    - name: dependency_version_check
-      type: Bash
+          JFROG_CLI_PLUGINS_SERVER: test
+          JFROG_CLI_BUILD_NUMBER: ${run_id}
+    postRun:
       configuration:
         environmentVariables:
-          mySecureEnv:
-            allowCustom: true
-            secure: true
-            default: "someValue"
+          readOnly:
+            JFROG_CLI_LOG_LEVEL:
+              default: "DEBUG"
       execution:
-        onStart:
-          - printenv
         onExecute:
-          - jfrog --version
+          - echo "hello"
+    steps:
+      - name: dependency_version_check
+        type: Bash
+        configuration:
+          environmentVariables:
+            mySecureEnv:
+              allowCustom: true
+              secure: true
+              default: "someValue"
+        execution:
+          onStart:
+            - printenv
+          onExecute:
+            - jfrog --version
           - printenv
