@@ -15,7 +15,7 @@ resources:
       path: deepikasl/jfrog_pipelines
       gitProvider: deepikaGithub
       buildOn:
-        commit: true
+        commit: false
       branches:
         include: master
       files:
