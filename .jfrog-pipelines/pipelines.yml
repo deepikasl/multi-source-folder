@@ -65,6 +65,7 @@ resources:
 pipelines:
   - name: demo_manual_main
     configuration:
+      reTriggerOnSyncFailure: true
 #       jfrogCliVersion: 2
       environmentVariables:
         readOnly:
