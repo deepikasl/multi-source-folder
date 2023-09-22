@@ -45,29 +45,29 @@ pipelines:
           onExecute:
             - echo "executing"
 
-      # - name: docker_build
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: sample_GitRepo
-      #     integrations:
-      #       - name: deepikaArt 
-      #   execution:
-      #     onExecute:
-      #       - echo "executing docker_build"
-
       - name: docker_build
-        type: DockerBuild
+        type: Bash
         configuration:
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName: docker.artprod.mycompany.com/docker_local/dbp  # replace with your image path and name
-          dockerImageTag: ${run_number}
           inputResources:
             - name: sample_GitRepo
           integrations:
             - name: deepikaArt 
         execution:
-          onStart:
-            - echo "test1234"
+          onExecute:
+            - echo "executing docker_build"
+
+      # - name: docker_build
+      #   type: DockerBuild
+      #   configuration:
+      #     dockerFileLocation: .
+      #     dockerFileName: Dockerfile
+      #     dockerImageName: docker.artprod.mycompany.com/docker_local/dbp  # replace with your image path and name
+      #     dockerImageTag: ${run_number}
+      #     inputResources:
+      #       - name: sample_GitRepo
+      #     integrations:
+      #       - name: deepikaArt 
+      #   execution:
+      #     onStart:
+      #       - echo "test1234"
             
