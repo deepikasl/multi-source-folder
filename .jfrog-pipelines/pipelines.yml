@@ -1,21 +1,24 @@
-pipelines:
-  - name: some_Deployment_deepika
-    configuration:
-      retentionPolicy:
-        maxAgeDays: 1
-        minRuns: 10
-    steps:
-      - name: dependency_version_check
-        type: Bash
-        configuration:
-          environmentVariables:
-            mySecureEnv:
-              allowCustom: true
-              secure: true
-              default: "someValue"
-        execution:
-          onStart:
-            - printenv
-          onExecute:
-            - jfrog --version
-            - printenv
+# pipelines:
+#   - name: some_Deployment_deepika
+#     configuration:
+#       retentionPolicy:
+#         maxAgeDays: 1
+#         minRuns: 10
+#     steps:
+#       - name: dependency_version_check
+#         type: Bash
+#         configuration:
+#           environmentVariables:
+#             mySecureEnv:
+#               allowCustom: true
+#               secure: true
+#               default: "someValue"
+#         execution:
+#           onStart:
+#             - printenv
+#           onExecute:
+#             - jfrog --version
+#             - printenv
+include:
+  template: jfrog/DockerBuildAndPush/1.0.0
+valuesFilePath: ./values.yml
