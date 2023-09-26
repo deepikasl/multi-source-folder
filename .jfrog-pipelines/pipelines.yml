@@ -20,5 +20,5 @@
 #             - jfrog --version
 #             - printenv
 include:
-  template: jfrog/DockerBuildAndPush/1.0.0
+  template: jfrog/DockerBuildAndPush/1.1.0
 valuesFilePath: ./values.yml
