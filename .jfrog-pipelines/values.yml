@@ -1,31 +1,353 @@
-Pipeline:
-  name: foo
+#############################################################################################
+#                                                                                           #
+#   THIS FILE WAS GENERATED AUTOMATICALLY BY A PIPELINES JOB NAMED "ba_config_ci"           #
+#   THE JOB SHOULD BE TRIGGERED AUTOMATICALLY ON CHANGES TO "ba-config" GIT REPOSITORY      #
+#   IF IT WAS NOT, YOU CAN TRIGGER IT MANUALLY                                              #
+#   ANY MANUAL CHANGES TO THIS FILE WILL BE OVERWRITTEN BY THE AFOREMENTIONED JOB           #
+#                                                                                           #
+#############################################################################################
 
-GitRepo:
-  name: fooGitRepo
-  gitProvider: deepikaGithub
-  path: deepikasl/jfrog_pipelines
-  branches:
-    include: master
+actions:
+  - deploy
+  - reload
+  - restart
 
-artifactoryIntegration: art
-
-Image:
-  name: fooImage
-  sourceRepository: foo
-  autoPull: false
-
-DockerBuild:
-  name: foobuild
-  dockerImageName: foo
-  dockerFileName: foo
-  dockerFileLocation: '.'
-  dockerImageTag: ${run_number}
-
-DockerPush:
-  name: foopush
-  targetRepository: foo
-
-BuildInfo:
-  autoPublishBuildInfo: true
-  name: fooBuildInfo
+services:
+  aiba-chain:
+    - staging
+  azure-mp-webhook:
+    - production
+    - staging
+  bacdstats:
+    - production
+  bajira:
+    - staging
+  bajobs:
+    - development
+    - production
+    - staging
+  bamail:
+    - production
+    - staging
+  banodedummy:
+    - production
+    - staging
+  basbdemo:
+    - staging
+  batoken:
+    - staging
+  baus-auto:
+    - development
+    - production
+    - staging
+  billprep:
+    - development
+    - production
+    - staging
+  billtx:
+    - production
+    - staging
+  bintray-proxy:
+    - production
+    - staging
+  cloud-usage:
+    - production
+    - staging
+  custupd:
+    - production
+    - staging
+  datagrail-agent:
+    - production
+    - staging
+  dlpop:
+    - development
+    - production
+    - staging
+  fico-dummy:
+    - production
+    - staging
+  fico-reco:
+    - production
+    - staging
+  forecast:
+    - production
+    - staging
+  jbach:
+    - development
+    - production
+    - staging
+  jbam:
+    - production
+    - staging
+  jcs:
+    - development
+    - production
+    - staging
+  jes:
+    - development
+    - production
+    - staging
+  jmis:
+    - development
+    - production
+    - staging
+  jpay:
+    - development
+    - production
+    - staging
+  jpms:
+    - development
+    - production
+    - staging
+  jump:
+    - production
+    - staging
+  landing-api-proxy:
+    - development
+    - production
+    - staging
+  landing:
+    - development
+    - production
+    - staging
+  licgen:
+    - development
+    - production
+    - staging
+  licval:
+    - production
+    - staging
+  logship:
+    - production
+    - staging
+  meproc:
+    - development
+    - production
+    - staging
+  my-proxy:
+    - development
+    - production
+    - staging
+  myjfrog-api-proxy:
+    - development
+    - production
+    - staging
+  myjfrog-ui:
+    - development
+    - production
+    - staging
+  narcissus:
+    - development
+    - production
+    - staging
+  notification-factory:
+    - staging
+  notification-publisher:
+    - staging
+  notification-repository:
+    - staging
+  npmaint:
+    - development
+    - staging
+  saasmon:
+    - development
+    - production
+    - staging
+  saastoken:
+    - development
+    - production
+    - staging
+  salesfrog:
+    - production
+    - staging
+  store:
+    - development
+    - production
+    - staging
+  uas:
+    - development
+    - production
+    - staging
+  usage-exposer:
+    - development
+    - production
+    - staging
+  usage-reporter:
+    - production
+    - staging
+  userpref:
+    - production
+    - staging
+cronJobs:
+  - abnormal-usage-alert-notification
+  - abnormal-usage-detection
+  - abnormal-usage-report
+  - aggregate-deprecated-api-users
+  - archive-inactive-server-billing-logs
+  - aws
+  - azure
+  - bp-artifactory-aws-cloudfront-redirect
+  - bp-artifactory-aws-s3-redirect-01
+  - bp-artifactory-aws-s3-redirect-02
+  - bp-artifactory-aws-s3-redirect-04
+  - bp-artifactory-aws-s3-redirect-05
+  - bp-artifactory-aws-s3-redirect-06
+  - bp-artifactory-aws-s3-redirect-07
+  - bp-artifactory-aws-s3-redirect-08
+  - bp-artifactory-aws-s3-redirect-09
+  - bp-artifactory-aws-s3-redirect-10
+  - bp-artifactory-aws-s3-redirect-11
+  - bp-artifactory-p2p
+  - bp-artifactory-replicator
+  - bp-artifactory-storage-v2
+  - bp-artifactory-traffic-v2
+  - bp-pipelines-build-time-v2
+  - bucket-processor-artifactory-aws-cloudfront-redirect
+  - bucket-processor-artifactory-aws-s3-redirect-1
+  - bucket-processor-artifactory-aws-s3-redirect-2
+  - bucket-processor-artifactory-aws-s3-redirect-3
+  - bucket-processor-artifactory-p2p
+  - bucket-processor-artifactory-replicator
+  - bucket-processor-artifactory-storage-v2
+  - bucket-processor-artifactory-traffic-v2
+  - bucket-processor-pipelines-build-time-v2
+  - check-bundled-cloud-usage-audit-job
+  - check-cloud-usage-audit-job
+  - check-log-shipping-cloud-usage-audit-job
+  - check-zuora-cloud-usage-audit-job
+  - cloud-usage-audit-monthly-report-job
+  - cname-expiration
+  - completeness-report
+  - create-bundled-cloud-usage-audit-job
+  - create-cloud-usage-audit-job
+  - create-log-shipping-cloud-usage-audit-job
+  - cron-job-AWSAuditUsage
+  - cron-job-AWSCloudTrial
+  - cron-job-AccountNotReadyToReportUsage
+  - cron-job-AutoBlockFree
+  - cron-job-AutoDeleteBlockedInstances
+  - cron-job-AutoPauseProduct
+  - cron-job-DailyMpSubscriptionManagement
+  - cron-job-DailyProductCrmSync
+  - cron-job-EPlusUpdateTrafficIpsExclusions
+  - cron-job-MPMetering
+  - cron-job-MPSubscriptionManagement
+  - cron-job-NarcissusSync
+  - cron-job-ServerOverUsageNotification
+  - cron-job-TokenCreationPromotionProTeam15Usd
+  - cron-job-TrialExpirationProcess
+  - cron-job-UserRoleExpiration
+  - cronL-job-MPReport
+  - cronjob-test1
+  - delete-actions-daily
+  - delete-actions-hourly
+  - delete-billable-traffic-daily
+  - delete-billable-traffic-hourly
+  - delete-build-time-daily
+  - delete-build-time-hourly
+  - delete-consumption-totals-daily
+  - delete-consumption-totals-hourly
+  - delete-non-billable-traffic-daily
+  - delete-non-billable-traffic-hourly
+  - delete-usage-state-daily
+  - delete-usage-state-hourly
+  - eq-report-billprep-vs-aws-daily
+  - eq-report-billprep-vs-aws-monthly
+  - eq-report-billprep-vs-aws-monthlyInternal
+  - eq-report-billprep-vs-aws-monthlyinternal
+  - eq-report-billprep-vs-azure-daily
+  - eq-report-billprep-vs-azure-monthly
+  - eq-report-billprep-vs-azure-monthlyInternal
+  - eq-report-billprep-vs-azure-monthlyinternal
+  - eq-report-billprep-vs-gcp-daily
+  - eq-report-billprep-vs-gcp-monthly
+  - eq-report-billprep-vs-gcp-monthlyInternal
+  - eq-report-ct-vs-ub
+  - equality-report-store-aws-mp-daily
+  - equality-report-store-aws-mp-monthly
+  - equality-report-uas-billprep-daily
+  - equality-report-uas-billprep-monthly
+  - equality-report-uas-billprep-monthly-intl
+  - equality-report-uas-zuora-daily
+  - equality-report-uas-zuora-monthly
+  - equality-report-uas-zuora-monthly-intl
+  - expire-stale-records
+  - fetch-usage-reports
+  - find-server-and-action-issues
+  - gcp
+  - handle-missing-audit
+  - handle-missing-job-runs
+  - history-monitor
+  - incident-alerts-report
+  - monitor-log-delivery
+  - monitor-log-quarantine
+  - monitor-logship-dst-servers-with-issues
+  - monitor-logship-s3-buckets
+  - monitor-s3-buckets
+  - mpreg
+  - mpupdate
+  - narcissus-deleted-servers-cleanup
+  - populate-account-history-fields
+  - post-customer-updates
+  - process-billing-logs
+  - process-bpr-aws
+  - process-bpr-azure
+  - process-bpr-gcp
+  - process-metrics-logs
+  - process-mp-billing-data
+  - process-usage-logs-1
+  - process-usage-logs-2
+  - process-usage-logs-abcde
+  - process-usage-logs-fghij
+  - process-usage-logs-klmno
+  - process-usage-logs-pqrst
+  - process-usage-logs-uvwxy
+  - process-usage-logs-z0123456789
+  - process-usage-reports
+  - process-zip-files
+  - process-zuora-billing
+  - process-zuora-billing-aws
+  - process-zuora-billing-azure
+  - process-zuora-billing-gcp
+  - process-zuora-billing-zuora
+  - report-job-completion
+  - reprocess-usage-reports
+  - retrieve-and-save-predictions-s3
+  - rollup-actions-daily
+  - rollup-actions-monthly
+  - rollup-billable-traffic-daily
+  - rollup-billable-traffic-monthly
+  - rollup-build-time-daily
+  - rollup-build-time-monthly
+  - rollup-consumption-totals-daily
+  - rollup-consumption-totals-monthly
+  - rollup-non-billable-traffic-daily
+  - rollup-non-billable-traffic-monthly
+  - rollup-usage-state-daily
+  - rollup-usage-state-monthly
+  - saas-token-expiration
+  - send-notifications
+  - sfWriteRead
+  - test
+  - traffic-usage-moved-to-next-month-report
+  - update-account-history
+  - update-account-history-full
+  - update-account-history-incremental
+  - update-servers-without-account-termination-time
+  - upgrade-dummy-usage-servers-job
+  - vacuum-actions-daily
+  - vacuum-actions-hourly
+  - vacuum-billing-logs
+  - vacuum-build-time-daily
+  - vacuum-build-time-hourly
+  - vacuum-consumption-totals-daily
+  - vacuum-consumption-totals-hourly
+  - vacuum-dst-billing-logs
+  - vacuum-non-billable-traffic-details-daily
+  - vacuum-non-billable-traffic-details-hourly
+  - vacuum-traffic-details-daily
+  - vacuum-traffic-details-hourly
+  - vacuum-usage-state-details-daily
+  - vacuum-usage-state-details-hourly
+  - xray-traffic-anomalies-detection
+  - zuora
