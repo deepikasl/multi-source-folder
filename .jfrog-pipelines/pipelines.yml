@@ -25,7 +25,6 @@ pipelines:
           onExecute:
             - pushd $res_nodeRepo_resourcePath 
             - npm install
-            - ls
             - mkdir -p $shared_workspace/repo/node_modules
             - mv ./node_modules $shared_workspace/repo/node_modules
             - popd
@@ -38,16 +37,15 @@ pipelines:
             - name: nodeRepo
           inputSteps:
             - name: node_setup
+          integrations:
+            - name: deepika_art
         execution:
           onStart:
             - pushd $res_nodeRepo_resourcePath
-            - ls $shared_workspace/repo
             - mv $shared_workspace/repo/node_modules .
-            - ls
           onExecute:
-            - echo "you are here"
-            - ls
-            - pwd
+            - npm run build
+            - jfrog rt upload dist example-repo-local
             - popd
           
         
