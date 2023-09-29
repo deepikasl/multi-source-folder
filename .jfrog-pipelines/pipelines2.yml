@@ -31,7 +31,8 @@ pipelines:
         execution:
           onStart:
             - pushd $res_nodeRepo_resourcePath
-            - restore_pipeline_files repo_node_modules .
+            - mkdir node_modules
+            - restore_pipeline_files repo_node_modules node_modules
             - ls
           onExecute:
             - npm run build
