@@ -1,0 +1,39 @@
+pipelines:
+  - name: sample_node_app_2
+    steps:
+      - name: node_setup
+        type: Bash
+        configuration:
+          integrations:
+            - name: deepika_art_entplus
+          inputResources:
+            - name: nodeRepo
+        execution:
+          onStart:
+            - npm config set registry "https://entplus.jfrog.io/artifactory/api/npm/npm-virtual"
+            - curl -u"${int_deepika_art_entplus_user}":"${int_deepika_art_entplus_apikey}" "https://entplus.jfrog.io/api/npm/auth" >> ~/.npmrc
+          onExecute:
+            - pushd $res_nodeRepo_resourcePath 
+            - npm install
+            - add_pipeline_files node_modules repo_node_modules
+            - popd
+            
+      - name: app_build
+        type: Bash
+        configuration:
+          affinityGroup: node_app
+          inputResources:
+            - name: nodeRepo
+          inputSteps:
+            - name: node_setup
+          integrations:
+            - name: deepika_art
+        execution:
+          onStart:
+            - pushd $res_nodeRepo_resourcePath
+            - restore_pipeline_files repo_node_modules .
+            - ls
+          onExecute:
+            - npm run build
+            - jfrog rt upload dist example-repo-local
+            - popd
