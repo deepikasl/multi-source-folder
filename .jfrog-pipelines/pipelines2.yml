@@ -33,8 +33,8 @@ pipelines:
             - pushd $res_nodeRepo_resourcePath
             - mkdir node_modules
             - restore_pipeline_files repo_node_modules node_modules
-            - ls
+            - ls node_modules
           onExecute:
             - npm run build
-            - jfrog rt upload dist example-repo-local
+            - jfrog rt upload dist/index.js example-repo-local/node_app.js
             - popd
