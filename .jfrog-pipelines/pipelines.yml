@@ -35,6 +35,8 @@ pipelines:
           affinityGroup: node_app
           inputResources:
             - name: nodeRepo
+          inputSteps:
+            - name: node_setup
         execution:
           onStart:
             - pushd $res_nodeRepo_resourcePath
