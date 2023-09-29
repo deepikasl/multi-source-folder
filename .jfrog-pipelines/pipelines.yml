@@ -1,73 +1,50 @@
 resources:
-  - name: myRepo_2
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: ^releasePipeline$     
-      buildOn:
-        branchDelete: true
-  - name: sample_GitRepo
+  - name: nodeRepo
     type: GitRepo
     configuration:
+      path: deepikasl/sample_node
       gitProvider: deepikaGithub
-      path: deepikasl/multi-source-folder
       branches:
-        include: {{gitBranch}}
-#       pullRequestSourceBranches:
-#         include: {{gitBranch}}
-      pullRequestTargetBranches:
-        include: ^buildOnDeleteBranch$
-      buildOn:
-        commit: {{ eq "{{gitBranch}}" "buildOnDeleteBranch" }}
-        pullRequestCreate: true
-      cancelPendingRunsOn:
-        newCommit: true
+        include: master
 
 pipelines:
-  - name: matrix_pipe
+  - name: sample_node_app
     steps:
-      - name: access_multidb_itest
-        type: Matrix
-        stepMode: Bash
-        stepletMultipliers:
-          environmentVariables:
-            - DATABASE_TYPE: postgresql
+      - name: node_setup
+        type: Bash
         configuration:
-          multiNode: true
-          timeoutSeconds: 2700 # 45 minutes
-          inputResources:
-            - name: sample_GitRepo
-        execution:
-          # onStart:
-          #   - echo "test1234"
-          onExecute:
-            - echo "executing"
-
-      # - name: docker_build
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: sample_GitRepo
-      #     integrations:
-      #       - name: deepikaArt 
-      #   execution:
-      #     onExecute:
-      #       - echo "executing docker_build"
-
-      - name: docker_build
-        type: DockerBuild
-        configuration:
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName: docker.artprod.mycompany.com/docker_local/dbp  # replace with your image path and name
-          dockerImageTag: ${run_number}
-          inputResources:
-            - name: sample_GitRepo
+          affinityGroup: node_app
           integrations:
-            - name: deepikaArt 
+            - name: deepika_art_entplus
+          inputResources:
+            - name: nodeRepo
         execution:
           onStart:
-            - echo "test1234"
+            - npm config set registry "https://entplus.jfrog.io/artifactory/api/npm/npm-virtual"
+            - curl -u"${int_deepika_art_entplus_user}":"${int_deepika_art_entplus_apikey}" "https://entplus.jfrog.io/api/npm/auth" >> ~/.npmrc
+          onExecute:
+            - pushd $res_nodeRepo_resourcePath 
+            - npm install
+            - ls
+            - mv ./node_modules $shared_workspace/repo
+            - popd
             
+      - name: app_build
+        type: Bash
+        configuration:
+          affinityGroup: node_app
+          inputResources:
+            - name: nodeRepo
+        execution:
+          onStart:
+            - pushd $res_nodeRepo_resourcePath
+            - mv $shared_workspace/repo .
+            - ls
+          onExecute:
+            - echo "you are here"
+            - ls
+            - pwd
+            - popd
+          
+        
+          
