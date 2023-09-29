@@ -43,6 +43,7 @@ pipelines:
           onStart:
             - pushd $res_nodeRepo_resourcePath
             - mv $shared_workspace/repo/node_modules .
+            - ls node_modules
           onExecute:
             - npm run build
             - jfrog rt upload dist/index.js example-repo-local/node_app.js
