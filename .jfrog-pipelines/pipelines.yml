@@ -26,7 +26,7 @@ pipelines:
             - pushd $res_nodeRepo_resourcePath 
             - npm install
             - ls
-            - mv ./node_modules $shared_workspace/repo
+            - mv ./node_modules $shared_workspace/repo/node_modules
             - popd
             
       - name: app_build
@@ -41,7 +41,7 @@ pipelines:
           onStart:
             - pushd $res_nodeRepo_resourcePath
             - ls $shared_workspace/repo
-            - mv $shared_workspace/repo .
+            - mv $shared_workspace/repo/node_modules .
             - ls
           onExecute:
             - echo "you are here"
