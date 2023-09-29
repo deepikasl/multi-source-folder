@@ -45,7 +45,7 @@ pipelines:
             - mv $shared_workspace/repo/node_modules .
           onExecute:
             - npm run build
-            - jfrog rt upload dist example-repo-local
+            - jfrog rt upload dist example-repo-local/node
             - popd
           
         
