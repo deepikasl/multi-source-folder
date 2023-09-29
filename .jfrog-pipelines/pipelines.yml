@@ -26,6 +26,7 @@ pipelines:
             - pushd $res_nodeRepo_resourcePath 
             - npm install
             - ls
+            - mkdir -p $shared_workspace/repo/node_modules
             - mv ./node_modules $shared_workspace/repo/node_modules
             - popd
             
