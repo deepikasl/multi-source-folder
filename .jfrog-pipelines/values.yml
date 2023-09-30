@@ -30,6 +30,10 @@ services:
     - development
     - production
     - staging
+  banotherTest:
+    - development
+    - production
+    - staging
   bamail:
     - production
     - staging
