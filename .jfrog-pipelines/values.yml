@@ -39,7 +39,6 @@ services:
     - staging
   banodedummy:
     - production
-    - development
     - staging
   basbdemo:
     - staging
