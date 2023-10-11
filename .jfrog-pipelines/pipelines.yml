@@ -1,162 +1,105 @@
-git_resource_trigger_condition: &git_resource_trigger_condition
-  {{ if or ( hasPrefix "release" "{{gitBranch}}" ) ( hasPrefix "milestone" "{{gitBranch}}" ) }}
-  trigger: false
-  {{ else }}
-  trigger: true
-  {{ end }}
 resources:
-  - name: dvu_cron_trigger
-    type: CronTrigger
-    configuration:
-      interval: '0 2 * * *' # Every day at 2 AM
-  - name: myRepo_1
+  - name: git_res
     type: GITRepo
     configuration:
       path: deepikasl/jfrog_pipelines
       gitProvider: deepikaGithub
+      branches:
+        include: autoSyncTest
+      pullRequestSourceBranches:
+        include: autoSyncTest
       buildOn:
+        pullRequestCreate: false
         commit: true
-      branches:
-        include: master
-      files:
-        include: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: newRepo_1
-    type: GITRepo
-    configuration:
-      path: deepikasl/jfrog_pipelines
-      gitProvider: deepikaGithub
-      buildOn:
-        commit: false
-      branches:
-        include: master
-      files:
-        exclude: templates\/artifactory\/*|templates\/distribution\/*|templates\/insight\/*|templates\/pipelines\/*|templates\/xray\/*
-  - name: submodule
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: submodule
-  - name: submodule_https
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      cloneProtocol: https
-      branches:
-        include: submodule
-
-  - name: propertyBag_1
-    type: PropertyBag
-    configuration:
-      foo: bar
-      foo1: bar1
-      foo2: bar2
-  - name: gitRepo_branch_create
-    type: GITRepo
-    configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: .*
-      buildOn:
-        branchCreate: true
-        commit: false
 
 pipelines:
   - name: demo_manual_main
     configuration:
-      reTriggerOnSyncFailure: false
-#       jfrogCliVersion: 2
-      environmentVariables:
-        readOnly:
-          pipelineEnv:
-            secure: true
-            default: "somePipValue"
       integrations:
         - name: deepikaGithub
     steps:
-      - name: dependency_version_check
+      - name: first_step
         type: Bash
         configuration:
-          environmentVariables:
-            mySecureEnv:
-              allowCustom: true
-              secure: true
-              default: "someValue"
           inputResources:
-            - name: gitRepo_branch_create
-#               branch: main
+            - name: git_res
         execution:
-          onStart:
+          onExecute:
             - printenv
+      - name: second_step
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: first_step
+          inputResources:
+            - name: git_res
+        execution:
           onExecute:
-            - jfrog --version
             - printenv
-#             - echo ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
-#             - jfrog config add jftest --url https://stg-repo.jfrog.info --access-token ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
-#             - touch test.txt
-#             - echo "hello" > test.txt
-#             - jfrog rt upload test.txt deeps-sampleRepo/test.txt
-#             - echo "$mySecureEnv"
-#             - echo "hi"
-      - name: manual_trigger
+      - name: third_step
         type: Bash
         configuration:
-          inputResources:
-            - name: myRepo_1
-              <<: *git_resource_trigger_condition
-          outputResources:
-            - name: propertyBag_1
-          integrations:
-            - name: deepikaGithub
-        execution:
-          onExecute:
-            - write_output propertyBag_1 "foo=$run_number"
-      - name: submodule_test
-        type: Bash
-        configuration:
-          inputResources:
-            - name: newRepo_1
-            - name: submodule
           inputSteps:
-            - name: dependency_version_check
-            - name: manual_trigger
+            - name: second_step
+          inputResources:
+            - name: git_res
         execution:
           onExecute:
-            - pushd $res_submodule_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-      - name: submodule_test_https
+            - printenv
+      - name: forth_step
         type: Bash
         configuration:
-          inputResources:
-            - name: submodule_https
           inputSteps:
-            - name: manual_trigger
+            - name: third_step
         execution:
           onExecute:
-            - pushd $res_submodule_https_resourcePath
-            - ls
-            - pushd myFirstSubModule
-            - ls
-  - name: second_pipeline
-    configuration:
-      retentionPolicy:
-         maxAgeDays: 1
-         minRuns: 1
-    steps:
-      - name: submodule_test
+            - printenv
+      - name: fifth_step
         type: Bash
         configuration:
+          inputSteps:
+            - name: forth_step
           inputResources:
-            - name: newRepo_1
+            - name: git_res
         execution:
           onExecute:
-            - printenv 
-            # - pushd $res_newRepo_resourcePath
-            # - ls
-            # - pushd myFirstSubModule
-            
+            - printenv
+      - name: sixth_step
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: fifth_step
+          inputResources:
+            - name: git_res
+        execution:
+          onExecute:
+            - printenv
+      - name: seventh_step
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: sixth_step
+        execution:
+          onExecute:
+            - printenv
+      - name: eighth_step
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: seventh_step
+          inputResources:
+            - name: git_res
+        execution:
+          onExecute:
+            - printenv
+      - name: ninth_step
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: eighth_step
+          inputResources:
+            - name: git_res
+        execution:
+          onExecute:
+            - printenv
+
