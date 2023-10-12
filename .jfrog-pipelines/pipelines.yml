@@ -1,8 +1,8 @@
 resources:
-  - name: git_res
+  - name: git_res_1
     type: GITRepo
     configuration:
-      path: deepikasl/jfrog_pipelines
+      path: deepikasl/multi-source-folder
       gitProvider: deepikaGithub
       branches:
         include: autoSyncTest
@@ -22,7 +22,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: git_res
+            - name: git_res_1
         execution:
           onExecute:
             - printenv
@@ -32,7 +32,7 @@ pipelines:
           inputSteps:
             - name: first_step
           inputResources:
-            - name: git_res
+            - name: git_res_1
         execution:
           onExecute:
             - printenv
@@ -42,7 +42,7 @@ pipelines:
           inputSteps:
             - name: second_step
           inputResources:
-            - name: git_res
+            - name: git_res_1
         execution:
           onExecute:
             - printenv
@@ -60,7 +60,7 @@ pipelines:
           inputSteps:
             - name: forth_step
           inputResources:
-            - name: git_res
+            - name: git_res_1
         execution:
           onExecute:
             - printenv
@@ -70,7 +70,7 @@ pipelines:
           inputSteps:
             - name: fifth_step
           inputResources:
-            - name: git_res
+            - name: git_res_1
         execution:
           onExecute:
             - printenv
@@ -88,7 +88,7 @@ pipelines:
           inputSteps:
             - name: seventh_step
           inputResources:
-            - name: git_res
+            - name: git_res_1
         execution:
           onExecute:
             - printenv
@@ -98,7 +98,7 @@ pipelines:
           inputSteps:
             - name: eighth_step
           inputResources:
-            - name: git_res
+            - name: git_res_1
         execution:
           onExecute:
             - printenv
