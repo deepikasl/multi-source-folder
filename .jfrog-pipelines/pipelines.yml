@@ -92,7 +92,7 @@ pipelines:
           onStart:
             - printenv
           onExecute:
-            - msg=$'Hello\nWorld'
+            - msg=$'Testing new \n line'
             - update_run_description "$msg"
             - jfrog --version
             - printenv
