@@ -61,7 +61,7 @@ resources:
       branches:
         include: .*
       buildOn:
-        branchCreate: true
+        # branchCreate: true
         commit: false
 
 pipelines:
@@ -92,6 +92,8 @@ pipelines:
           onStart:
             - printenv
           onExecute:
+            - msg=$'Hello\nWorld'
+            - update_run_description "$msg"
             - jfrog --version
             - printenv
 #             - echo ${JFROG_LOCAL_ARTIFACTRY_TOKEN}
