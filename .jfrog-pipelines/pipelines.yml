@@ -44,7 +44,7 @@ resources:
   - name: artifact_deepika
     type: Artifact
     configuration:
-      jfrogPlatformProvider: nishith_jfrog
+      jfrogPlatformProvider: deepika_jfrog
       repositories:
         - example-repo-local
         - pipe-deepika-artifact-sample
@@ -59,7 +59,7 @@ resources:
   - name: artifact_deepika_1
     type: Artifact
     configuration:
-      jfrogPlatformProvider: nishith_jfrog
+      jfrogPlatformProvider: deepika_jfrog
       repositories:
         - pipe-deepika-artifact-sample
       artifactPath:
