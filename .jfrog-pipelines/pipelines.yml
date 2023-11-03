@@ -5,7 +5,7 @@ resources:
       jfrogPlatformProvider: deepikaArt
       repositories:
         - example-repo-local
-        - example-repo-2
+        - example-repo-3
       artifactPath:
         include:
           - tools/*
