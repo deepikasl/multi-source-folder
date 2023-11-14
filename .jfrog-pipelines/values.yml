@@ -1,0 +1,3 @@
+integrations:
+  artifactoryIntegration: myArt
+  distributionIntegration: myDist
