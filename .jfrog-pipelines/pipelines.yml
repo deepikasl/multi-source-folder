@@ -1,73 +1,68 @@
 resources:
-  - name: myRepo_2
-    type: GITRepo
+  - name: build_info
+    type: BuildInfo
     configuration:
-      path: deepikasl/multi-source-folder
-      gitProvider: deepikaGithub
-      branches:
-        include: ^releasePipeline$     
-      buildOn:
-        branchDelete: true
-  - name: sample_GitRepo
-    type: GitRepo
+      sourceArtifactory: {{ .Values.myArtifactoryIntegration }}
+      buildName: build_name
+      buildNumber: 1
+
+  - name: release_bundle
+    type: ReleaseBundle
     configuration:
-      gitProvider: deepikaGithub
-      path: deepikasl/multi-source-folder
-      branches:
-        include: {{gitBranch}}
-#       pullRequestSourceBranches:
-#         include: {{gitBranch}}
-      pullRequestTargetBranches:
-        include: ^buildOnDeleteBranch$
-      buildOn:
-        commit: {{ eq "{{gitBranch}}" "buildOnDeleteBranch" }}
-        pullRequestCreate: true
-      cancelPendingRunsOn:
-        newCommit: true
+      sourceDistribution: {{ .Values.distributionIntegration }}
+      name: demo_rb
+      version: v1.0.0
+
+  - name: signed_bundle
+    type: ReleaseBundle
+    configuration:
+      sourceDistribution: {{ .Values.distributionIntegration }}
+      name: demo_rb
+      version: v1.0.0
+
+  - name: distribution_rules
+    type: DistributionRule
+    configuration:
+      sourceDistribution: {{ .Values.distributionIntegration }}
+      serviceName: "*"
+      siteName: "*"
+      cityName: "*"
+      countryCodes:
+        - "CN"
+        - "GB"
 
 pipelines:
-  - name: matrix_pipe
+  - name: distribute_to_edge
     steps:
-      - name: access_multidb_itest
-        type: Matrix
-        stepMode: Bash
-        stepletMultipliers:
-          environmentVariables:
-            - DATABASE_TYPE: postgresql
+      - name: create_release_bundle
+        type: Bash
         configuration:
-          multiNode: true
-          timeoutSeconds: 2700 # 45 minutes
           inputResources:
-            - name: sample_GitRepo
+            - name: build_info
+          outputResources:
+            - name: release_bundle
         execution:
-          # onStart:
-          #   - echo "test1234"
           onExecute:
-            - echo "executing"
-
-      # - name: docker_build
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: sample_GitRepo
-      #     integrations:
-      #       - name: deepikaArt 
-      #   execution:
-      #     onExecute:
-      #       - echo "executing docker_build"
-
-      - name: docker_build
-        type: DockerBuild
+            - echo "create_release_bundle"
+      - name: sign_release_bundle
+        type: Bash
         configuration:
-          dockerFileLocation: .
-          dockerFileName: Dockerfile
-          dockerImageName: docker.artprod.mycompany.com/docker_local/dbp  # replace with your image path and name
-          dockerImageTag: ${run_number}
           inputResources:
-            - name: sample_GitRepo
-          integrations:
-            - name: deepikaArt 
+            - name: release_bundle
+          outputResources:
+            - name: signed_bundle
         execution:
-          onStart:
-            - echo "test1234"
+          onExecute:
+            - echo "sign_release_bundle"
+      - name: distribute_to_edge
+        type: Bash
+        configuration:
+          inputResources:
+            - name: signed_bundle
+          outputResources:
+            - name: distribution_rules
+        execution:
+          onExecute:
+            - echo "distribute_to_edge"
+          
             
