@@ -39,6 +39,8 @@ pipelines:
         configuration:
           inputResources:
             - name: build_info
+          integrations:
+            - name: {{ .Values.myArtifactoryIntegration }}
           outputResources:
             - name: release_bundle
         execution:
