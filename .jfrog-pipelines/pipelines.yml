@@ -4,8 +4,8 @@ resources:
     type: BuildInfo
     configuration:
       sourceArtifactory: {{ .Values.integrations.artifactoryIntegration }}
-      buildName: myApp_build
-      buildNumber: 1
+      buildName: go_app
+      buildNumber: 14
 
   - name: release_bundle
     type: ReleaseBundle
@@ -47,6 +47,7 @@ pipelines:
         execution:
           onExecute:
             - echo "create_release_bundle"
+            - fileSpecFileName="createReleaseBundlePayload.json"
             - fileSpec='{"files":[]}'
             - aqlTemplate='{"items.find":{}}'
             - aqlTemplate="{\"items.find\":{\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
