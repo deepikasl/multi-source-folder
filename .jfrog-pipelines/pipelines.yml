@@ -2,28 +2,28 @@ resources:
   - name: build_info
     type: BuildInfo
     configuration:
-      sourceArtifactory: {{ .Values.myArtifactoryIntegration }}
+      sourceArtifactory: {{ .Values.integrations.myArtifactoryIntegration }}
       buildName: myApp_build
       buildNumber: 1
 
   - name: release_bundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: {{ .Values.distributionIntegration }}
+      sourceDistribution: {{ .Values.integrations.distributionIntegration }}
       name: demo_rb
       version: v1.0.0
 
   - name: signed_bundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: {{ .Values.distributionIntegration }}
+      sourceDistribution: {{ .Values.integrations.distributionIntegration }}
       name: demo_rb
       version: v1.0.0
 
   - name: distribution_rules
     type: DistributionRule
     configuration:
-      sourceDistribution: {{ .Values.distributionIntegration }}
+      sourceDistribution: {{ .Values.integrations.distributionIntegration }}
       serviceName: "*"
       siteName: "*"
       cityName: "*"
@@ -40,7 +40,7 @@ pipelines:
           inputResources:
             - name: build_info
           integrations:
-            - name: {{ .Values.myArtifactoryIntegration }}
+            - name: {{ .Values.integrations.myArtifactoryIntegration }}
           outputResources:
             - name: release_bundle
         execution:
