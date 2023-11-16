@@ -3,7 +3,7 @@ resources:
     type: BuildInfo
     configuration:
       sourceArtifactory: {{ .Values.myArtifactoryIntegration }}
-      buildName: build_name
+      buildName: myApp_build
       buildNumber: 1
 
   - name: release_bundle
@@ -44,6 +44,13 @@ pipelines:
         execution:
           onExecute:
             - echo "create_release_bundle"
+            - local fileSpec='{"files": []}'
+            - local aqlTemplate='{"items.find": {}}'
+            - aqlTemplate="{\"items.find\": {\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
+            - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '.aql = $json')
+            - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.files += [ $json ]')
+            - echo "$fileSpec"
+            - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
       - name: sign_release_bundle
         type: Bash
         configuration:
