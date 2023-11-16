@@ -3,7 +3,7 @@ resources:
   - name: build_info
     type: BuildInfo
     configuration:
-      sourceArtifactory: {{ .Values.integrations.myArtifactoryIntegration }}
+      sourceArtifactory: {{ .Values.integrations.artifactoryIntegration }}
       buildName: myApp_build
       buildNumber: 1
 
@@ -41,7 +41,7 @@ pipelines:
           inputResources:
             - name: build_info
           integrations:
-            - name: {{ .Values.integrations.myArtifactoryIntegration }}
+            - name: {{ .Values.integrations.artifactoryIntegration }}
           outputResources:
             - name: release_bundle
         execution:
