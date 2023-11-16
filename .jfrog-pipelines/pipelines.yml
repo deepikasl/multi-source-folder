@@ -1,3 +1,4 @@
+valuesFilePath: ./values.yml
 resources:
   - name: build_info
     type: BuildInfo
