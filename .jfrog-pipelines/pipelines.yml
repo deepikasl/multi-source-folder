@@ -34,6 +34,8 @@ resources:
 
 pipelines:
   - name: distribute_to_edge
+    configuration:
+      jfrogCliVersion: 2
     steps:
       - name: create_release_bundle
         type: Bash
