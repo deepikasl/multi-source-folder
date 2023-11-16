@@ -46,7 +46,7 @@ pipelines:
         execution:
           onExecute:
             - echo "create_release_bundle"
-            - fileSpec='{"files": []}'
+            - fileSpec="{"files": []}"
             - aqlTemplate='{"items.find": {}}'
             - aqlTemplate="{\"items.find\": {\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
             - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '.aql = $json')
