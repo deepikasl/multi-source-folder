@@ -72,3 +72,7 @@ controls:
   create_release_bundle:
     runtime: auto
     enabled: true
+
+  sign_release_bundle:
+    runtime: auto
+    enabled: true
