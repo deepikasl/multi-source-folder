@@ -204,7 +204,11 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
+            {{ if $isSignAvailable }}
             - name: signed_bundle
+            {{ else }}
+            - name: release_bundle
+            {{ end }}
           outputResources:
             - name: distribution_rules
         execution:
