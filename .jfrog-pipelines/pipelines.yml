@@ -174,7 +174,7 @@ pipelines:
             - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.files += [ $json ]')
             - echo "$fileSpec"
             - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
-            - jf rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
+            - jf ds rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
 
       {{ if $isSignAvailable }}
       - name: sign_release_bundle
