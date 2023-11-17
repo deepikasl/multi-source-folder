@@ -1,3 +1,53 @@
-integrations:
-  artifactoryIntegration: deepikaArt
-  distributionIntegration: deepikaDist
+metadata:
+  releaseBundleType: v2
+
+inputs:
+  pipeline:
+    configuration:
+      integrations:
+        - deepikaArt
+      retentionPolicy:
+        maxAgeDays: 90
+        minRuns: 10
+
+  integrations:
+    artifactory: deepikaArt
+    distribution: deepikaDist
+
+  resources:
+    build_info:
+      buildName: go_app
+      buildNumber: 14
+
+    release_bundle:
+      name: deepika_demo_rb
+      version: v1.0.0
+
+    distribution_rules:
+      serviceName: "*"
+      siteName: "*"
+      cityName: "*"
+      countryCodes:
+        - "CN"
+        - "GB"
+
+configurations:
+  steps:
+    create_release_bundle:
+      runtime:
+        versions:
+          - "16.10.0"
+      onStart:
+        - echo "onStart"
+      onExecute:
+        - echo "onExecute"
+      onFailure:
+        - echo "onFailure"
+      onSuccess:
+        - echo "onSuccess"
+        
+controls:
+  create_release_bundle:
+    runtime: auto
+    enabled: true
+
