@@ -1,6 +1,7 @@
 valuesFilePath: ./values.yml
 
 # Names
+{{ $serviceName := .Values.serviceName }}
 {{ $buildInfoResultResName := print $serviceName "_build_result" }}
 {{ $buildInfoResName := print $serviceName "_build_info" }}
 
@@ -218,3 +219,4 @@ pipelines:
       #       {{ template "step.distribute_to_edge.onFailure" $templateParams }}
       #     {{ end }}
           
+            
