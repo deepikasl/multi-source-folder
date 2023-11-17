@@ -56,6 +56,16 @@ configurations:
         - echo "onFailure"
       onSuccess:
         - echo "onSuccess"
+
+    distribute_to_edge:
+      onStart:
+        - echo "onStart"
+      onExecute:
+        - echo "onExecute"
+      onFailure:
+        - echo "onFailure"
+      onSuccess:
+        - echo "onSuccess"
         
 controls:
   create_release_bundle:
