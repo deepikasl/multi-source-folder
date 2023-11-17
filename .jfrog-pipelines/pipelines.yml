@@ -169,38 +169,40 @@ pipelines:
         execution:
           {{ if .Values.configurations.steps.sign_release_bundle.onStart }}
           onStart:
-            {{ template "step.sign_release_bundle.onStart" $templateParams }}
+            {{ template "step.sign_release_bundle.onStart" }}
           {{ end }}
           onExecute:
-            {{ template "step.sign_release_bundle.onExecute" $templateParams }}
+            {{ template "step.sign_release_bundle.onExecute" }}
           {{ if .Values.configurations.steps.sign_release_bundle.onSuccess }}
           onSuccess:
-            {{ template "step.sign_release_bundle.onSuccess" $templateParams }}
+            {{ template "step.sign_release_bundle.onSuccess" }}
           {{ end }}
           {{ if .Values.configurations.steps.sign_release_bundle.onFailure }}
           onFailure:
-            {{ template "step.sign_release_bundle.onFailure" $templateParams }}
+            {{ template "step.sign_release_bundle.onFailure" }}
           {{ end }}
 
-      # - name: distribute_to_edge
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: signed_bundle
-      #     outputResources:
-      #       - name: distribution_rules
-      #   execution:
-      #     {{ if .Values.configurations.steps.distribute_to_edge.onStart }}
-      #     onStart:
-      #       {{ template "step.distribute_to_edge.onStart" $templateParams }}
-      #     {{ end }}
-      #     onExecute:
-      #       {{ template "step.distribute_to_edge.onExecute" $templateParams }}
-      #     {{ if .Values.configurations.steps.distribute_to_edge.onSuccess }}
-      #     onSuccess:
-      #       {{ template "step.distribute_to_edge.onSuccess" $templateParams }}
-      #     {{ end }}
-      #     {{ if .Values.configurations.steps.distribute_to_edge.onFailure }}
-      #     onFailure:
-      #       {{ template "step.distribute_to_edge.onFailure" $templateParams }}
-      #     {{ end }}
+      - name: distribute_to_edge
+        type: Bash
+        configuration:
+          inputResources:
+            - name: signed_bundle
+          outputResources:
+            - name: distribution_rules
+        execution:
+          {{ if .Values.configurations.steps.distribute_to_edge.onStart }}
+          onStart:
+            {{ template "step.distribute_to_edge.onStart" }}
+          {{ end }}
+          onExecute:
+            {{ template "step.distribute_to_edge.onExecute" }}
+          {{ if .Values.configurations.steps.distribute_to_edge.onSuccess }}
+          onSuccess:
+            {{ template "step.distribute_to_edge.onSuccess" }}
+          {{ end }}
+          {{ if .Values.configurations.steps.distribute_to_edge.onFailure }}
+          onFailure:
+            {{ template "step.distribute_to_edge.onFailure" }}
+          {{ end }}
+          
+            
