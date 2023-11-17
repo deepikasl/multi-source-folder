@@ -68,7 +68,7 @@ resources:
       sourceDistribution: {{ .Values.inputs.integrations.distribution }}
       # serviceName: {{ .Values.inputs.resources.distribution_rules.serviceName }}
       serviceName: "*"
-      siteName: {{ .Values.inputs.resources.distribution_rules.siteName }}
+      siteName: "{{ .Values.inputs.resources.distribution_rules.siteName }}"
       cityName: {{ .Values.inputs.resources.distribution_rules.cityName }}
       countryCodes:
         - "CN"
