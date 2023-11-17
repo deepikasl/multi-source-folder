@@ -139,9 +139,9 @@ resources:
     type: DistributionRule
     configuration:
       sourceDistribution: {{ .Values.inputs.integrations.distribution }}
-      serviceName: {{ .Values.inputs.resources.distribution_rules.serviceName }}
-      siteName: {{ .Values.inputs.resources.distribution_rules.siteName }}
-      cityName: {{ .Values.inputs.resources.distribution_rules.cityName }}
+      serviceName: "{{ .Values.inputs.resources.distribution_rules.serviceName }}"
+      siteName: "{{ .Values.inputs.resources.distribution_rules.siteName }}"
+      cityName: "{{ .Values.inputs.resources.distribution_rules.cityName }}"
       countryCodes:
         - "CN"
         - "GB"
