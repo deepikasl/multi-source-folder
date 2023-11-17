@@ -181,12 +181,27 @@ pipelines:
           outputResources:
             - name: signed_bundle
         execution:
+          {{ if .Values.configurations.steps.sign_release_bundle.onStart }}
+          onStart:
+            {{ template "step.sign_release_bundle.onStart" $templateParams }}
+          {{ end }}
+          onExecute:
+            {{ template "step.sign_release_bundle.onExecute" $templateParams }}
+          {{ if .Values.configurations.steps.sign_release_bundle.onSuccess }}
+          onSuccess:
+            {{ template "step.sign_release_bundle.onSuccess" $templateParams }}
+          {{ end }}
+          {{ if .Values.configurations.steps.sign_release_bundle.onFailure }}
+          onFailure:
+            {{ template "step.sign_release_bundle.onFailure" $templateParams }}
+          {{ end }}
+        # execution:
           # {{ if .Values.configurations.steps.sign_release_bundle.onStart }}
           # onStart:
           #   {{ template "step.sign_release_bundle.onStart" $templateParams }}
           # {{ end }}
-          onExecute:
-            {{ template "step.sign_release_bundle.onExecute" $templateParams }}
+          # onExecute:
+          #   {{ template "step.sign_release_bundle.onExecute" $templateParams }}
           # {{ if .Values.configurations.steps.sign_release_bundle.onSuccess }}
           # onSuccess:
           #   {{ template "step.sign_release_bundle.onSuccess" $templateParams }}
