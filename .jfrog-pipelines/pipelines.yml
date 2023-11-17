@@ -5,6 +5,9 @@ valuesFilePath: ./values.yml
 {{ $buildInfoResultResName := print $serviceName "_build_result" }}
 {{ $buildInfoResName := print $serviceName "_build_info" }}
 
+{{ $isControlsAvailable := default false .Values.controls }}
+{{ $isSignAvailable := default false (and $isControlsAvailable (eq .Values.controls.sign_release_bundle.enabled true)) }}
+
 # -----------------------------------------------------------------
 # Reusable templates
 # These are resolved using 'template' thus indentation is important
@@ -173,6 +176,7 @@ pipelines:
             - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
             - jf rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
 
+      {{ if $isSignAvailable }}
       - name: sign_release_bundle
         type: Bash
         configuration:
@@ -195,7 +199,7 @@ pipelines:
           onFailure:
             {{ template "step.sign_release_bundle.onFailure" $templateParams }}
           {{ end }}
-
+      {{ end }}
       - name: distribute_to_edge
         type: Bash
         configuration:
@@ -218,5 +222,4 @@ pipelines:
           onFailure:
             {{ template "step.distribute_to_edge.onFailure" $templateParams }}
           {{ end }}
-          
-            
+           
