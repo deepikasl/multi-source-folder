@@ -40,6 +40,36 @@ valuesFilePath: ./values.yml
             {{- end }}
             {{ end }}
 {{ end }}
+
+# sign_release_bundle step
+{{ define "step.sign_release_bundle.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sign_release_bundle }}
+            - echo "onExecute"
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.sign_release_bundle.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sign_release_bundle }}
+            - echo "onStart"
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.sign_release_bundle.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sign_release_bundle }}
+            - echo "onSuccess"
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.sign_release_bundle.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.sign_release_bundle }}
+            - echo "onFailure"
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 resources:
   - name: build_info
     type: BuildInfo
@@ -66,9 +96,9 @@ resources:
     type: DistributionRule
     configuration:
       sourceDistribution: {{ .Values.inputs.integrations.distribution }}
-      serviceName: "{{ .Values.inputs.resources.distribution_rules.serviceName }}"
-      siteName: "{{ .Values.inputs.resources.distribution_rules.siteName }}"
-      cityName: "{{ .Values.inputs.resources.distribution_rules.cityName }}"
+      serviceName: {{ .Values.inputs.resources.distribution_rules.serviceName }}
+      siteName: {{ .Values.inputs.resources.distribution_rules.siteName }}
+      cityName: {{ .Values.inputs.resources.distribution_rules.cityName }}
       countryCodes:
         - "CN"
         - "GB"
@@ -108,8 +138,20 @@ pipelines:
           outputResources:
             - name: signed_bundle
         execution:
+          {{ if .Values.configurations.steps.sign_release_bundle.onStart }}
+          onStart:
+            {{ template "step.sign_release_bundle.onStart" $templateParams }}
+          {{ end }}
           onExecute:
-            - echo "sign_release_bundle"
+            {{ template "step.sign_release_bundle.onExecute" $templateParams }}
+          {{ if .Values.configurations.steps.sign_release_bundle.onSuccess }}
+          onSuccess:
+            {{ template "step.sign_release_bundle.onSuccess" $templateParams }}
+          {{ end }}
+          {{ if .Values.configurations.steps.sign_release_bundle.onFailure }}
+          onFailure:
+            {{ template "step.sign_release_bundle.onFailure" $templateParams }}
+          {{ end }}
 
       - name: distribute_to_edge
         type: Bash
