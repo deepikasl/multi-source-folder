@@ -44,31 +44,31 @@ resources:
   - name: build_info
     type: BuildInfo
     configuration:
-      sourceArtifactory: {{ .Values.integrations.artifactoryIntegration }}
-      buildName: go_app
-      buildNumber: 14
+      sourceArtifactory: {{ .Values.inputs.integrations.artifactory }}
+      buildName: {{ .Values.inputs.resources.build_info.buildName }}
+      buildNumber: {{ .Values.inputs.resources.build_info.buildNumber }}
 
   - name: release_bundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: {{ .Values.integrations.distributionIntegration }}
-      name: deepika_demo_rb
-      version: v1.0.0
+      sourceDistribution: {{ .Values.inputs.integrations.distribution }}
+      name: {{ .Values.inputs.resources.release_bundle.name }}
+      version: {{ .Values.inputs.resources.release_bundle.version }}
 
   - name: signed_bundle
     type: ReleaseBundle
     configuration:
-      sourceDistribution: {{ .Values.integrations.distributionIntegration }}
-      name: deepika_demo_rb
-      version: v1.0.0
+      sourceDistribution: {{ .Values.inputs.integrations.distribution }}
+      name: {{ .Values.inputs.resources.signed_bundle.name }}
+      version: {{ .Values.inputs.resources.signed_bundle.version }}
 
   - name: distribution_rules
     type: DistributionRule
     configuration:
-      sourceDistribution: {{ .Values.integrations.distributionIntegration }}
-      serviceName: "*"
-      siteName: "*"
-      cityName: "*"
+      sourceDistribution: {{ .Values.inputs.integrations.distribution }}
+      serviceName: {{ .Values.inputs.resources.distribution_rules.serviceName }}
+      siteName: {{ .Values.inputs.resources.distribution_rules.siteName }}
+      cityName: {{ .Values.inputs.resources.distribution_rules.cityName }}
       countryCodes:
         - "CN"
         - "GB"
@@ -84,7 +84,7 @@ pipelines:
           inputResources:
             - name: build_info
           integrations:
-            - name: {{ .Values.integrations.artifactoryIntegration }}
+            - name: {{ .Values.inputs.integrations.artifactory }}
           outputResources:
             - name: release_bundle
         execution:
@@ -99,25 +99,25 @@ pipelines:
             - echo "$fileSpec"
             - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
             - jf rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
-      # - name: sign_release_bundle
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: release_bundle
-      #     outputResources:
-      #       - name: signed_bundle
-      #   execution:
-      #     onExecute:
-      #       - echo "sign_release_bundle"
-      # - name: distribute_to_edge
-      #   type: Bash
-      #   configuration:
-      #     inputResources:
-      #       - name: signed_bundle
-      #     outputResources:
-      #       - name: distribution_rules
-      #   execution:
-      #     onExecute:
-      #       - echo "distribute_to_edge"
-          
-            
+
+      - name: sign_release_bundle
+        type: Bash
+        configuration:
+          inputResources:
+            - name: release_bundle
+          outputResources:
+            - name: signed_bundle
+        execution:
+          onExecute:
+            - echo "sign_release_bundle"
+
+      - name: distribute_to_edge
+        type: Bash
+        configuration:
+          inputResources:
+            - name: signed_bundle
+          outputResources:
+            - name: distribution_rules
+        execution:
+          onExecute:
+            - echo "distribute_to_edge"
