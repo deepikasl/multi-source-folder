@@ -70,6 +70,35 @@ valuesFilePath: ./values.yml
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
+# distribute_to_edge step
+{{ define "step.distribute_to_edge.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.distribute_to_edge }}
+            - echo "onExecute"
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.distribute_to_edge.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.distribute_to_edge }}
+            - echo "onStart"
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.distribute_to_edge.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.distribute_to_edge }}
+            - echo "onSuccess"
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.distribute_to_edge.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.distribute_to_edge }}
+            - echo "onFailure"
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 resources:
   - name: build_info
     type: BuildInfo
@@ -161,5 +190,17 @@ pipelines:
           outputResources:
             - name: distribution_rules
         execution:
+          {{ if .Values.configurations.steps.distribute_to_edge.onStart }}
+          onStart:
+            {{ template "step.distribute_to_edge.onStart" $templateParams }}
+          {{ end }}
           onExecute:
-            - echo "distribute_to_edge"
+            {{ template "step.distribute_to_edge.onExecute" $templateParams }}
+          {{ if .Values.configurations.steps.distribute_to_edge.onSuccess }}
+          onSuccess:
+            {{ template "step.distribute_to_edge.onSuccess" $templateParams }}
+          {{ end }}
+          {{ if .Values.configurations.steps.distribute_to_edge.onFailure }}
+          onFailure:
+            {{ template "step.distribute_to_edge.onFailure" $templateParams }}
+          {{ end }}
