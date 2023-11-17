@@ -1,4 +1,45 @@
 valuesFilePath: ./values.yml
+# Steps shared onExecute template
+{{ define "step.shared.onExecute.command" }}
+  {{ $ := . }}
+            {{ if ( and ($.conf) ($.conf.onExecute) ) }}
+            {{- range $cmd := $.conf.onExecute }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ else if $.default}}
+            - {{ $.default }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onStart template
+{{ define "step.shared.onStart.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onStart }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onSuccess template
+{{ define "step.shared.onSuccess.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onSuccess }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onFailure template
+{{ define "step.shared.onFailure.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.onFailure }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
 resources:
   - name: build_info
     type: BuildInfo
