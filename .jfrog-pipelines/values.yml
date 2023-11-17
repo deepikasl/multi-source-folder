@@ -23,6 +23,10 @@ inputs:
       name: deepika_demo_rb
       version: v1.0.0
 
+    signed_bundle:
+      name: deepika_demo_rb
+      version: v1.0.0
+
     distribution_rules:
       serviceName: "*"
       siteName: "*"
@@ -50,4 +54,3 @@ controls:
   create_release_bundle:
     runtime: auto
     enabled: true
-
