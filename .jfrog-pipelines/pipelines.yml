@@ -7,6 +7,7 @@ valuesFilePath: ./values.yml
 
 {{ $isControlsAvailable := default false .Values.controls }}
 {{ $isSignAvailable := default false (and $isControlsAvailable (eq .Values.controls.sign_release_bundle.enabled true)) }}
+{{ $isPromoteAvailable := default false (and $isControlsAvailable (eq .Values.controls.promote_release_bundle.enabled true)) }}
 
 # -----------------------------------------------------------------
 # Reusable templates
@@ -87,6 +88,35 @@ valuesFilePath: ./values.yml
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
+# promote_release_bundle step
+{{ define "step.promote_release_bundle.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.promote_release_bundle }}
+            - echo "onExecute"
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.promote_release_bundle.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.promote_release_bundle }}
+            - echo "onStart"
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.promote_release_bundle.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.promote_release_bundle }}
+            - echo "onSuccess"
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.promote_release_bundle.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.promote_release_bundle }}
+            - echo "onFailure"
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 # distribute_to_edge step
 {{ define "step.distribute_to_edge.onExecute" }}
   {{ $ := . }}
@@ -131,12 +161,23 @@ resources:
       name: {{ .Values.inputs.resources.release_bundle.name }}
       version: {{ .Values.inputs.resources.release_bundle.version }}
 
+  {{ if $isSignAvailable }}
   - name: signed_bundle
     type: ReleaseBundle
     configuration:
       sourceDistribution: {{ .Values.inputs.integrations.distribution }}
       name: {{ .Values.inputs.resources.signed_bundle.name }}
       version: {{ .Values.inputs.resources.signed_bundle.version }}
+  {{ end }}
+
+  {{ if $isPromoteAvailable }}
+  - name: promoted_bundle
+    type: ReleaseBundle
+    configuration:
+      sourceDistribution: {{ .Values.inputs.integrations.distribution }}
+      name: {{ .Values.inputs.resources.promoted_bundle.name }}
+      version: {{ .Values.inputs.resources.promoted_bundle.version }}
+  {{ end }}
 
   - name: distribution_rules
     type: DistributionRule
@@ -198,6 +239,30 @@ pipelines:
           {{ if .Values.configurations.steps.sign_release_bundle.onFailure }}
           onFailure:
             {{ template "step.sign_release_bundle.onFailure" $templateParams }}
+          {{ end }}
+      {{ end }}
+      {{ if $isPromoteAvailable }}
+      - name: promote_release_bundle
+        type: Bash
+        configuration:
+          inputResources:
+            - name: release_bundle
+          outputResources:
+            - name: signed_bundle
+        execution:
+          {{ if .Values.configurations.steps.promote_release_bundle.onStart }}
+          onStart:
+            {{ template "step.promote_release_bundle.onStart" $templateParams }}
+          {{ end }}
+          onExecute:
+            {{ template "step.promote_release_bundle.onExecute" $templateParams }}
+          {{ if .Values.configurations.steps.promote_release_bundle.onSuccess }}
+          onSuccess:
+            {{ template "step.promote_release_bundle.onSuccess" $templateParams }}
+          {{ end }}
+          {{ if .Values.configurations.steps.promote_release_bundle.onFailure }}
+          onFailure:
+            {{ template "step.promote_release_bundle.onFailure" $templateParams }}
           {{ end }}
       {{ end }}
       - name: distribute_to_edge
