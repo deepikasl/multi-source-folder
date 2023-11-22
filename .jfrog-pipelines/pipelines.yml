@@ -234,17 +234,21 @@ pipelines:
           outputResources:
             - name: release_bundle
         execution:
+          {{ if .Values.configurations.steps.create_release_bundle.onStart }}
+          onStart:
+            {{ template "step.create_release_bundle.onStart" $templateParams }}
+          {{ end }}
           onExecute:
-            - echo "create_release_bundle"
-            - fileSpecFileName="createReleaseBundlePayload.json"
-            - fileSpec='{"files":[]}'
-            - aqlTemplate='{"items.find":{}}'
-            - aqlTemplate="{\"items.find\":{\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
-            - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '.aql = $json')
-            - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.files += [ $json ]')
-            - echo "$fileSpec"
-            - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
-            - jf rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
+            {{ template "step.create_release_bundle.onExecute" $templateParams }}
+          {{ if .Values.configurations.steps.create_release_bundle.onSuccess }}
+          onSuccess:
+            {{ template "step.create_release_bundle.onSuccess" $templateParams }}
+          {{ end }}
+          {{ if .Values.configurations.steps.create_release_bundle.onFailure }}
+          onFailure:
+            {{ template "step.create_release_bundle.onFailure" $templateParams }}
+          {{ end }}
+            
 
       {{ if $isSignAvailable }}
       - name: sign_release_bundle
