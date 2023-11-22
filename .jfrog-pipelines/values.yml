@@ -28,6 +28,10 @@ inputs:
       name: deepika_demo_rb
       version: v1.0.0
 
+    promoted_bundle:
+      name: deepika_demo_rb
+      version: v1.0.0
+
     distribution_rules:
       serviceName: "*"
       siteName: "*"
@@ -49,6 +53,16 @@ configurations:
         - echo "onSuccess"
 
     sign_release_bundle:
+      onStart:
+        - echo "onStart"
+      onExecute:
+        - echo "onExecute"
+      onFailure:
+        - echo "onFailure"
+      onSuccess:
+        - echo "onSuccess"
+
+    promote_release_bundle:
       onStart:
         - echo "onStart"
       onExecute:
