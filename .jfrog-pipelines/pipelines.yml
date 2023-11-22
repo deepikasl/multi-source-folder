@@ -59,6 +59,35 @@ valuesFilePath: ./values.yml
             {{ end }}
 {{ end }}
 
+# create_release_bundle step
+{{ define "step.create_release_bundle.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.create_release_bundle }}
+            - echo "onExecute"
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+{{ define "step.create_release_bundle.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.create_release_bundle }}
+            - echo "onStart"
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+{{ define "step.create_release_bundle.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.create_release_bundle }}
+            - echo "onSuccess"
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+{{ define "step.create_release_bundle.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.create_release_bundle }}
+            - echo "onFailure"
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
 # sign_release_bundle step
 {{ define "step.sign_release_bundle.onExecute" }}
   {{ $ := . }}
