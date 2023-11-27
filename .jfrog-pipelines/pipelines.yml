@@ -14,7 +14,7 @@ valuesFilePath: ./values.yml
 # These are resolved using 'template' thus indentation is important
 # -----------------------------------------------------------------
 {{ $resultResources := dict "buildInfoResultResName" $buildInfoResultResName }}
-{{ $templateParams := merge $resultResources }}
+{{ $templateParams := merge $resultResources (dict "values" .Values) }}
 
 
 # Steps shared onExecute template
@@ -71,7 +71,6 @@ valuesFilePath: ./values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.create_release_bundle }}
             - echo "onStart"
-            - echo {{ $ }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
@@ -237,7 +236,6 @@ pipelines:
         execution:
           {{ if .Values.configurations.steps.create_release_bundle.onStart }}
           onStart:
-            # - echo {{ .Values.configurations.steps.create_release_bundle.onStart }}
             {{ template "step.create_release_bundle.onStart" $templateParams }}
           {{ end }}
           onExecute:
