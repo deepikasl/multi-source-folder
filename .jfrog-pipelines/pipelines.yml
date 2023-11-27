@@ -235,6 +235,7 @@ pipelines:
           outputResources:
             - name: release_bundle
         execution:
+           - echo {{ .Values.configurations.steps.create_release_bundle.onStart }}
           {{ if .Values.configurations.steps.create_release_bundle.onStart }}
           onStart:
             {{ template "step.create_release_bundle.onStart" $templateParams }}
