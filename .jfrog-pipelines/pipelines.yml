@@ -72,7 +72,7 @@ valuesFilePath: ./values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.create_release_bundle }}
             - echo "onStart"
-            - echo {{ $.conf }}
+            # - echo {{ $.conf }}
             # {{- range $cmd := $.conf.onStart }}
             # - {{ $cmd }}
             # {{- end }}
