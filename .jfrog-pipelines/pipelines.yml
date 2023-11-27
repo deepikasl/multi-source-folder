@@ -71,7 +71,7 @@ valuesFilePath: ./values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.create_release_bundle }}
             - echo "onStart"
-            - echo {{ $.values }}
+            - echo {{ .Values }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
@@ -237,7 +237,7 @@ pipelines:
         execution:
           {{ if .Values.configurations.steps.create_release_bundle.onStart }}
           onStart:
-            - echo {{ .Values.configurations.steps.create_release_bundle.onStart }}
+            # - echo {{ .Values.configurations.steps.create_release_bundle.onStart }}
             {{ template "step.create_release_bundle.onStart" $templateParams }}
           {{ end }}
           onExecute:
