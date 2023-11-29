@@ -249,6 +249,9 @@ pipelines:
         execution:
           {{ if .Values.configurations.steps.create_release_bundle.onStart }}
           onStart:
+            - task: jfrog/setup-jfrog-cli@v0.1.0
+              input:
+                version: "2.48.0"
             {{ template "step.create_release_bundle.onStart" $templateParams }}
           {{ end }}
           onExecute:
