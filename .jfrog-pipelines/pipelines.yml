@@ -232,8 +232,6 @@ pipelines:
             - name: build_info
           integrations:
             - name: {{ .Values.inputs.integrations.artifactory }}
-          inputSteps:
-            - name: set_up
           outputResources:
             - name: release_bundle
         execution:
