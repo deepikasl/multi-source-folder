@@ -223,7 +223,15 @@ pipelines:
   - name: distribute_to_edge
     configuration:
       jfrogCliVersion: 2
+      affinityGroup: distribute
     steps:
+      - name: set_up
+        type: Bash
+        execution:
+          onExecute:
+            - task: jfrog/setup-jfrog-cli@v0.1.0
+              input:
+                version: "2.48.0"
       - name: create_release_bundle
         type: Bash
         configuration:
@@ -231,6 +239,8 @@ pipelines:
             - name: build_info
           integrations:
             - name: {{ .Values.inputs.integrations.artifactory }}
+          inputSteps:
+            - name: set_up
           outputResources:
             - name: release_bundle
         execution:
