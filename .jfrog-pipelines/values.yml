@@ -44,6 +44,9 @@ configurations:
   steps:
     create_release_bundle:
       onStart:
+        - task: jfrog/setup-jfrog-cli@v0.1.0
+          input:
+            version: "2.48.0"
         - echo "create_release_bundle"
         - fileSpecFileName="createReleaseBundlePayload.json"
         - fileSpec='{"files":[]}'
@@ -54,7 +57,7 @@ configurations:
         - echo "$fileSpec"
         - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
       onExecute:
-        - jf ds rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
+        - jf rbc --builds=$step_tmp_dir/$fileSpecFileName --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
       onFailure:
         - echo "onFailure"
       onSuccess:
