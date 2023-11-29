@@ -227,6 +227,9 @@ pipelines:
     steps:
       - name: set_up
         type: Bash
+        configuration:
+          integrations:
+            - name: {{ .Values.inputs.integrations.artifactory }}
         execution:
           onExecute:
             - task: jfrog/setup-jfrog-cli@v0.1.0
