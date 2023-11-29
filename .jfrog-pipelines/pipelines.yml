@@ -225,16 +225,6 @@ pipelines:
       jfrogCliVersion: 2
       affinityGroup: distribute
     steps:
-      - name: set_up
-        type: Bash
-        configuration:
-          integrations:
-            - name: {{ .Values.inputs.integrations.artifactory }}
-        execution:
-          onExecute:
-            - task: jfrog/setup-jfrog-cli@v0.1.0
-              input:
-                version: "2.48.0"
       - name: create_release_bundle
         type: Bash
         configuration:
@@ -255,6 +245,7 @@ pipelines:
             {{ template "step.create_release_bundle.onStart" $templateParams }}
           {{ end }}
           onExecute:
+            - jf --version
             {{ template "step.create_release_bundle.onExecute" $templateParams }}
           {{ if .Values.configurations.steps.create_release_bundle.onSuccess }}
           onSuccess:
