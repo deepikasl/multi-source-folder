@@ -81,7 +81,7 @@ configurations:
 
     distribute_to_edge:
       onStart:
-        - distributionRuleResourceObject="{\"service_name\": \"$res_distribution_rules_serviceName\", \"site_name\": \"$res_distribution_rules_siteName\", \"city_name\": \"$res_distribution_rules_cityName\", \"country_codes\": [\"$res_distribution_rules_countryCodes\"]}"
+        - distributionRuleResourceObject="{\"service_name\":\"$res_distribution_rules_serviceName\",\"site_name\":\"$res_distribution_rules_siteName\",\"city_name\":\"$res_distribution_rules_cityName\",\"country_codes\":[\"$res_distribution_rules_countryCodes\"]}"
         - body=$(echo $body | jq --argjson json "$distributionRuleResourceObject" '.distribution_rules += [ $json ]')
         - echo "$body"
         - echo \"\$body\" | jq '.' > \$step_tmp_dir/distribution_payload
