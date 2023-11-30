@@ -293,8 +293,6 @@ pipelines:
         configuration:
           inputResources:
             - name: release_bundle
-          outputResources:
-            - name: signed_bundle
         execution:
           {{ if .Values.configurations.steps.promote_release_bundle.onStart }}
           onStart:
