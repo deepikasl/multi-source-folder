@@ -224,6 +224,8 @@ pipelines:
     configuration:
       jfrogCliVersion: 2
       affinityGroup: distribute
+      integrations:
+        - name: {{ .Values.inputs.integrations.artifactory }}
     steps:
       - name: create_release_bundle
         type: Bash
