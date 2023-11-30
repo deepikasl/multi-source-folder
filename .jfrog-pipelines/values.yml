@@ -46,11 +46,10 @@ configurations:
       onStart:
         - echo "create_release_bundle"
         - fileSpecFileName="createReleaseBundlePayload.json"
-        - fileSpec='{"files":[]}'
-        - aqlTemplate='{"items.find":{}}'
-        - aqlTemplate="{\"items.find\":{\"@build.name\":\"$res_build_info_buildName\",\"@build.number\":\"$res_build_info_buildNumber\"}}"
-        - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '.aql = $json')
-        - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.files += [ $json ]')
+        - fileSpec='{"builds":[]}'
+        - aqlTemplate="{\"name\":\"$res_build_info_buildName\",\"number\":\"$res_build_info_buildNumber\"}"
+        - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '$json')
+        - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.builds += [ $json ]')
         - echo "$fileSpec"
         - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
       onExecute:
