@@ -89,7 +89,7 @@ configurations:
         - echo "$fileSpec"
         - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
       onExecute:
-        - jfrog rbd --dist-rules=$step_tmp_dir/fileSpecFileName deepika_demo_rb 1.0.0
+        - jfrog rbd --dist-rules=$step_tmp_dir/$fileSpecFileName deepika_demo_rb 1.0.0
       onFailure:
         - echo "onFailure"
       onSuccess:
