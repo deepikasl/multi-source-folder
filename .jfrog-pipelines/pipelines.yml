@@ -299,6 +299,13 @@ pipelines:
             {{ template "step.promote_release_bundle.onStart" $templateParams }}
           {{ end }}
           onExecute:
+            - task: jfrog/setup-jfrog-cli@v0.1.0
+              input:
+                version: "2.50.4"
+            - configure_jfrog_cli --artifactory-url $int_deepikaArt_url --user "$int_deepikaArt_user" --apikey "$int_deepikaArt_apikey" --server-name "newVersion1"
+            - use_jfrog_cli "newVersion1"
+            - jf --version
+            - jfrog -v
             {{ template "step.promote_release_bundle.onExecute" $templateParams }}
           {{ if .Values.configurations.steps.promote_release_bundle.onSuccess }}
           onSuccess:
@@ -326,6 +333,13 @@ pipelines:
             {{ template "step.distribute_to_edge.onStart" $templateParams }}
           {{ end }}
           onExecute:
+            - task: jfrog/setup-jfrog-cli@v0.1.0
+              input:
+                version: "2.50.4"
+            - configure_jfrog_cli --artifactory-url $int_deepikaArt_url --user "$int_deepikaArt_user" --apikey "$int_deepikaArt_apikey" --server-name "newVersion1"
+            - use_jfrog_cli "newVersion1"
+            - jf --version
+            - jfrog -v
             {{ template "step.distribute_to_edge.onExecute" $templateParams }}
           {{ if .Values.configurations.steps.distribute_to_edge.onSuccess }}
           onSuccess:
