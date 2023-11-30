@@ -71,9 +71,10 @@ configurations:
 
     promote_release_bundle:
       onStart:
-        - echo "onStart"
+        - echo "create_release_bundle"
       onExecute:
         - echo "onExecute"
+        - jfrog rbp --signing-key=deepika-pipelines-rb deepika_demo_rb 1.0.0
       onFailure:
         - echo "onFailure"
       onSuccess:
