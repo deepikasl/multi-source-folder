@@ -247,7 +247,7 @@ pipelines:
           onExecute:
             - task: jfrog/setup-jfrog-cli@v0.1.0
               input:
-                version: "2.48.0"
+                version: "2.50.4"
             - configure_jfrog_cli --artifactory-url $int_deepikaArt_url --user "$int_deepikaArt_user" --apikey "$int_deepikaArt_apikey" --server-name "newVersion1"
             - use_jfrog_cli "newVersion1"
             - jf --version
