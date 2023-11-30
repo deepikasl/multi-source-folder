@@ -83,7 +83,7 @@ configurations:
       onStart:
         - fileSpecFileName="createReleaseBundlePayload.json"
         - fileSpec='{"distribution_rules":[]}'
-        - aqlTemplate="{\"site_name\":\"\",\"city_name\":\"\",\"country_codes\":\"*\"}"
+        - aqlTemplate="{\"site_name\":\"\",\"city_name\":\"\",\"country_codes\":[\"*\"]}"
         - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '$json')
         - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.distribution_rules += [ $json ]')
         - echo "$fileSpec"
