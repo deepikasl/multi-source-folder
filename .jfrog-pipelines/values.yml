@@ -97,4 +97,8 @@ controls:
 
   sign_release_bundle:
     runtime: auto
+    enabled: false
+
+  promote_release_bundle:
+    runtime: auto
     enabled: true
