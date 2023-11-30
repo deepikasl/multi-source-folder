@@ -17,8 +17,8 @@ inputs:
 
   resources:
     build_info:
-      buildName: Go_QuickStart
-      buildNumber: 264
+      buildName: demo_microservice_1_SampleTest
+      buildNumber: 2
 
     release_bundle:
       name: deepika_demo_rb
