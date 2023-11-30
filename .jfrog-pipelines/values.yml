@@ -84,7 +84,7 @@ configurations:
       onStart:
         - echo "onStart"
       onExecute:
-        - echo "onExecute"
+        - jf rbd --dist-rules=/path/to/dist-rules.json deepika_demo_rb 1.0.0
       onFailure:
         - echo "onFailure"
       onSuccess:
