@@ -251,6 +251,7 @@ pipelines:
             - configure_jfrog_cli --artifactory-url $int_deepikaArt_url --user "$int_deepikaArt_user" --apikey "$int_deepikaArt_apikey" --server-name "newVersion1"
             - use_jfrog_cli "newVersion1"
             - jf --version
+            - jfrog -v
             {{ template "step.create_release_bundle.onExecute" $templateParams }}
           {{ if .Values.configurations.steps.create_release_bundle.onSuccess }}
           onSuccess:
