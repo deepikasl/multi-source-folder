@@ -106,4 +106,4 @@ controls:
 
   promote_release_bundle:
     runtime: auto
-    enabled: true
+    enabled: false
