@@ -38,7 +38,6 @@ inputs:
       cityName: "*"
       countryCodes:
         - "CN"
-        - "GB"
 
 configurations:
   steps:
@@ -82,15 +81,7 @@ configurations:
 
     distribute_to_edge:
       onStart:
-        - distributionRuleResourceObject="{\"service_name\": \"$res_distribution_rules_serviceName\", \"site_name\": \"$res_distribution_rules_siteName\", \"city_name\": \"$res_distribution_rules_cityName\", \"country_codes\": []}"
-        - local countryCodesLen=$(find_resource_variable "$distributionRuleResourceName" countryCodes_len)
-        - |
-          if [ ! -z "$res_distribution_rules_countryCodes_len" ] && [ $res_distribution_rules_countryCodes_len -gt 0 ]; then
-            for (( j=0; j<$res_distribution_rules_countryCodes_len; j++ )); do
-              code=$res_distribution_rules_countryCodes_$j
-              distributionRuleResourceObject=$(echo $distributionRuleResourceObject | jq --arg code "$code" '.country_codes += [ $code ]')
-            done
-          fi
+        - distributionRuleResourceObject="{\"service_name\": \"$res_distribution_rules_serviceName\", \"site_name\": \"$res_distribution_rules_siteName\", \"city_name\": \"$res_distribution_rules_cityName\", \"country_codes\": [\"$res_distribution_rules_countryCodes\"]}"
         - body=$(echo $body | jq --argjson json "$distributionRuleResourceObject" '.distribution_rules += [ $json ]')
         - echo "$body"
         - echo \"\$body\" | jq '.' > \$step_tmp_dir/distribution_payload
