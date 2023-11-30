@@ -88,11 +88,6 @@ configurations:
         - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.distribution_rules += [ $json ]')
         - echo "$fileSpec"
         - echo "$fileSpec" | jq . > "$step_tmp_dir/$fileSpecFileName"
-        - body='{\"distribution_rules\":[]}'
-        - distributionRuleResourceObject="{\"site_name\":\"\",\"city_name\":\"\",\"country_codes\":[\"*\"]}"
-        - body=$(echo $body | jq --argjson json "$distributionRuleResourceObject" '.distribution_rules += [ $json ]')
-        - echo "$body"
-        - echo \"\$body\" | jq '.' > \$step_tmp_dir/distribution_payload
       onExecute:
         - jfrog rbd --dist-rules=$step_tmp_dir/fileSpecFileName deepika_demo_rb 1.0.0
       onFailure:
