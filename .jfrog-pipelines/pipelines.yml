@@ -222,7 +222,7 @@ resources:
 pipelines:
   - name: distribute_to_edge
     configuration:
-      jfrogCliVersion: 2
+      # jfrogCliVersion: 2
       affinityGroup: distribute
     steps:
       - name: create_release_bundle
