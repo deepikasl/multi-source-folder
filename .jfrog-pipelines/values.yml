@@ -17,8 +17,8 @@ inputs:
 
   resources:
     build_info:
-      buildName: go_app
-      buildNumber: 14
+      buildName: Go_QuickStart
+      buildNumber: 264
 
     release_bundle:
       name: deepika_demo_rb
