@@ -17,8 +17,8 @@ inputs:
 
   resources:
     build_info:
-      buildName: demo_microservice_1
-      buildNumber: 78
+      buildName: go_app
+      buildNumber: 14
 
     release_bundle:
       name: deepika_demo_rb
@@ -47,7 +47,7 @@ configurations:
         - echo "create_release_bundle"
         - fileSpecFileName="createReleaseBundlePayload.json"
         - fileSpec='{"builds":[]}'
-        - aqlTemplate="{\"name\":\"$res_build_info_buildName\",\"number\":\"$res_build_info_buildNumber\",\"repository\":\"tasks-build-info\"}"
+        - aqlTemplate="{\"name\":\"$res_build_info_buildName\",\"number\":\"$res_build_info_buildNumber\",\"repository_key\":\"tasks-build-info\"}"
         - buildInfoQuery=$(echo {} | jq --argjson json "$aqlTemplate" '$json')
         - fileSpec=$(echo $fileSpec | jq --argjson json "$buildInfoQuery" '.builds += [ $json ]')
         - echo "$fileSpec"
