@@ -37,18 +37,18 @@ configurations:
       #   - echo "onStart"
       onExecute:
         - echo "onExecute"
-        - |
-              RT_SERVER=server \
-              RT_URL=$repo21 \
-              RT_USER=$int_entplus_deployer_user \
-              RT_API_KEY=$int_entplus_deployer_apikey \
-              IMG_NAME=$apiImageName \
-              PIPELINES_CORE_VERSION=$PIPELINES_CORE_VERSION \
-              IMG_TAG=$RELEASE_VERSION \
-              RT_REGISTRY=entplus.jfrog.io/${RT_DOCKER_REPO} \
-              MICRO_BUILD_IMAGE=$res_node16BuildImage_imageName:$res_node16BuildImage_imageTag \
-              BASE_RUN_IMAGE=$res_node16MicroRunImage_imageName:$res_node16MicroRunImage_imageTag \
-              ./buildApi.sh "${res_apiGit_resourcePath}"
+        # - |
+        #       RT_SERVER=server \
+        #       RT_URL=$repo21 \
+        #       RT_USER=$int_entplus_deployer_user \
+        #       RT_API_KEY=$int_entplus_deployer_apikey \
+        #       IMG_NAME=$apiImageName \
+        #       PIPELINES_CORE_VERSION=$PIPELINES_CORE_VERSION \
+        #       IMG_TAG=$RELEASE_VERSION \
+        #       RT_REGISTRY=entplus.jfrog.io/${RT_DOCKER_REPO} \
+        #       MICRO_BUILD_IMAGE=$res_node16BuildImage_imageName:$res_node16BuildImage_imageTag \
+        #       BASE_RUN_IMAGE=$res_node16MicroRunImage_imageName:$res_node16MicroRunImage_imageTag \
+        #       ./buildApi.sh "${res_apiGit_resourcePath}"
       onFailure:
         - echo "onFailure"
       onSuccess:
