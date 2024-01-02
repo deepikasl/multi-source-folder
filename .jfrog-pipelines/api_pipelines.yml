@@ -49,7 +49,7 @@ Steps shared onExecute template
   {{ $ := . }}
             {{ if $.conf }}
             {{- range $cmd := $.conf.onExecute }}
-            {{ $cmd }}
+            - {{ $cmd }}
             {{- end }}
             {{ end }}
 {{ end }}
