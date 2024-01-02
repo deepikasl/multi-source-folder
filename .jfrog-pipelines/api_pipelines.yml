@@ -65,7 +65,7 @@ valuesFilePath: api_values.yml
   {{ $ := . }}
             {{ if ( and ($.conf) ($.conf.onExecute) ) }}
             {{- range $cmd := $.conf.onExecute }}
-            - {{ $cmd }}
+            - {{ $cmd | nindent 6 }}
             {{- end }}
             {{ else if $.default}}
             - {{ $.default }}
