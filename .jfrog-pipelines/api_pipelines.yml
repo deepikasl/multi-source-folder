@@ -99,6 +99,6 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            {{ .Values.configurations.steps.build.onExecute | nindent 6 }}
+            {{ .Values.configurations.steps.build.onExecute }}
             # {{ toYaml | .Values.configurations.steps.build.onExecute }}
             # {{ template "step.build.onExecute" $templateParams }}
