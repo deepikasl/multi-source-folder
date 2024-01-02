@@ -99,5 +99,5 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            {{ toYaml .Values.configurations.steps.build.onExecute | indent 2 }}
+            {{ .Values.configurations.steps.build.onExecute | indent 2 }}
             {{ template "step.build.onExecute" $templateParams }}
