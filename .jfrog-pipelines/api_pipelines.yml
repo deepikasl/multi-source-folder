@@ -13,8 +13,6 @@ valuesFilePath: api_values.yml
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
 {{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
 {{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.publish.enabled true)) }}
-{{ $isLintAvailable := default false (and $isControlsAvailable (eq .Values.controls.lint.enabled true)) }}
-{{ $isClamScanAvailable := default false (and $isControlsAvailable (eq .Values.controls.clamScan.enabled true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 
 # -----------------------------------------------------------------
@@ -63,12 +61,10 @@ valuesFilePath: api_values.yml
 # Steps shared onExecute template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
-            {{ if ( and ($.conf) ($.conf.onExecute) ) }}
+            {{ if $.conf }}
             {{- range $cmd := $.conf.onExecute }}
             - {{ $cmd }}
             {{- end }}
-            {{ else if $.default}}
-            - {{ $.default }}
             {{ end }}
 {{ end }}
 
@@ -106,59 +102,28 @@ valuesFilePath: api_values.yml
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-  {{ $ := set $ "default" "npm run build" }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.build.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.build.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.build.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
-            {{ template "step.shared.onFailure.command" $ }}
-{{ end }}
-
-# lint step
-{{ define "step.lint.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
-  {{ $ := set $ "default" "npm run lint" }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
-            {{ template "step.shared.onExecute.command" $ }}
-{{ end }}
-
-{{ define "step.lint.onStart" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
-            {{ template "step.shared.onStart.command" $ }}
-{{ end }}
-
-{{ define "step.lint.onSuccess" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
-            {{ template "step.shared.onSuccess.command" $ }}
-{{ end }}
-
-{{ define "step.lint.onFailure" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -166,29 +131,28 @@ valuesFilePath: api_values.yml
 {{ define "step.codeQuality.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-  {{ $ := set $ "default" "npm run clean" }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.codeQuality.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -196,28 +160,28 @@ valuesFilePath: api_values.yml
 {{ define "step.sonarScan.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.sonarScan.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.sonarScan.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.sonarScan.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.sonarScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -225,28 +189,28 @@ valuesFilePath: api_values.yml
 {{ define "step.clamScan.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 {{ define "step.clamScan.onStart" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 {{ define "step.clamScan.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.clamScan.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.clamScan }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 
@@ -255,8 +219,7 @@ valuesFilePath: api_values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-  {{ $ := set $ "default" "npm publish" }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            # - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
@@ -265,14 +228,14 @@ valuesFilePath: api_values.yml
 {{ define "step.publish.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onSuccess.command" $ }}
 {{ end }}
 
 {{ define "step.publish.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onFailure.command" $ }}
 {{ end }}
 # -----------------------------------------------------------------
@@ -300,7 +263,7 @@ resources:
 pipelines:
   - name: {{ $pipelineName }}
     configuration:
-      jfrogCliVersion: {{ default 2 .Values.metadata.jfrogCliVersion }}
+      jfrogCliVersion: 2
       integrations:
         {{ template "pipeline.config.integrations" . }}
       environmentVariables:
@@ -336,67 +299,17 @@ pipelines:
                 versions:
                   {{- range $version := .Values.configurations.steps.build.runtime.versions }}
                   - {{ $version }}
-                  {{- end }}
-              {{ end }}
-        execution:
-          # {{ if .Values.configurations.steps.build.onStart }}
-          # onStart:
-          #   {{ template "step.build.onStart" $templateParams }}
-          # {{ end }}
-          onExecute:
-            - echo {{ .Values.configurations.steps.build.onExecute }}
-            - echo {{ .Values.configurations.steps.build.onStart }}
-            {{ template "step.build.onExecute" $templateParams }}
-          {{ if .Values.configurations.steps.build.onSuccess }}
-          onSuccess:
-            {{ template "step.build.onSuccess" $templateParams }}
-          {{ end }}
-          {{ if .Values.configurations.steps.build.onFailure }}
-          onFailure:
-            {{ template "step.build.onFailure" $templateParams }}
-          {{ end }}
-      {{ if $isLintAvailable }}
-      - name: {{ .Values.metadata.serviceName }}_lint
-        type: Bash
-        configuration:
-          affinityGroup: {{ .Values.metadata.serviceName }}
-          runtime:
-            type: image
-            image:
-              {{ if (eq .Values.controls.lint.runtime "custom") }}
-              custom:
-                {{ range $key, $value := .Values.configurations.steps.lint.runtime.custom }}
-                {{ $key }}: {{ $value }}
-                {{ end }}
-              {{ else }}
-              auto:
-                language: node
-                versions:
-                  {{- range $version := .Values.configurations.steps.lint.runtime.versions }}
-                  - {{ $version }}
                   {{- end }} 
               {{ end }}
-          inputSteps:
-            - name: {{ .Values.metadata.serviceName }}_build
-              status:
-                - success
         execution:
-          {{ if .Values.configurations.steps.lint.onStart }}
           onStart:
-            {{ template "step.lint.onStart" $templateParams }}
-          {{ end }}
+            {{ template "step.build.onStart" $templateParams }}
           onExecute:
-            {{ template "step.lint.onExecute" $templateParams }}
-          {{ if .Values.configurations.steps.lint.onSuccess }}
+            {{ template "step.build.onExecute" $templateParams }}
           onSuccess:
-            {{ template "step.lint.onSuccess" $templateParams }}
-          {{ end }}
-          {{ if .Values.configurations.steps.lint.onFailure }}
+            {{ template "step.build.onSuccess" $templateParams }}
           onFailure:
-            {{ template "step.lint.onFailure" $templateParams }}
-          {{ end }}
-      {{ end }}
-
+            {{ template "step.build.onFailure" $templateParams }}
       {{ if $isQualityAvailable }}
       - name: {{ .Values.metadata.serviceName }}_quality
         type: Bash
@@ -426,20 +339,14 @@ pipelines:
                   {{- end }} 
               {{ end }}
         execution:
-          {{ if .Values.configurations.steps.codeQuality.onStart }}
           onStart:
             {{ template "step.codeQuality.onStart" $templateParams }}
-          {{ end }}
           onExecute:
             {{ template "step.codeQuality.onExecute" $templateParams }}
-          {{ if .Values.configurations.steps.codeQuality.onSuccess }}
           onSuccess:
             {{ template "step.codeQuality.onSuccess" $templateParams }}
-          {{ end }}
-          {{ if .Values.configurations.steps.codeQuality.onFailure }}
           onFailure:
             {{ template "step.codeQuality.onFailure" $templateParams }}
-          {{ end }}
 
       - name: {{ .Values.metadata.serviceName }}_sonar_scan
         type: Bash
@@ -470,23 +377,16 @@ pipelines:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
         execution:
-          {{ if .Values.configurations.steps.sonarScan.onStart }}
           onStart:
             {{ template "step.sonarScan.onStart" $templateParams }}
-          {{ end }}
           onExecute:
             {{ template "step.sonarScan.onExecute" $templateParams }}
-          {{ if .Values.configurations.steps.sonarScan.onSuccess }}
           onSuccess:
             {{ template "step.sonarScan.onSuccess" $templateParams }}
-          {{ end }}
-          {{ if .Values.configurations.steps.sonarScan.onFailure }}
           onFailure:
             {{ template "step.sonarScan.onFailure" $templateParams }}
-          {{ end }}
       {{ end }}
 
-      {{ if $isClamScanAvailable }}
       - name: {{ .Values.metadata.serviceName }}_clam_scan
         type: Bash
         configuration:
@@ -513,21 +413,14 @@ pipelines:
           inputSteps:
             - name: {{ .Values.metadata.serviceName }}_build
         execution:
-          {{ if .Values.configurations.steps.clamScan.onStart }}
           onStart:
             {{ template "step.clamScan.onStart" $templateParams }}
-          {{ end }}
           onExecute:
             {{ template "step.clamScan.onExecute" $templateParams }}
-          {{ if .Values.configurations.steps.clamScan.onSuccess }}
           onSuccess:
             {{ template "step.clamScan.onSuccess" $templateParams }}
-          {{ end }}
-          {{ if .Values.configurations.steps.clamScan.onFailure }}
           onFailure:
             {{ template "step.clamScan.onFailure" $templateParams }}
-          {{ end }}
-      {{ end }}
 
       {{ if $isPublishAvailable }}
       - name: {{ .Values.metadata.serviceName }}_publish
@@ -558,18 +451,10 @@ pipelines:
             - name: {{ $buildInfoResultResName }}
             - name: {{ $buildInfoResName }}
         execution:
-          {{ if .Values.configurations.steps.publish.onStart }}
-          onStart:
-            {{ template "step.publish.onStart" $templateParams }}
-          {{ end }}
           onExecute:
             {{ template "step.publish.onExecute" $templateParams }}
-          {{ if .Values.configurations.steps.publish.onSuccess }}
           onSuccess:
             {{ template "step.publish.onSuccess" $templateParams }}
-          {{ end }}
-          {{ if .Values.configurations.steps.publish.onFailure }}
           onFailure:
             {{ template "step.publish.onFailure" $templateParams }}
-          {{ end }}
       {{ end }}
