@@ -37,6 +37,7 @@ configurations:
         - echo "onStart"
       onExecute:
         - echo "onExecute"
+        - echo "lalala"
         # - |
         #   RT_SERVER=server \
         #   RT_URL=$repo21 \
