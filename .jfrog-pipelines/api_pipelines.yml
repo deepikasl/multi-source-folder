@@ -99,5 +99,5 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            {{ .Values.configurations.steps.build.onExecute }}
+            {{ .Values.configurations.steps.build.onExecute | nindent8 }}
             # {{ template "step.build.onExecute" $templateParams }}
