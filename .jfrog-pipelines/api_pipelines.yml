@@ -45,22 +45,22 @@ valuesFilePath: api_values.yml
 {{ end }}
 
 # Steps shared onExecute template
-{{ define "step.shared.onExecute.command" }}
-  {{ $ := . }}
-            {{ if $.conf }}
-            {{- range $cmd := $.conf.onExecute }}
-            - {{ $cmd }}
-            {{- end }}
-            {{ end }}
-{{ end }}
+# {{ define "step.shared.onExecute.command" }}
+#   {{ $ := . }}
+#             {{ if $.conf }}
+#             {{- range $cmd := $.conf.onExecute }}
+#             - {{ $cmd }}
+#             {{- end }}
+#             {{ end }}
+# {{ end }}
 
-# build step
-{{ define "step.build.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-            {{ template "step.shared.onExecute.command" $ }}
-{{ end }}
+# # build step
+# {{ define "step.build.onExecute" }}
+#   {{ $ := . }}
+#   {{ $ := set $ "conf" $.values.configurations.steps.build }}
+#             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+#             {{ template "step.shared.onExecute.command" $ }}
+# {{ end }}
 # -----------------------------------------------------------------
 
 # Resource definitions
