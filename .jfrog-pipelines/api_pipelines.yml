@@ -48,10 +48,10 @@ Steps shared onExecute template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
             {{ if $.conf }}
-            {{ $.conf }}
-            # {{- range $cmd := $.conf.onExecute }}
-            # - {{ $cmd }}
-            # {{- end }}
+            # {{ $.conf }}
+            {{- range $cmd := $.conf.onExecute }}
+            - {{ $cmd }}
+            {{- end }}
             {{ end }}
 {{ end }}
 
