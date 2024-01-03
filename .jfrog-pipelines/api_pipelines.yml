@@ -60,7 +60,8 @@ Steps shared onExecute template
 {{ define "step.build.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
-            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+  {{ $ := set $ "default" "npm run build" }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 # -----------------------------------------------------------------
