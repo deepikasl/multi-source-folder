@@ -40,7 +40,7 @@ configurations:
         - echo "lalala"
         - |
           if [ -z "$PIPELINES_CHART_VERSION" ]; then
-            export PIPELINES_CHART_VERSION="101.44.0-m000"
+          export PIPELINES_CHART_VERSION="101.44.0-m000"
           fi
       onFailure:
         - echo "onFailure"
