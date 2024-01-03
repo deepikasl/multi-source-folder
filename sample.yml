@@ -1,0 +1,119 @@
+valuesFilePath: api_values.yml
+# Template Variables
+
+# Names
+{{ $serviceName := .Values.metadata.serviceName }}
+{{ $gitResName := print $serviceName "_git_source" }}
+{{ $buildInfoResultResName := print $serviceName "_build_result" }}
+{{ $buildInfoResName := print $serviceName "_build_info" }}
+{{ $pipelineName := print $serviceName "_build" }}
+{{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
+
+{{ $isControlsAvailable := default false .Values.controls }}
+{{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
+{{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
+{{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.publish.enabled true)) }}
+{{ $isLintAvailable := default false (and $isControlsAvailable (eq .Values.controls.lint.enabled true)) }}
+{{ $isClamScanAvailable := default false (and $isControlsAvailable (eq .Values.controls.clamScan.enabled true)) }}
+{{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
+
+# -----------------------------------------------------------------
+# Reusable templates
+# These are resolved using 'template' thus indentation is important
+# -----------------------------------------------------------------
+{{ $resultResources := dict "buildInfoResultResName" $buildInfoResultResName }}
+{{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory) }}
+
+# Git repo resource
+{{ define "res.gitRepo.config" }}
+  {{ range $key, $value := .Values.inputs.sourceRepository }}
+  {{ $isObject := or (eq $key "files") (eq $key "branches") (eq $key "pullRequestSourceBranches") (eq $key "pullRequestTargetBranches") (eq $key "tags") (eq $key "buildOn") (eq $key "cancelPendingRunsOn") (eq $key "pin") }}
+  {{ if (eq $isObject false )}}
+      {{ $key }}: {{ $value }}
+  {{ else }}
+      {{ $key }}:
+  {{ range $depthKey, $depthValue := $value }}
+        {{ $depthKey }}: {{ $depthValue }}
+  {{ end }}
+  {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ define "pipeline.config.integrations" }}
+  {{ $ := . }}
+            {{- range $int := .Values.inputs.pipeline.configuration.integrations }}
+            - name: {{ $int }}
+            {{- end }}
+{{ end }}
+
+{{ define "pipeline.config.environmentVariables" }}
+  {{ $ := . }}
+            {{ range $key, $value := .Values.inputs.pipeline.configuration.environmentVariables }}
+            {{ $key }}: {{ $value }}
+            {{ end }}
+{{ end }}
+
+{{ define "pipeline.config.retentionPolicy" }}
+  {{ $ := . }}
+            {{ range $key, $value := .Values.inputs.pipeline.configuration.retentionPolicy }}
+            {{ $key }}: {{ $value }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onExecute template
+{{ define "step.shared.onExecute.command" }}
+  {{ $ := . }}
+            {{ if ( and ($.conf) ($.conf.onExecute) ) }}
+            {{- range $cmd := $.conf.onExecute }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ else if $.default}}
+            - {{ $.default }}
+            {{ end }}
+{{ end }}
+
+# build step
+{{ define "step.build.onExecute" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+  {{ $ := set $ "default" "npm run build" }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}
+            {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+# -----------------------------------------------------------------
+
+# Resource definitions
+resources:
+  - name: {{ $gitResName }}
+    type: GitRepo
+    configuration:
+      {{ template "res.gitRepo.config" . }}
+
+  - name: {{ $buildInfoResultResName }}
+    type: PropertyBag
+    configuration:
+      timestamp: ''
+
+  - name: {{ $buildInfoResName }}
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: {{ .Values.inputs.integrations.artifactory }}
+      buildName: ''
+      buildNumber: ''
+
+# Pipeline definition
+pipelines:
+  - name: {{ $pipelineName }}
+    configuration:
+      jfrogCliVersion: {{ default 2 .Values.metadata.jfrogCliVersion }}
+    steps:
+      - name: {{ .Values.metadata.serviceName }}_build
+        type: Bash
+        configuration:
+          affinityGroup: {{ .Values.metadata.serviceName }}
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+        execution:
+          onExecute:
+            {{ template "step.build.onExecute" $templateParams }}
