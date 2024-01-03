@@ -47,10 +47,12 @@ valuesFilePath: api_values.yml
 Steps shared onExecute template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
-            {{ if $.conf }}
+            {{ if ( and ($.conf) ($.conf.onExecute) ) }}
             {{- range $cmd := $.conf.onExecute }}
             - {{ $cmd }}
             {{- end }}
+            {{ else if $.default}}
+            - {{ $.default }}
             {{ end }}
 {{ end }}
 
