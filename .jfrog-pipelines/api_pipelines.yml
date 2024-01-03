@@ -1,4 +1,4 @@
-valuesFilePath: api_values.yml
+valuesFilePath: values.yml
 # Template Variables
 
 # Names
@@ -13,6 +13,8 @@ valuesFilePath: api_values.yml
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
 {{ $isQualityAvailable := default false (and $isControlsAvailable (eq .Values.controls.codeQuality.enabled true)) }}
 {{ $isPublishAvailable := default false (and $isControlsAvailable (eq .Values.controls.publish.enabled true)) }}
+{{ $isLintAvailable := default false (and $isControlsAvailable (eq .Values.controls.lint.enabled true)) }}
+{{ $isClamScanAvailable := default false (and $isControlsAvailable (eq .Values.controls.clamScan.enabled true)) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
 
 # -----------------------------------------------------------------
@@ -44,7 +46,21 @@ valuesFilePath: api_values.yml
             {{- end }}
 {{ end }}
 
-Steps shared onExecute template
+{{ define "pipeline.config.environmentVariables" }}
+  {{ $ := . }}
+            {{ range $key, $value := .Values.inputs.pipeline.configuration.environmentVariables }}
+            {{ $key }}: {{ $value }}
+            {{ end }}
+{{ end }}
+
+{{ define "pipeline.config.retentionPolicy" }}
+  {{ $ := . }}
+            {{ range $key, $value := .Values.inputs.pipeline.configuration.retentionPolicy }}
+            {{ $key }}: {{ $value }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onExecute template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
             {{ if ( and ($.conf) ($.conf.onExecute) ) }}
@@ -89,9 +105,7 @@ resources:
 pipelines:
   - name: {{ $pipelineName }}
     configuration:
-      jfrogCliVersion: 2
-      integrations:
-        {{ template "pipeline.config.integrations" . }}
+      jfrogCliVersion: {{ default 2 .Values.metadata.jfrogCliVersion }}
     steps:
       - name: {{ .Values.metadata.serviceName }}_build
         type: Bash
@@ -102,5 +116,4 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
         execution:
           onExecute:
-            # {{ .Values.configurations.steps.build.onExecute }}
             {{ template "step.build.onExecute" $templateParams }}
