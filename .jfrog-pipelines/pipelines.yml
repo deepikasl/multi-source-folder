@@ -69,22 +69,22 @@ pipelines:
     configuration:
       reTriggerOnSyncFailure: false
 #       jfrogCliVersion: 2
-      environmentVariables:
-        readOnly:
-          pipelineEnv:
-            secure: true
-            default: "somePipValue"
+      # environmentVariables:
+      #   readOnly:
+      #     pipelineEnv:
+      #       secure: true
+      #       default: "somePipValue"
       integrations:
         - name: deepikaGithub
     steps:
       - name: dependency_version_check
         type: Bash
         configuration:
-          environmentVariables:
-            mySecureEnv:
-              allowCustom: true
-              secure: true
-              default: "someValue"
+          # environmentVariables:
+          #   mySecureEnv:
+          #     allowCustom: true
+          #     secure: true
+          #     default: "someValue"
           inputResources:
             - name: gitRepo_branch_create
             - name: propertyBag_1
