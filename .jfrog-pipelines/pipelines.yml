@@ -109,8 +109,8 @@ pipelines:
           inputResources:
             - name: myRepo_1
               <<: *git_resource_trigger_condition
-          outputResources:
-            - name: propertyBag_1
+          # outputResources:
+          #   - name: propertyBag_1
           integrations:
             - name: deepikaGithub
         execution:
