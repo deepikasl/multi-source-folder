@@ -86,7 +86,7 @@ pipelines:
           #     secure: true
           #     default: "someValue"
           inputResources:
-            - name: gitRepo_branch_create
+            # - name: gitRepo_branch_create
             - name: propertyBag_1
         execution:
           onStart:
