@@ -87,7 +87,7 @@ pipelines:
               default: "someValue"
           inputResources:
             - name: gitRepo_branch_create
-#               branch: main
+            - name: propertyBag_1
         execution:
           onStart:
             - printenv
