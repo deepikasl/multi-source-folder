@@ -12,9 +12,7 @@ pipelines:
       - name: EXT_S_PS_AU_0018_1
         type: PowerShell
         configuration:
-          integrations:
-            - name: s_artifactory
-          outputResources:
+          inputResources:
             - name: EXT_S_PS_AU_0018_fileSpec
         execution:
           onExecute:
